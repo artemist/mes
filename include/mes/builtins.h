@@ -103,6 +103,7 @@ struct scm *module_variable (struct scm *module, struct scm *name);
 struct scm *module_ref (struct scm *module, struct scm *name);
 struct scm *module_define_x (struct scm *module, struct scm *name, struct scm *value);
 /* src/posix.c */
+struct scm *abort_ ();
 struct scm *exit_ (struct scm *x);
 struct scm *peek_byte ();
 struct scm *read_byte ();

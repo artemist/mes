@@ -33,7 +33,7 @@ struct ldiv_t
 
 int __raise (int);
 
-#if __TINYC__
+#if __TINYC__ || SYSTEM_LIBC
 #define __raise(x) -1
 #endif
 

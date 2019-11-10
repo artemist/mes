@@ -107,6 +107,7 @@ lib/mes/ntoab.c
 lib/mes/oputc.c
 lib/mes/ultoa.c
 lib/mes/utoa.c
+lib/stub/__raise.c
 "
 
 if test $mes_libc = mes; then

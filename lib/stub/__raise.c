@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,15 +18,10 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <signal.h>
+// CONSTANT SIGABRT 0
 
-void
-abort (void)
+int
+__raise (int signum)
 {
-  if (raise (SIGABRT) < 0) /* could not raise SIGABRT */
-    {
-      /* Fail in any way possible */
-      unsigned char* x = (unsigned char*) 0;
-      *x = 2;
-    }
+  return -1;
 }
