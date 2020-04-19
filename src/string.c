@@ -42,7 +42,7 @@ assert_max_string (size_t i, char const *msg, char *string)
 }
 
 char const *
-list_to_cstring (SCM list, size_t * size)
+list_to_cstring (SCM list, size_t *size)
 {
   size_t i = 0;
   char *p = g_buf;

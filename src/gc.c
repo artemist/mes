@@ -40,12 +40,12 @@ struct scm *g_cells;
 struct scm *g_news;
 
 SCM
-gc_init ()                ///((internal))
+gc_init ()                      ///((internal))
 {
 #if SYSTEM_LIBC
-  ARENA_SIZE = 100000000;    // 2.3GiB
+  ARENA_SIZE = 100000000;       // 2.3GiB
 #else
-  ARENA_SIZE = 300000;       // 32b: 3MiB, 64b: 6 MiB
+  ARENA_SIZE = 300000;          // 32b: 3MiB, 64b: 6 MiB
 #endif
   MAX_ARENA_SIZE = 100000000;
   STACK_SIZE = 20000;
