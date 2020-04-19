@@ -105,6 +105,7 @@ int unreadchar ();
 long length__ (SCM x);
 size_t bytes_cells (size_t length);
 void assert_max_string (size_t i, char const *msg, char *string);
+void assert_msg (int check, char *msg);
 
 #include "mes/builtins.h"
 #include "mes/constants.h"

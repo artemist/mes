@@ -113,6 +113,7 @@ if test $mes_libc = mes; then
 lib/ctype/isdigit.c
 lib/ctype/isspace.c
 lib/ctype/isxdigit.c
+lib/mes/assert_msg.c
 lib/posix/write.c
 lib/stdlib/atoi.c
 "
