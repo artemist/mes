@@ -104,7 +104,7 @@ init_builtin (SCM builtin_type, char const *name, int arity, FUNCTION function, 
 }
 
 SCM
-mes_builtins (SCM a)            /**((internal))*/
+mes_builtins (SCM a)            /*:((internal)) */
 {
   // TODO minimal: cons, car, cdr, list, null_p, eq_p minus, plus
   // display_, display_error_, getenv
