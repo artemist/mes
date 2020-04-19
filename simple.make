@@ -46,6 +46,7 @@ CFLAGS:=					\
  -Wno-int-conversion
 
 MES_SOURCES =					\
+ src/builtins.c					\
  src/gc.c					\
  src/hash.c					\
  src/lib.c					\

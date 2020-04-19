@@ -32,6 +32,20 @@ struct scm
   SCM cdr;
 };
 
+#if __MESC__
+typedef long function0_t;
+typedef long function1_t;
+typedef long function2_t;
+typedef long function3_t;
+typedef long functionn_t;
+#else // !__MESC__
+typedef SCM (*function0_t) (void);
+typedef SCM (*function1_t) (SCM);
+typedef SCM (*function2_t) (SCM, SCM);
+typedef SCM (*function3_t) (SCM, SCM, SCM);
+typedef SCM (*functionn_t) (SCM);
+#endif // !__MESC__
+
 // mes
 extern int g_debug;
 extern char *g_buf;
@@ -70,15 +84,21 @@ extern struct scm *g_news;
 SCM alloc (long n);
 SCM apply (SCM f, SCM x, SCM a);
 SCM apply_builtin (SCM fn, SCM x);
+SCM builtin_name (SCM builtin);
+#if __MESC__
+long builtin_function (SCM builtin);
+#else
+SCM (*builtin_function (SCM builtin)) (SCM);
+#endif
 SCM cstring_to_list (char const *s);
 SCM cstring_to_symbol (char const *s);
-SCM display_ (SCM x);
 SCM fdisplay_ (SCM, int, int);
 SCM gc_init ();
 SCM gc_peek_frame ();
 SCM gc_pop_frame ();
 SCM gc_push_frame ();
 SCM init_time (SCM a);
+SCM make_builtin_type ();
 SCM make_bytes (char const *s, size_t length);
 SCM make_cell__ (long type, SCM car, SCM cdr);
 SCM make_hash_table_ (long size);
@@ -86,8 +106,7 @@ SCM make_hashq_type ();
 SCM make_initial_module (SCM a);
 SCM make_string (char const *s, size_t length);
 SCM make_vector__ (long k);
-SCM read_input_file_env (SCM);
-SCM string_equal_p (SCM a, SCM b);
+SCM mes_builtins (SCM a);
 SCM struct_ref_ (SCM x, long i);
 SCM struct_set_x_ (SCM x, long i, SCM e);
 SCM vector_ref_ (SCM x, long i);

@@ -429,6 +429,7 @@ lib/linux/symlink.c
 fi
 
 mes_SOURCES="
+src/builtins.c
 src/gc.c
 src/hash.c
 src/lib.c

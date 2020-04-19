@@ -30,24 +30,11 @@ fi
 . ./config.sh
 . ${srcdest}build-aux/trace.sh
 . ${srcdest}build-aux/cc.sh
+. ${srcdest}build-aux/configure-lib.sh
 
 trap 'test -f .log && cat .log' EXIT
 
-mes_sources="
-src/gc.c
-src/hash.c
-src/lib.c
-src/math.c
-src/mes.c
-src/module.c
-src/posix.c
-src/reader.c
-src/string.c
-src/struct.c
-src/vector.c
-"
-
-for c in $mes_sources; do
+for c in $mes_SOURCES; do
     compile $c
 done
 if test $mes_libc = system; then

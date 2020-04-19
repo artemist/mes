@@ -33,7 +33,18 @@
 *.mini-hex2
 *.a
 *.o
+*.h.m2
+*.c.m2
 *.seed-out
+*.stderr
+*.stdout
+
+*.x86-out
+
+/TAGS
+
+/lib/x86-mes/0exit-42
+/lib/x86-mes/exit-42
 
 /lib/tests/*/[0-9a][0-9a-z]-*
 !/lib/tests/*/*.c
@@ -56,7 +67,6 @@
 /.store
 /.tarball-version
 
-/out
 ?
 ?.mes
 \#*#

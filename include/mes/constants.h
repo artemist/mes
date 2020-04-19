@@ -269,8 +269,8 @@
 // CONSTANT cell_type_broken_heart 117
 #define cell_type_broken_heart 117
 
-// CONSTANT cell_test 118
-#define cell_test 118
+// CONSTANT cell_symbol_test 118
+#define cell_symbol_test 118
 
 /* Cell types */
 
