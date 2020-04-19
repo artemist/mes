@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -29,9 +29,16 @@ make_struct (SCM type, SCM fields, SCM printer)
   long size = 2 + length__ (fields);
   SCM v = alloc (size);
   SCM x = make_cell__ (TSTRUCT, size, v);
-  g_cells[v] = g_cells[vector_entry (type)];
-  g_cells[v + 1] = g_cells[vector_entry (printer)];
-  for (long i = 2; i < size; i++)
+  SCM vt = vector_entry (type);
+  TYPE (v) = TYPE (vt);
+  CAR (v) = CAR (vt);
+  CDR (v) = CDR (vt);
+  SCM vp = vector_entry (printer);
+  TYPE (v + 1) = TYPE (vp);
+  CAR (v + 1) = CAR (vp);
+  CDR (v + 1) = CDR (vp);
+  long i;
+  for (i = 2; i < size; i = i + 1)
     {
       SCM e = cell_unspecified;
       if (fields != cell_nil)
@@ -39,7 +46,10 @@ make_struct (SCM type, SCM fields, SCM printer)
           e = CAR (fields);
           fields = CDR (fields);
         }
-      g_cells[v + i] = g_cells[vector_entry (e)];
+      SCM ve = vector_entry (e);
+      TYPE (v + i) = TYPE (ve);
+      CAR (v + i) = CAR (ve);
+      CDR (v + i) = CDR (ve);
     }
   return x;
 }
