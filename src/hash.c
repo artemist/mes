@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -28,7 +28,7 @@ int
 hash_cstring (char const *s, long size)
 {
   int hash = s[0] * 37;
-  if (s[0] && s[1])
+  if (s[0] != 0 && s[1] != 0)
     hash = hash + s[1] * 43;
   assert (size);
   hash = hash % size;
@@ -39,7 +39,7 @@ int
 hashq_ (SCM x, long size)
 {
   if (TYPE (x) == TSPECIAL || TYPE (x) == TSYMBOL)
-    return hash_cstring (CSTRING (x), size);    // FIXME: hash x directly
+    return hash_cstring (CSTRING (x), size);    /* FIXME: hash x directly. */
   error (cell_symbol_system_error, cons (MAKE_STRING0 ("hashq_: not a symbol"), x));
 }
 
@@ -183,7 +183,8 @@ hash_table_printer (SCM table)
   fdputc (' ', __stdout);
   SCM buckets = struct_ref_ (table, 4);
   fdputs ("buckets: ", __stdout);
-  for (int i = 0; i < LENGTH (buckets); i++)
+  int i;
+  for (i = 0; i < LENGTH (buckets); i = i + 1)
     {
       SCM e = vector_ref_ (buckets, i);
       if (e != cell_unspecified)
@@ -203,21 +204,20 @@ hash_table_printer (SCM table)
 }
 
 SCM
-make_hashq_type ()              ///((internal))
+make_hashq_type ()              /*:((internal)) */
 {
-  SCM record_type = cell_symbol_record_type;    // FIXME
   SCM fields = cell_nil;
   fields = cons (cell_symbol_buckets, fields);
   fields = cons (cell_symbol_size, fields);
   fields = cons (fields, cell_nil);
   fields = cons (cell_symbol_hashq_table, fields);
-  return make_struct (record_type, fields, cell_unspecified);
+  return make_struct (cell_symbol_record_type, fields, cell_unspecified);
 }
 
 SCM
 make_hash_table_ (long size)
 {
-  if (!size)
+  if (size == 0)
     size = 100;
   SCM hashq_type = make_hashq_type ();
 
@@ -226,7 +226,8 @@ make_hash_table_ (long size)
   values = cons (buckets, values);
   values = cons (MAKE_NUMBER (size), values);
   values = cons (cell_symbol_hashq_table, values);
-  //FIXME: symbol/printer return make_struct (hashq_type, values, cstring_to_symbol ("hash-table-printer");
+  /*FIXME: symbol/printer
+    return make_struct (hashq_type, values, cstring_to_symbol ("hash-table-printer");*/
   return make_struct (hashq_type, values, cell_unspecified);
 }
 

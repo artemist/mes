@@ -282,14 +282,14 @@ write_port_ (SCM x, SCM p)
 }
 
 SCM
-fdisplay_ (SCM x, int fd, int write_p)  ///((internal))
+fdisplay_ (SCM x, int fd, int write_p)  /**((internal))*/
 {
   g_depth = 5;
   return display_helper (x, 0, "", fd, write_p);
 }
 
 SCM
-exit_ (SCM x)                   ///((name . "exit"))
+exit_ (SCM x)                   /**((name . "exit"))*/
 {
   assert (TYPE (x) == TNUMBER);
   exit (VALUE (x));
@@ -307,7 +307,7 @@ frame_printer (SCM frame)
 }
 
 SCM
-make_frame_type ()              ///((internal))
+make_frame_type ()              /**((internal))*/
 {
   SCM record_type = cell_symbol_record_type;    // FIXME
   SCM fields = cell_nil;
@@ -336,7 +336,7 @@ make_frame (SCM stack, long index)
 }
 
 SCM
-make_stack_type ()              ///((internal))
+make_stack_type ()              /**((internal))*/
 {
   SCM record_type = cell_symbol_record_type;    // FIXME
   SCM fields = cell_nil;
@@ -347,7 +347,7 @@ make_stack_type ()              ///((internal))
 }
 
 SCM
-make_stack (SCM stack)          ///((arity . n))
+make_stack (SCM stack)          /**((arity . n))*/
 {
   SCM stack_type = make_stack_type ();
   long size = (STACK_SIZE - g_stack) / FRAME_SIZE;
