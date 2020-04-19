@@ -22,8 +22,7 @@
 #define __MES_MES_H
 
 #include <sys/types.h>
-
-typedef long SCM;
+#include "mes/cc.h"
 
 struct scm
 {
@@ -32,64 +31,53 @@ struct scm
   SCM cdr;
 };
 
-#if __MESC__
-typedef long function0_t;
-typedef long function1_t;
-typedef long function2_t;
-typedef long function3_t;
-typedef long functionn_t;
-#else // !__MESC__
-typedef SCM (*function0_t) (void);
-typedef SCM (*function1_t) (SCM);
-typedef SCM (*function2_t) (SCM, SCM);
-typedef SCM (*function3_t) (SCM, SCM, SCM);
-typedef SCM (*functionn_t) (SCM);
-#endif // !__MESC__
+/* mes */
+int g_debug;
+char *g_buf;
+SCM g_continuations;
+SCM g_symbols;
+SCM g_symbol_max;
 
-// mes
-extern int g_debug;
-extern char *g_buf;
-extern SCM g_continuations;
-extern SCM g_symbols;
-extern SCM g_symbol_max;
+/* a/env */
+SCM r0;
+/* param 1 */
+SCM r1;
+/* save 2 */
+SCM r2;
+/* continuation */
+SCM r3;
+/* current-module */
+SCM m0;
+/* macro */
+SCM g_macros;
+SCM g_ports;
 
-// a/env
-extern SCM r0;
-// param 1
-extern SCM r1;
-// save 2
-extern SCM r2;
-// continuation
-extern SCM r3;
-// current-module
-extern SCM m0;
-// macro
-extern SCM g_macros;
-extern SCM g_ports;
+/* gc */
+long ARENA_SIZE;
+long MAX_ARENA_SIZE;
+long STACK_SIZE;
+long JAM_SIZE;
+long GC_SAFETY;
+long MAX_STRING;
+char *g_arena;
+long g_free;
+SCM g_stack;
+SCM *g_stack_array;
+struct scm *g_cells;
+struct scm *g_news;
 
-// gc
-extern long ARENA_SIZE;
-extern long MAX_ARENA_SIZE;
-extern long STACK_SIZE;
-extern long JAM_SIZE;
-extern long GC_SAFETY;
-extern long MAX_STRING;
-extern char *g_arena;
-extern long g_free;
-extern SCM g_stack;
-extern SCM *g_stack_array;
-extern struct scm *g_cells;
-extern struct scm *g_news;
+char **__execl_c_argv;
+char *__getcwd_buf;
+char *__open_boot_buf;
+char *__open_boot_file_name;
+char *__setenv_buf;
+char *__reader_read_char_buf;
 
 SCM alloc (long n);
 SCM apply (SCM f, SCM x, SCM a);
 SCM apply_builtin (SCM fn, SCM x);
 SCM builtin_name (SCM builtin);
-#if __MESC__
-long builtin_function (SCM builtin);
-#else
-SCM (*builtin_function (SCM builtin)) (SCM);
-#endif
+FUNCTION builtin_function (SCM builtin);
 SCM cstring_to_list (char const *s);
 SCM cstring_to_symbol (char const *s);
 SCM fdisplay_ (SCM, int, int);
@@ -122,4 +110,4 @@ void assert_max_string (size_t i, char const *msg, char *string);
 #include "mes/constants.h"
 #include "mes/macros.h"
 
-#endif //__MES_MES_H
+#endif /* __MES_MES_H */

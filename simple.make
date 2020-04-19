@@ -28,6 +28,7 @@ MES = bin/mes-gcc
 #MES_CPU = x86
 
 M2_PLANET = M2-Planet
+M2_PLANET_FLAGS = --architecture amd64
 
 CFLAGS:=					\
   $(CFLAGS)					\
@@ -105,6 +106,7 @@ bin/mes-gcc: $(MAKEFILES) $(GCC_SOURCES) $(INCLUDES) | bin
 M2_PLANET_INCLUDES =				\
  include/mes/mes.h				\
  include/mes/m2.h				\
+ include/mes/builtins.h				\
  include/mes/constants.h
 
 M2_PLANET_PREFIX = ../M2-Planet
@@ -112,19 +114,54 @@ M2_PLANET_SOURCES =						\
  $(M2_PLANET_PREFIX)/test/common_amd64/functions/exit.c		\
  $(M2_PLANET_PREFIX)/test/common_amd64/functions/malloc.c	\
  $(M2_PLANET_PREFIX)/functions/calloc.c				\
- $(M2_PLANET_INCLUDES)						\
+ $(M2_PLANET_INCLUDES:%.h=%.h.m2)				\
  $(SOURCES:%.c=%.c.m2)
 
-%.c.m2: %.c $(MAKEFILES)
-	@sed -r 's@^(#include.*)@/* \1 */@' $<	\
+%.h.m2: %.h $(MAKEFILES)
+	@sed -r					\
+	    -e 's,^//,@@,'			\
+	    -e 's@^(#include.*)@/* \1 */@'	\
+	    $<					\
 	| $(CC) -E -I include			\
+	    -D __M2_PLANET__=1			\
 	    -D FUNCTION0=FUNCTION		\
 	    -D FUNCTION1=FUNCTION		\
 	    -D FUNCTION2=FUNCTION		\
 	    -D FUNCTION3=FUNCTION		\
 	    -D FUNCTIONN=FUNCTION		\
 	    -D const=				\
-	    -o $@ -x c -
+	    -D long=SCM				\
+	    -D size_t=SCM			\
+	    -D ssize_t=SCM			\
+	    -D unsigned=SCM			\
+            -include mes/m2.h			\
+	    -x c -				\
+	| sed -r				\
+	    -e 's,^@@,//,'			\
+	    > $@				\
+
+%.c.m2: %.c $(MAKEFILES)
+	@sed -r					\
+	    -e 's,^//,@@,'			\
+	    -e 's@^(#include.*)@/* \1 */@'	\
+	    $<					\
+	| $(CC) -E -I include			\
+	    -D __M2_PLANET__=1			\
+	    -D FUNCTION0=FUNCTION		\
+	    -D FUNCTION1=FUNCTION		\
+	    -D FUNCTION2=FUNCTION		\
+	    -D FUNCTION3=FUNCTION		\
+	    -D FUNCTIONN=FUNCTION		\
+	    -D const=				\
+	    -D long=SCM				\
+	    -D size_t=SCM			\
+	    -D ssize_t=SCM			\
+	    -D unsigned=SCM			\
+            -include mes/m2.h			\
+	    -x c -				\
+	| sed -r				\
+	    -e 's,^@@,//,'			\
+	    > $@
 
 bin/mes-m2: $(MAKEFILES) $(M2_PLANET_SOURCES) $(M2_PLANET_INCLUDES) | bin
 	$(M2_PLANET) $(M2_PLANET_FLAGS) $(M2_PLANET_SOURCES:%=-f %) -o $@ || rm -f $@

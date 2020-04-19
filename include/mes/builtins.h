@@ -174,4 +174,4 @@ SCM vector_set_x (SCM x, SCM i, SCM e);
 SCM list_to_vector (SCM x);
 SCM vector_to_list (SCM v);
 
-#endif //__MES_BUILTINS_H
+#endif /* __MES_BUILTINS_H */
