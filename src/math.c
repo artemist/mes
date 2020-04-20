@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  * Copyright © 2021 W. J. van der Laan <laanwj@protonmail.com>
  *
  * This file is part of GNU Mes.
@@ -39,7 +39,7 @@ assert_number (char const *name, SCM x)
 }
 
 SCM
-greater_p (SCM x)               ///((name . ">") (arity . n))
+greater_p (SCM x)               /*:((name . ">") (arity . n)) */
 {
   if (x == cell_nil)
     return cell_t;
@@ -58,7 +58,7 @@ greater_p (SCM x)               ///((name . ">") (arity . n))
 }
 
 SCM
-less_p (SCM x)                  ///((name . "<") (arity . n))
+less_p (SCM x)                  /*:((name . "<") (arity . n)) */
 {
   if (x == cell_nil)
     return cell_t;
@@ -77,7 +77,7 @@ less_p (SCM x)                  ///((name . "<") (arity . n))
 }
 
 SCM
-is_p (SCM x)                    ///((name . "=") (arity . n))
+is_p (SCM x)                    /*:((name . "=") (arity . n)) */
 {
   if (x == cell_nil)
     return cell_t;
@@ -94,7 +94,7 @@ is_p (SCM x)                    ///((name . "=") (arity . n))
 }
 
 SCM
-minus (SCM x)                   ///((name . "-") (arity . n))
+minus (SCM x)                   /*:((name . "-") (arity . n)) */
 {
   assert_number ("minus", CAR (x));
   long n = VALUE (CAR (x));
@@ -104,27 +104,27 @@ minus (SCM x)                   ///((name . "-") (arity . n))
   while (x != cell_nil)
     {
       assert_number ("minus", CAR (x));
-      n -= VALUE (car (x));
+      n = n - VALUE (car (x));
       x = cdr (x);
     }
   return MAKE_NUMBER (n);
 }
 
 SCM
-plus (SCM x)                    ///((name . "+") (arity . n))
+plus (SCM x)                    /*:((name . "+") (arity . n)) */
 {
   long n = 0;
   while (x != cell_nil)
     {
       assert_number ("plus", CAR (x));
-      n += VALUE (car (x));
+      n = n + VALUE (car (x));
       x = cdr (x);
     }
   return MAKE_NUMBER (n);
 }
 
 SCM
-divide (SCM x)                  ///((name . "/") (arity . n))
+divide (SCM x)                  /*:((name . "/") (arity . n)) */
 {
   long n = 1;
   if (x != cell_nil)
@@ -139,9 +139,9 @@ divide (SCM x)                  ///((name . "/") (arity . n))
       long y = VALUE (CAR (x));
       if (y == 0)
         error (cstring_to_symbol ("divide-by-zero"), x);
-      if (!n)
+      if (n == 0)
         break;
-      n /= y;
+      n = n / y;
       x = cdr (x);
     }
   return MAKE_NUMBER (n);
@@ -157,45 +157,47 @@ modulo (SCM a, SCM b)
   if (y == 0)
     error (cstring_to_symbol ("divide-by-zero"), a);
   while (x < 0)
-    x += y;
-  x = x ? x % y : 0;
+    x = x + y;
+  if (x != 0)
+    x = x % y;
+
   return MAKE_NUMBER (x);
 }
 
 SCM
-multiply (SCM x)                ///((name . "*") (arity . n))
+multiply (SCM x)                /*:((name . "*") (arity . n)) */
 {
   long n = 1;
   while (x != cell_nil)
     {
       assert_number ("multiply", CAR (x));
-      n *= VALUE (car (x));
+      n = n * VALUE (car (x));
       x = cdr (x);
     }
   return MAKE_NUMBER (n);
 }
 
 SCM
-logand (SCM x)                  ///((arity . n))
+logand (SCM x)                  /*:((arity . n)) */
 {
   long n = -1;
   while (x != cell_nil)
     {
       assert_number ("multiply", CAR (x));
-      n &= VALUE (car (x));
+      n = n & VALUE (car (x));
       x = cdr (x);
     }
   return MAKE_NUMBER (n);
 }
 
 SCM
-logior (SCM x)                  ///((arity . n))
+logior (SCM x)                  /*:((arity . n)) */
 {
   long n = 0;
   while (x != cell_nil)
     {
       assert_number ("logior", CAR (x));
-      n |= VALUE (car (x));
+      n = n | VALUE (car (x));
       x = cdr (x);
     }
   return MAKE_NUMBER (n);
@@ -210,13 +212,13 @@ lognot (SCM x)
 }
 
 SCM
-logxor (SCM x)                  ///((arity . n))
+logxor (SCM x)                  /*:((arity . n)) */
 {
   long n = 0;
   while (x != cell_nil)
     {
       assert_number ("logxor", CAR (x));
-      n ^= VALUE (car (x));
+      n = n ^ VALUE (car (x));
       x = cdr (x);
     }
   return MAKE_NUMBER (n);
@@ -229,5 +231,10 @@ ash (SCM n, SCM count)
   assert_number ("ash", count);
   long cn = VALUE (n);
   long ccount = VALUE (count);
-  return MAKE_NUMBER ((ccount < 0) ? cn >> -ccount : cn << ccount);
+  long result;
+  if (ccount < 0)
+    result = cn >> -ccount;
+  else
+    result = cn << ccount;
+  return MAKE_NUMBER (result);
 }
