@@ -20,7 +20,8 @@
 
 set -e
 
-. ${srcdest}build-aux/config.sh
+srcdest=${srcdest-./}
+. ${srcdest}config.sh
 . ${srcdest}build-aux/trace.sh
 
 trace "SNARF$snarf  builtins.c" ${srcdest}build-aux/mes-snarf.scm src/builtins.c
@@ -35,3 +36,22 @@ trace "SNARF$snarf  reader.c"   ${srcdest}build-aux/mes-snarf.scm src/reader.c
 trace "SNARF$snarf  strings.c"  ${srcdest}build-aux/mes-snarf.scm src/string.c
 trace "SNARF$snarf  struct.c"   ${srcdest}build-aux/mes-snarf.scm src/struct.c
 trace "SNARF$snarf  vector.c"   ${srcdest}build-aux/mes-snarf.scm src/vector.c
+
+for i in src/*.symbols.h; do
+    n=$(basename $i .symbols.h)
+    echo "/* src/$n.c */"
+    cat $i
+    mv $i $(basename $i .symbols.h).s
+done > s
+
+for i in src/*.h; do
+    n=$(basename $i .h)
+    echo "/* src/$n.c */"
+    cat $i
+done > h
+
+for i in src/*.i; do
+    n=$(basename $i .i)
+    echo "  /* src/$n.c */"
+    cat $i
+done > c

@@ -23,6 +23,7 @@
 
 /* Symbols */
 
+/* src/mes.c */
 // CONSTANT cell_nil 1
 #define cell_nil 1
 // CONSTANT cell_f 2
@@ -45,7 +46,6 @@
 #define cell_begin 10
 // CONSTANT cell_call_with_current_continuation 11
 #define cell_call_with_current_continuation 11
-
 // CONSTANT cell_vm_apply 12
 #define cell_vm_apply 12
 // CONSTANT cell_vm_apply2 13
@@ -114,7 +114,6 @@
 #define cell_vm_macro_expand_set_x 44
 // CONSTANT cell_vm_return 45
 #define cell_vm_return 45
-
 // CONSTANT cell_symbol_dot 46
 #define cell_symbol_dot 46
 // CONSTANT cell_symbol_lambda 47
@@ -129,7 +128,6 @@
 #define cell_symbol_define 51
 // CONSTANT cell_symbol_define_macro 52
 #define cell_symbol_define_macro 52
-
 // CONSTANT cell_symbol_quasiquote 53
 #define cell_symbol_quasiquote 53
 // CONSTANT cell_symbol_unquote 54
@@ -144,10 +142,8 @@
 #define cell_symbol_unsyntax 58
 // CONSTANT cell_symbol_unsyntax_splicing 59
 #define cell_symbol_unsyntax_splicing 59
-
 // CONSTANT cell_symbol_set_x 60
 #define cell_symbol_set_x 60
-
 // CONSTANT cell_symbol_sc_expand 61
 #define cell_symbol_sc_expand 61
 // CONSTANT cell_symbol_macro_expand 62
@@ -156,7 +152,6 @@
 #define cell_symbol_portable_macro_expand 63
 // CONSTANT cell_symbol_sc_expander_alist 64
 #define cell_symbol_sc_expander_alist 64
-
 // CONSTANT cell_symbol_call_with_values 65
 #define cell_symbol_call_with_values 65
 // CONSTANT cell_symbol_call_with_current_continuation 66
@@ -173,7 +168,6 @@
 #define cell_symbol_write 71
 // CONSTANT cell_symbol_display 72
 #define cell_symbol_display 72
-
 // CONSTANT cell_symbol_car 73
 #define cell_symbol_car 73
 // CONSTANT cell_symbol_cdr 74
@@ -192,7 +186,6 @@
 #define cell_symbol_wrong_number_of_args 80
 // CONSTANT cell_symbol_wrong_type_arg 81
 #define cell_symbol_wrong_type_arg 81
-
 // CONSTANT cell_symbol_buckets 82
 #define cell_symbol_buckets 82
 // CONSTANT cell_symbol_builtin 83
@@ -211,14 +204,12 @@
 #define cell_symbol_size 89
 // CONSTANT cell_symbol_stack 90
 #define cell_symbol_stack 90
-
 // CONSTANT cell_symbol_argv 91
 #define cell_symbol_argv 91
 // CONSTANT cell_symbol_mes_datadir 92
 #define cell_symbol_mes_datadir 92
 // CONSTANT cell_symbol_mes_version 93
 #define cell_symbol_mes_version 93
-
 // CONSTANT cell_symbol_internal_time_units_per_second 94
 #define cell_symbol_internal_time_units_per_second 94
 // CONSTANT cell_symbol_compiler 95
@@ -229,7 +220,6 @@
 #define cell_symbol_pmatch_car 97
 // CONSTANT cell_symbol_pmatch_cdr 98
 #define cell_symbol_pmatch_cdr 98
-
 // CONSTANT cell_type_bytes 99
 #define cell_type_bytes 99
 // CONSTANT cell_type_char 100
@@ -268,7 +258,6 @@
 #define cell_type_vector 116
 // CONSTANT cell_type_broken_heart 117
 #define cell_type_broken_heart 117
-
 // CONSTANT cell_symbol_test 118
 #define cell_symbol_test 118
 

@@ -85,8 +85,7 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
                     (cut string-replace-string <> "_to_" "->")
                     (cut string-replace-suffix <> "_x" "!")
                     (cut string-replace-suffix <> "_x_" "!-")
-                    (cut string-replace-suffix <> "_p" "?")
-                    )
+                    (cut string-replace-suffix <> "_p" "?"))
                    (function.name f))))
         (if (not (string-suffix? "-" name)) name
             (string-append "core:" (string-drop-right name 1))))))
@@ -117,7 +116,7 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
                     (if (string-null? (function.formals f)) 0
                         (length (string-split (function.formals f) #\,)))))
          (n (if (eq? arity 'n) -1 arity)))
-    (format #f "  a = init_builtin (builtin_type, ~s, ~a, &~a, a);\n" (function.name f) n (function.name f))))
+    (format #f "  a = init_builtin (builtin_type, ~s, ~a, (function1_t) & ~a, a);\n" (function-scm-name f) n (function.name f))))
 
 (define (disjoin . predicates)
   (lambda (. arguments)
@@ -151,8 +150,15 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
               rest
               (receive (parameter-list annotation)
                   (apply values (string-split-string rest " ///"))
-                (let* ((parameters (string-drop parameter-list 1))
+                (let* ((parameters (string-trim-both parameter-list))
+                       (parameters (string-drop parameters 1))
                        (parameters (string-drop-right parameters 1))
+                       (annotation (if (string? annotation) (string-trim-both annotation)
+                                       annotation))
+                       (annotation (if (and (string? annotation)
+                                            (string-suffix? "*/" annotation))
+                                       (string-drop-right annotation 2)
+                                       annotation))
                        (formals (if (string-null? parameters) '()
                                     (string-split parameters #\,)))
                        (formals (map string-trim formals)))

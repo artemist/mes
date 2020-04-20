@@ -21,15 +21,16 @@
 #ifndef __MES_BUILTINS_H
 #define __MES_BUILTINS_H
 
-/* src/builtins.mes */
+/* src/builtins.c */
 SCM make_builtin (SCM builtin_type, SCM name, SCM arity, SCM function);
+SCM builtin_name (SCM builtin);
 SCM builtin_arity (SCM builtin);
 SCM builtin_p (SCM x);
 SCM builtin_printer (SCM builtin);
-/* src/gc.mes */
+/* src/gc.c */
 SCM gc_check ();
 SCM gc ();
-/* src/hash.mes */
+/* src/hash.c */
 SCM hashq (SCM x, SCM size);
 SCM hash (SCM x, SCM size);
 SCM hashq_get_handle (SCM table, SCM key, SCM dflt);
@@ -39,8 +40,7 @@ SCM hashq_set_x (SCM table, SCM key, SCM value);
 SCM hash_set_x (SCM table, SCM key, SCM value);
 SCM hash_table_printer (SCM table);
 SCM make_hash_table (SCM x);
-/* src/lib.mes */
-SCM procedure_name_ (SCM x);
+/* src/lib.c */
 SCM display_ (SCM x);
 SCM display_error_ (SCM x);
 SCM display_port_ (SCM x, SCM p);
@@ -57,7 +57,7 @@ SCM memq (SCM x, SCM a);
 SCM equal2_p (SCM a, SCM b);
 SCM last_pair (SCM x);
 SCM pair_p (SCM x);
-/* src/math.mes */
+/* src/math.c */
 SCM greater_p (SCM x);
 SCM less_p (SCM x);
 SCM is_p (SCM x);
@@ -71,12 +71,11 @@ SCM logior (SCM x);
 SCM lognot (SCM x);
 SCM logxor (SCM x);
 SCM ash (SCM n, SCM count);
-/* src/mes.mes */
+/* src/mes.c */
 SCM make_cell_ (SCM type, SCM car, SCM cdr);
 SCM type_ (SCM x);
 SCM car_ (SCM x);
 SCM cdr_ (SCM x);
-SCM arity_ (SCM x);
 SCM cons (SCM x, SCM y);
 SCM car (SCM x);
 SCM cdr (SCM x);
@@ -91,7 +90,6 @@ SCM append2 (SCM x, SCM y);
 SCM append_reverse (SCM x, SCM y);
 SCM reverse_x_ (SCM x, SCM t);
 SCM pairlis (SCM x, SCM y, SCM a);
-SCM call (SCM fn, SCM x);
 SCM assq (SCM x, SCM a);
 SCM assoc (SCM x, SCM a);
 SCM set_car_x (SCM x, SCM e);
@@ -100,13 +98,13 @@ SCM set_env_x (SCM x, SCM e, SCM a);
 SCM macro_get_handle (SCM name);
 SCM add_formals (SCM formals, SCM x);
 SCM eval_apply ();
-/* src/module.mes */
+/* src/module.c */
 SCM make_module_type ();
 SCM module_printer (SCM module);
 SCM module_variable (SCM module, SCM name);
 SCM module_ref (SCM module, SCM name);
 SCM module_define_x (SCM module, SCM name, SCM value);
-/* src/posix.mes */
+/* src/posix.c */
 SCM peek_byte ();
 SCM read_byte ();
 SCM unread_byte (SCM i);
@@ -127,7 +125,6 @@ SCM current_error_port ();
 SCM open_output_file (SCM x);
 SCM set_current_output_port (SCM port);
 SCM set_current_error_port (SCM port);
-SCM force_output (SCM p);
 SCM chmod_ (SCM file_name, SCM mode);
 SCM isatty_p (SCM port);
 SCM primitive_fork ();
@@ -140,7 +137,7 @@ SCM getcwd_ ();
 SCM dup_ (SCM port);
 SCM dup2_ (SCM old, SCM new);
 SCM delete_file (SCM file_name);
-/* src/reader.mes */
+/* src/reader.c */
 SCM read_input_file_env_ (SCM e, SCM a);
 SCM read_input_file_env (SCM a);
 SCM read_env (SCM a);
@@ -150,7 +147,7 @@ SCM reader_read_binary ();
 SCM reader_read_octal ();
 SCM reader_read_hex ();
 SCM reader_read_string ();
-/* src/strings.mes */
+/* src/string.c */
 SCM string_equal_p (SCM a, SCM b);
 SCM symbol_to_string (SCM symbol);
 SCM symbol_to_keyword (SCM symbol);
@@ -163,12 +160,12 @@ SCM read_string (SCM port);
 SCM string_append (SCM x);
 SCM string_length (SCM string);
 SCM string_ref (SCM str, SCM k);
-/* src/struct.mes */
+/* src/struct.c */
 SCM make_struct (SCM type, SCM fields, SCM printer);
 SCM struct_length (SCM x);
 SCM struct_ref (SCM x, SCM i);
 SCM struct_set_x (SCM x, SCM i, SCM e);
-/* src/vector.mes */
+/* src/vector.c */
 SCM make_vector_ (SCM n);
 SCM vector_length (SCM x);
 SCM vector_ref (SCM x, SCM i);
