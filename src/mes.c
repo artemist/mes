@@ -28,6 +28,8 @@
 #include <string.h>
 #include <string.h>
 
+// char const *MES_PKGDATADIR = "mes";
+
 SCM
 alloc (long n)
 {

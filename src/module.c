@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -24,20 +24,19 @@
 #include <assert.h>
 
 SCM
-make_module_type ()             ///(internal))
+make_module_type ()             /*:(internal)) */
 {
-  SCM record_type = cell_symbol_record_type;    // FIXME
   SCM fields = cell_nil;
   fields = cons (cstring_to_symbol ("globals"), fields);
   fields = cons (cstring_to_symbol ("locals"), fields);
   fields = cons (cstring_to_symbol ("name"), fields);
   fields = cons (fields, cell_nil);
   fields = cons (cell_symbol_module, fields);
-  return make_struct (record_type, fields, cell_unspecified);
+  return make_struct (cell_symbol_record_type, fields, cell_unspecified);
 }
 
 SCM
-make_initial_module (SCM a)     ///((internal))
+make_initial_module (SCM a)     /*:((internal)) */
 {
   SCM module_type = make_module_type ();
   a = acons (cell_symbol_module, module_type, a);
@@ -71,7 +70,6 @@ make_initial_module (SCM a)     ///((internal))
 SCM
 module_printer (SCM module)
 {
-  //module = m0;
   fdputs ("#<", __stdout);
   display_ (struct_ref_ (module, 2));
   fdputc (' ', __stdout);
@@ -90,7 +88,7 @@ module_printer (SCM module)
 SCM
 module_variable (SCM module, SCM name)
 {
-  //SCM locals = struct_ref_ (module, 3);
+  /*SCM locals = struct_ref_ (module, 3);*/
   SCM locals = module;
   SCM x = assq (name, locals);
   if (x == cell_f)
