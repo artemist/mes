@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -50,11 +50,13 @@ list_to_cstring (SCM list, size_t *size)
     {
       if (i > MAX_STRING)
         assert_max_string (i, "list_to_string", g_buf);
-      g_buf[i++] = VALUE (car (list));
+      g_buf[i] = VALUE (car (list));
+      i = i + 1;
       list = cdr (list);
     }
   g_buf[i] = 0;
-  *size = i;
+  size[0] = i;
+
   return g_buf;
 }
 
@@ -71,11 +73,17 @@ make_bytes (char const *s, size_t length)
   SCM x = alloc (size);
   TYPE (x) = TBYTES;
   LENGTH (x) = length;
-  char *p = (char *) &g_cells[x].cdr;
-  if (!length)
-    *(char *) p = 0;
+#if __M2_PLANET__
+  char *p = &g_cells[x];
+  p = p + 2 * sizeof (SCM);
+#else
+  char *p = &CDR (x);
+#endif
+  if (length == 0)
+    p[0] = 0;
   else
     memcpy (p, s, length + 1);
+
   return x;
 }
 
@@ -83,7 +91,7 @@ SCM
 make_string (char const *s, size_t length)
 {
   if (length > MAX_STRING)
-    assert_max_string (length, "make_string", (char *) s);
+    assert_max_string (length, "make_string", s);
   SCM x = make_cell__ (TSTRING, length, 0);
   SCM v = make_bytes (s, length);
   CDR (x) = v;
@@ -91,7 +99,7 @@ make_string (char const *s, size_t length)
 }
 
 SCM
-string_equal_p (SCM a, SCM b)   ///((name . "string=?"))
+string_equal_p (SCM a, SCM b)   /*:((name . "string=?")) */
 {
   if (!((TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD)))
     {
@@ -111,9 +119,10 @@ string_equal_p (SCM a, SCM b)   ///((name . "string=?"))
     }
   if (a == b
       || STRING (a) == STRING (b)
-      || (!LENGTH (a) && !LENGTH (b))
+      || (LENGTH (a) == 0 && LENGTH (b) == 0)
       || (LENGTH (a) == LENGTH (b) && !memcmp (CSTRING (a), CSTRING (b), LENGTH (a))))
     return cell_t;
+
   return cell_f;
 }
 
@@ -156,8 +165,9 @@ SCM
 bytes_to_list (char const *s, size_t i)
 {
   SCM p = cell_nil;
-  while (i--)
+  while (i != 0)
     {
+      i = i - 1;
       int c = (0x100 + s[i]) % 0x100;
       p = cons (MAKE_CHAR (c), p);
     }
@@ -192,7 +202,7 @@ list_to_string (SCM list)
 }
 
 SCM
-read_string (SCM port)          ///((arity . n))
+read_string (SCM port)          /*:((arity . n)) */
 {
   int fd = __stdin;
   if (TYPE (port) == TPAIR && TYPE (car (port)) == TNUMBER)
@@ -203,7 +213,8 @@ read_string (SCM port)          ///((arity . n))
     {
       if (i > MAX_STRING)
         assert_max_string (i, "read_string", g_buf);
-      g_buf[i++] = c;
+      g_buf[i] = c;
+      i = i + 1;
       c = readchar ();
     }
   g_buf[i] = 0;
@@ -212,7 +223,7 @@ read_string (SCM port)          ///((arity . n))
 }
 
 SCM
-string_append (SCM x)           ///((arity . n))
+string_append (SCM x)           /*:((arity . n)) */
 {
   char *p = g_buf;
   g_buf[0] = 0;
@@ -222,8 +233,8 @@ string_append (SCM x)           ///((arity . n))
       SCM string = CAR (x);
       assert (TYPE (string) == TSTRING);
       memcpy (p, CSTRING (string), LENGTH (string) + 1);
-      p += LENGTH (string);
-      size += LENGTH (string);
+      p = p + LENGTH (string);
+      size = size + LENGTH (string);
       if (size > MAX_STRING)
         assert_max_string (size, "string_append", g_buf);
       x = CDR (x);
