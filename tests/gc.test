@@ -1,3 +1,15 @@
+#! /bin/sh
+# -*-scheme-*-
+MES_ARENA=10000
+MES_MAX_ARENA=$MES_ARENA
+export MES_ARENA
+export MES_MAX_ARENA
+if [ "$MES" != guile ]; then
+    MES_BOOT=$0 exec ${MES-mes}
+fi
+exec ${MES-mes} --no-auto-compile -L ${0%/*} -L module -C module -e '(tests boot)' -s "$0" "$@"
+!#
+
 ;;; GNU Mes --- Maxwell Equations of Software
 ;;; Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;

@@ -27,6 +27,7 @@ tests/boot.test
 tests/read.test
 tests/srfi-0.test
 tests/macro.test
+tests/gc.test
 tests/perform.test
 tests/base.test
 tests/quasiquote.test
