@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -24,7 +24,9 @@ size_t
 strlen (char const *s)
 {
   int i = 0;
-  while (s[i])
-    i++;
+
+  while (s[i] != 0)
+    i = i + 1;
+
   return i;
 }
