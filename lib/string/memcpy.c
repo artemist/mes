@@ -21,12 +21,24 @@
 #include <mes/lib.h>
 #include <string.h>
 
+char *
+_memcpy (char *dest, char const *src, size_t n)
+{
+  char *p = dest;
+
+  while (n != 0)
+    {
+      n = n - 1;
+      dest[0] = src[0];
+      dest = dest + 1;
+      src = src + 1;
+    }
+
+  return p;
+}
+
 void *
 memcpy (void *dest, void const *src, size_t n)
 {
-  char *p = dest;
-  char const *q = src;
-  while (n--)
-    *p++ = *q++;
-  return dest;
+  return _memcpy (dest, src, n);
 }
