@@ -28,5 +28,5 @@ __assert_fail (char *s)
   eputs ("\n");
   char *fail = s;
   fail = 0;
-  *fail = 0;
+  fail[0] = 0;
 }
