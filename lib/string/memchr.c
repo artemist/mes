@@ -24,11 +24,14 @@ void *
 memchr (void const *block, int c, size_t size)
 {
   char const *p = block;
-  while (size--)
+
+  while (size != 0)
     {
-      if (c == *p)
-        return (void *) p;
-      p++;
+      size = size - 1;
+      if (c == p[0])
+        return p;
+      p = p + 1;
     }
+
   return 0;
 }
