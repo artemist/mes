@@ -19,12 +19,14 @@
  */
 
 #include <mes/lib.h>
+#include <errno.h>
 #include <limits.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/resource.h>
 #include <unistd.h>
 
-int __ungetc_buf[__FILEDES_MAX + 1] = { 0 };
+int *__ungetc_buf;
 
 int
 __ungetc_p (int filedes)
@@ -35,8 +37,13 @@ __ungetc_p (int filedes)
 void
 __ungetc_init ()
 {
-  if (__ungetc_buf[__FILEDES_MAX] == 0)
-    memset (__ungetc_buf, -1, (__FILEDES_MAX + 1) * sizeof (int));
+  if (__ungetc_buf == 0)
+    {
+      int save_errno = errno;
+      __ungetc_buf = malloc ((__FILEDES_MAX + 1) * sizeof (int));
+      errno = save_errno;
+      memset (__ungetc_buf, -1, (__FILEDES_MAX + 1) * sizeof (int));
+    }
 }
 
 void
@@ -65,10 +72,10 @@ fdgetc (int fd)
       int r = read (fd, &c, 1);
       if (r < 1)
         return -1;
-      i = (int) c;
+      i = c;
     }
   if (i < 0)
-    i += 256;
+    i = i + 256;
 
   return i;
 }
