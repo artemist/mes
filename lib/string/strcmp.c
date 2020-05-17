@@ -23,10 +23,11 @@
 int
 strcmp (char const *a, char const *b)
 {
-  while (*a && *b && *a == *b)
+  while (a[0] != 0 && b[0] != 0 && a[0] == b[0])
     {
-      a++;
-      b++;
+      a = a + 1;
+      b = b + 1;
     }
-  return *a - *b;
+
+  return a[0] - b[0];
 }
