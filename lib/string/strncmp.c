@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -23,12 +23,15 @@
 int
 strncmp (char const *a, char const *b, size_t size)
 {
-  if (!size)
+  if (size == 0)
     return 0;
-  while (*a && *b && *a == *b && --size)
+
+  while (a[0] != 0 && b[0] != 0 && a[0] == b[0] && size > 1)
     {
-      a++;
-      b++;
+      size = size - 1;
+      a = a + 1;
+      b = b + 1;
     }
-  return *a - *b;
+
+  return a[0] - b[0];
 }
