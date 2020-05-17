@@ -443,5 +443,6 @@ src/posix.c
 src/reader.c
 src/string.c
 src/struct.c
+src/symbol.c
 src/vector.c
 "

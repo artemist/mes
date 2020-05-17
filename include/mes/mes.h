@@ -32,6 +32,7 @@ struct scm
 };
 
 /* mes */
+char *g_datadir;
 int g_debug;
 char *g_buf;
 SCM g_continuations;
@@ -85,6 +86,7 @@ SCM gc_init ();
 SCM gc_peek_frame ();
 SCM gc_pop_frame ();
 SCM gc_push_frame ();
+SCM init_symbols ();
 SCM init_time (SCM a);
 SCM make_builtin_type ();
 SCM make_bytes (char const *s, size_t length);

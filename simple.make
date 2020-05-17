@@ -60,6 +60,7 @@ MES_SOURCES =					\
  src/reader.c					\
  src/string.c					\
  src/struct.c					\
+ src/symbol.c					\
  src/vector.c
 
 LIB_SOURCES =					\
@@ -110,7 +111,8 @@ M2_PLANET_INCLUDES =				\
  include/mes/mes.h				\
  include/mes/m2.h				\
  include/mes/builtins.h				\
- include/mes/constants.h
+ include/mes/constants.h			\
+ include/mes/symbols.h
 
 M2_PLANET_PREFIX = ../M2-Planet
 M2_PLANET_SOURCES =						\

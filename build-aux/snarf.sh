@@ -37,6 +37,7 @@ trace "SNARF$snarf  posix.c"      ${srcdest}build-aux/mes-snarf.scm src/posix.c
 trace "SNARF$snarf  reader.c"     ${srcdest}build-aux/mes-snarf.scm src/reader.c
 trace "SNARF$snarf  strings.c"    ${srcdest}build-aux/mes-snarf.scm src/string.c
 trace "SNARF$snarf  struct.c"     ${srcdest}build-aux/mes-snarf.scm src/struct.c
+trace "SNARF$snarf  symbol.c"     ${srcdest}build-aux/mes-snarf.scm src/symbol.c
 trace "SNARF$snarf  vector.c"     ${srcdest}build-aux/mes-snarf.scm src/vector.c
 
 for i in src/*.symbols.h; do
