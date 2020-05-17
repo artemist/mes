@@ -117,26 +117,21 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "builtin-arity", 1, &builtin_arity, a);
   a = init_builtin (builtin_type, "builtin?", 1, &builtin_p, a);
   a = init_builtin (builtin_type, "builtin-printer", 1, &builtin_printer, a);
+  /* src/display.c */
+  a = init_builtin (builtin_type, "core:display", 1, &display_, a);
+  a = init_builtin (builtin_type, "core:display-error", 1, &display_error_, a);
+  a = init_builtin (builtin_type, "core:display-port", 2, &display_port_, a);
+  a = init_builtin (builtin_type, "core:write", 1, &write_, a);
+  a = init_builtin (builtin_type, "core:write-error", 1, &write_error_, a);
+  a = init_builtin (builtin_type, "core:write-port", 2, &write_port_, a);
   /* src/eval-apply.c */
-  a = init_builtin (builtin_type, "assert-defined", 2, &assert_defined, a);
-  a = init_builtin (builtin_type, "check-formals", 3, &check_formals, a);
-  a = init_builtin (builtin_type, "check-apply", 2, &check_apply, a);
   a = init_builtin (builtin_type, "pairlis", 3, &pairlis, a);
   a = init_builtin (builtin_type, "set-car!", 2, &set_car_x, a);
   a = init_builtin (builtin_type, "set-cdr!", 2, &set_cdr_x, a);
   a = init_builtin (builtin_type, "set-env!", 3, &set_env_x, a);
-  a = init_builtin (builtin_type, "call-lambda", 4, &call_lambda, a);
-  a = init_builtin (builtin_type, "core:make-closure", 3, &make_closure_, a);
-  a = init_builtin (builtin_type, "core:make-variable", 1, &make_variable_, a);
   a = init_builtin (builtin_type, "macro-get-handle", 1, &macro_get_handle, a);
-  a = init_builtin (builtin_type, "get-macro", 1, &get_macro, a);
-  a = init_builtin (builtin_type, "macro-set!", 2, &macro_set_x, a);
-  a = init_builtin (builtin_type, "push-cc", 4, &push_cc, a);
   a = init_builtin (builtin_type, "add-formals", 2, &add_formals, a);
-  a = init_builtin (builtin_type, "expand-variable", 2, &expand_variable, a);
-  a = init_builtin (builtin_type, "apply-builtin", 2, &apply_builtin, a);
   a = init_builtin (builtin_type, "eval-apply", 0, &eval_apply, a);
-  a = init_builtin (builtin_type, "apply", 3, &apply, a);
   /* src/gc.c */
   a = init_builtin (builtin_type, "gc-check", 0, &gc_check, a);
   a = init_builtin (builtin_type, "gc", 0, &gc, a);
@@ -151,12 +146,6 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "hash-table-printer", 1, &hash_table_printer, a);
   a = init_builtin (builtin_type, "make-hash-table", 1, &make_hash_table, a);
   /* src/lib.c */
-  a = init_builtin (builtin_type, "core:display", 1, &display_, a);
-  a = init_builtin (builtin_type, "core:display-error", 1, &display_error_, a);
-  a = init_builtin (builtin_type, "core:display-port", 2, &display_port_, a);
-  a = init_builtin (builtin_type, "core:write", 1, &write_, a);
-  a = init_builtin (builtin_type, "core:write-error", 1, &write_error_, a);
-  a = init_builtin (builtin_type, "core:write-port", 2, &write_port_, a);
   a = init_builtin (builtin_type, "exit", 1, &exit_, a);
   a = init_builtin (builtin_type, "frame-printer", 1, &frame_printer, a);
   a = init_builtin (builtin_type, "make-stack", -1, &make_stack, a);
@@ -202,6 +191,7 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "assq", 2, &assq, a);
   a = init_builtin (builtin_type, "assoc", 2, &assoc, a);
   /* src/module.c */
+  a = init_builtin (builtin_type, "make-module-type", 0, &make_module_type, a);
   a = init_builtin (builtin_type, "module-printer", 1, &module_printer, a);
   a = init_builtin (builtin_type, "module-variable", 2, &module_variable, a);
   a = init_builtin (builtin_type, "module-ref", 2, &module_ref, a);
@@ -233,7 +223,9 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "execl", 2, &execl_, a);
   a = init_builtin (builtin_type, "core:waitpid", 2, &waitpid_, a);
   a = init_builtin (builtin_type, "current-time", 0, &current_time, a);
+  a = init_builtin (builtin_type, "gettimeofday", 0, &gettimeofday_, a);
   a = init_builtin (builtin_type, "get-internal-run-time", 0, &get_internal_run_time, a);
+  a = init_builtin (builtin_type, "getcwd", 0, &getcwd_, a);
   a = init_builtin (builtin_type, "dup", 1, &dup_, a);
   a = init_builtin (builtin_type, "dup2", 2, &dup2_, a);
   a = init_builtin (builtin_type, "delete-file", 1, &delete_file, a);

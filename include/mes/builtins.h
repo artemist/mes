@@ -27,6 +27,13 @@ SCM builtin_name (SCM builtin);
 SCM builtin_arity (SCM builtin);
 SCM builtin_p (SCM x);
 SCM builtin_printer (SCM builtin);
+/* src/display.c */
+SCM display_ (SCM x);
+SCM display_error_ (SCM x);
+SCM display_port_ (SCM x, SCM p);
+SCM write_ (SCM x);
+SCM write_error_ (SCM x);
+SCM write_port_ (SCM x, SCM p);
 /* src/eval-apply.c */
 SCM pairlis (SCM x, SCM y, SCM a);
 SCM set_car_x (SCM x, SCM e);
@@ -49,12 +56,6 @@ SCM hash_set_x (SCM table, SCM key, SCM value);
 SCM hash_table_printer (SCM table);
 SCM make_hash_table (SCM x);
 /* src/lib.c */
-SCM display_ (SCM x);
-SCM display_error_ (SCM x);
-SCM display_port_ (SCM x, SCM p);
-SCM write_ (SCM x);
-SCM write_error_ (SCM x);
-SCM write_port_ (SCM x, SCM p);
 SCM exit_ (SCM x);
 SCM frame_printer (SCM frame);
 SCM make_stack (SCM stack);
