@@ -129,10 +129,10 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "set-car!", 2, &set_car_x, a);
   a = init_builtin (builtin_type, "set-cdr!", 2, &set_cdr_x, a);
   a = init_builtin (builtin_type, "set-env!", 3, &set_env_x, a);
-  a = init_builtin (builtin_type, "macro-get-handle", 1, &macro_get_handle, a);
   a = init_builtin (builtin_type, "add-formals", 2, &add_formals, a);
   a = init_builtin (builtin_type, "eval-apply", 0, &eval_apply, a);
   /* src/gc.c */
+  a = init_builtin (builtin_type, "cons", 2, &cons, a);
   a = init_builtin (builtin_type, "gc-check", 0, &gc_check, a);
   a = init_builtin (builtin_type, "gc", 0, &gc, a);
   /* src/hash.c */
@@ -156,6 +156,8 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "equal2?", 2, &equal2_p, a);
   a = init_builtin (builtin_type, "last-pair", 1, &last_pair, a);
   a = init_builtin (builtin_type, "pair?", 1, &pair_p, a);
+  a = init_builtin (builtin_type, "char->integer", 1, &char_to_integer, a);
+  a = init_builtin (builtin_type, "integer->char", 1, &integer_to_char, a);
   /* src/math.c */
   a = init_builtin (builtin_type, ">", -1, &greater_p, a);
   a = init_builtin (builtin_type, "<", -1, &less_p, a);
@@ -171,11 +173,9 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "logxor", -1, &logxor, a);
   a = init_builtin (builtin_type, "ash", 2, &ash, a);
   /* src/mes.c */
-  a = init_builtin (builtin_type, "core:make-cell", 3, &make_cell_, a);
   a = init_builtin (builtin_type, "core:type", 1, &type_, a);
   a = init_builtin (builtin_type, "core:car", 1, &car_, a);
   a = init_builtin (builtin_type, "core:cdr", 1, &cdr_, a);
-  a = init_builtin (builtin_type, "cons", 2, &cons, a);
   a = init_builtin (builtin_type, "car", 1, &car, a);
   a = init_builtin (builtin_type, "cdr", 1, &cdr, a);
   a = init_builtin (builtin_type, "list", -1, &list, a);

@@ -26,7 +26,7 @@ make_struct (SCM type, SCM fields, SCM printer)
 {
   long size = 2 + length__ (fields);
   SCM v = alloc (size);
-  SCM x = make_cell__ (TSTRUCT, size, v);
+  SCM x = make_cell (TSTRUCT, size, v);
   SCM vt = vector_entry (type);
   TYPE (v) = TYPE (vt);
   CAR (v) = CAR (vt);

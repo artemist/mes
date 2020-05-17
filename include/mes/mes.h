@@ -90,7 +90,7 @@ SCM init_symbols ();
 SCM init_time (SCM a);
 SCM make_builtin_type ();
 SCM make_bytes (char const *s, size_t length);
-SCM make_cell__ (long type, SCM car, SCM cdr);
+SCM make_cell (long type, SCM car, SCM cdr);
 SCM make_hash_table_ (long size);
 SCM make_hashq_type ();
 SCM make_initial_module (SCM a);

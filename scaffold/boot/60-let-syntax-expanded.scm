@@ -46,9 +46,6 @@
   (if (null? rest) (core:write x)
       (core:write-port x (car rest))))
 
-(define (integer->char x)
-  (core:make-cell <cell:character> 0 x))
-
 (define (newline . rest)
   (core:display (list->string (list (integer->char 10)))))
 

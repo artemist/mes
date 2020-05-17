@@ -202,3 +202,15 @@ pair_p (SCM x)
     return cell_t;
   return cell_f;
 }
+
+SCM
+char_to_integer (SCM x)
+{
+  return MAKE_NUMBER (VALUE (x));
+}
+
+SCM
+integer_to_char (SCM x)
+{
+  return MAKE_CHAR (VALUE (x));
+}

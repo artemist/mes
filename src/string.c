@@ -90,7 +90,7 @@ make_string (char const *s, size_t length)
 {
   if (length > MAX_STRING)
     assert_max_string (length, "make_string", s);
-  SCM x = make_cell__ (TSTRING, length, 0);
+  SCM x = make_cell (TSTRING, length, 0);
   SCM v = make_bytes (s, length);
   CDR (x) = v;
   return x;
@@ -127,19 +127,19 @@ string_equal_p (SCM a, SCM b)   /*:((name . "string=?")) */
 SCM
 symbol_to_string (SCM symbol)
 {
-  return make_cell__ (TSTRING, CAR (symbol), CDR (symbol));
+  return make_cell (TSTRING, CAR (symbol), CDR (symbol));
 }
 
 SCM
 symbol_to_keyword (SCM symbol)
 {
-  return make_cell__ (TKEYWORD, CAR (symbol), CDR (symbol));
+  return make_cell (TKEYWORD, CAR (symbol), CDR (symbol));
 }
 
 SCM
 keyword_to_string (SCM keyword)
 {
-  return make_cell__ (TSTRING, CAR (keyword), CDR (keyword));
+  return make_cell (TSTRING, CAR (keyword), CDR (keyword));
 }
 
 SCM
@@ -154,7 +154,7 @@ string_to_symbol (SCM string)
 SCM
 make_symbol (SCM string)
 {
-  SCM x = make_cell__ (TSYMBOL, LENGTH (string), STRING (string));
+  SCM x = make_cell (TSYMBOL, LENGTH (string), STRING (string));
   hash_set_x (g_symbols, string, x);
   return x;
 }

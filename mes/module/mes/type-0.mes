@@ -119,9 +119,3 @@
 
 (define (symbol->list s)
   (string->list (symbol->string s)))
-
-(define (integer->char x)
-  (core:make-cell <cell:char> 0 x))
-
-(define (char->integer x)
-  (core:make-cell <cell:number> 0 x))

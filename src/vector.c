@@ -25,7 +25,7 @@ SCM
 make_vector__ (long k)
 {
   SCM v = alloc (k);
-  SCM x = make_cell__ (TVECTOR, k, v);
+  SCM x = make_cell (TVECTOR, k, v);
   long i;
   for (i = 0; i < k; i = i + 1)
     g_cells[v + i] = g_cells[vector_entry (cell_unspecified)];

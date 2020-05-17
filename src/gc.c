@@ -88,6 +88,35 @@ gc_init_news ()                 /*:((internal)) */
 }
 
 SCM
+alloc (long n)
+{
+  SCM x = g_free;
+  g_free = g_free + n;
+  if (g_free > ARENA_SIZE)
+    assert_msg (0, "alloc: out of memory");
+  return x;
+}
+
+SCM
+make_cell (long type, SCM car, SCM cdr)
+{
+  SCM x = g_free;
+  g_free = g_free + 1;
+  if (g_free > ARENA_SIZE)
+    assert_msg (0, "alloc: out of memory");
+  TYPE (x) = type;
+  CAR (x) = car;
+  CDR (x) = cdr;
+  return x;
+}
+
+SCM
+cons (SCM x, SCM y)
+{
+  return make_cell (TPAIR, x, y);
+}
+
+SCM
 gc_up_arena ()                  /*:((internal)) */
 {
   long old_arena_bytes = (ARENA_SIZE + JAM_SIZE) * sizeof (struct scm);

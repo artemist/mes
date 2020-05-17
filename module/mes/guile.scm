@@ -42,7 +42,6 @@
             core:display-port
             core:exit
             core:macro-expand
-            core:make-cell
             core:write
             core:write-error
             core:write-port
@@ -105,9 +104,7 @@
           ((guile:string? x) <cell:string>)
           ((guile:symbol? x) <cell:symbol>)))
   (define (core:car x)
-    (cond ((guile:string? x) (string->list x))))
-  (define (core:make-cell type car cdr)
-    (cond ((eq? type <cell:string>) (list->string car)))))
+    (cond ((guile:string? x) (string->list x)))))
  (mes))
 
 (cond-expand

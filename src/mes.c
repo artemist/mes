@@ -30,46 +30,6 @@
 // char const *MES_PKGDATADIR = "mes";
 
 SCM
-alloc (long n)
-{
-  SCM x = g_free;
-  g_free = g_free + n;
-  if (g_free > ARENA_SIZE)
-    assert_msg (0, "alloc: out of memory");
-  return x;
-}
-
-SCM
-make_cell__ (long type, SCM car, SCM cdr)
-{
-  SCM x = alloc (1);
-  TYPE (x) = type;
-  CAR (x) = car;
-  CDR (x) = cdr;
-  return x;
-}
-
-SCM
-make_cell_ (SCM type, SCM car, SCM cdr)
-{
-  assert_msg (TYPE (type) == TNUMBER, "TYPE (type) == TNUMBER");
-  long t = VALUE (type);
-  if (t == TCHAR || t == TNUMBER)
-    {
-      if (car != 0)
-        car = CAR (car);
-      else
-        car = 0;
-      if (cdr != 0)
-        cdr = CDR (cdr);
-      else
-        cdr = 0;
-      return make_cell__ (t, car, cdr);
-    }
-  return make_cell__ (t, car, cdr);
-}
-
-SCM
 assoc_string (SCM x, SCM a)     /*:((internal)) */
 {
   while (a != cell_nil && (TYPE (CAAR (a)) != TSTRING || string_equal_p (x, CAAR (a)) == cell_f))
@@ -107,12 +67,6 @@ cdr_ (SCM x)
           || TYPE (CDR (x)) == TSPECIAL || TYPE (CDR (x)) == TSYMBOL || TYPE (CDR (x)) == TSTRING))
     return CDR (x);
   return MAKE_NUMBER (CDR (x));
-}
-
-SCM
-cons (SCM x, SCM y)
-{
-  return make_cell__ (TPAIR, x, y);
 }
 
 SCM

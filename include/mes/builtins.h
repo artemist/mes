@@ -66,7 +66,9 @@ SCM memq (SCM x, SCM a);
 SCM equal2_p (SCM a, SCM b);
 SCM last_pair (SCM x);
 SCM pair_p (SCM x);
-/* src/math.c */
+SCM char_to_integer (SCM x);
+SCM integer_to_char (SCM x);
+/* src/math.mes */
 SCM greater_p (SCM x);
 SCM less_p (SCM x);
 SCM is_p (SCM x);
@@ -100,6 +102,11 @@ SCM append_reverse (SCM x, SCM y);
 SCM reverse_x_ (SCM x, SCM t);
 SCM assq (SCM x, SCM a);
 SCM assoc (SCM x, SCM a);
+SCM set_car_x (SCM x, SCM e);
+SCM set_cdr_x (SCM x, SCM e);
+SCM set_env_x (SCM x, SCM e, SCM a);
+SCM add_formals (SCM formals, SCM x);
+SCM eval_apply ();
 /* src/module.c */
 SCM make_module_type ();
 SCM module_printer (SCM module);

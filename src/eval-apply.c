@@ -145,17 +145,17 @@ call_lambda (SCM e, SCM x, SCM aa, SCM a)       /*:((internal)) */
 SCM
 make_closure_ (SCM args, SCM body, SCM a)       /*:((internal)) */
 {
-  return make_cell__ (TCLOSURE, cell_f, cons (cons (cell_circular, a), cons (args, body)));
+  return make_cell (TCLOSURE, cell_f, cons (cons (cell_circular, a), cons (args, body)));
 }
 
 SCM
 make_variable_ (SCM var)        /*:((internal)) */
 {
-  return make_cell__ (TVARIABLE, var, 0);
+  return make_cell (TVARIABLE, var, 0);
 }
 
 SCM
-macro_get_handle (SCM name)
+macro_get_handle (SCM name)     /*:((internal)) */
 {
   if (TYPE (name) == TSYMBOL)
     return hashq_get_handle (g_macros, name, cell_nil);
