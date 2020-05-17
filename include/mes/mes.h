@@ -40,15 +40,15 @@ SCM g_symbols;
 SCM g_symbol_max;
 
 /* a/env */
-SCM r0;
+SCM R0;
 /* param 1 */
-SCM r1;
+SCM R1;
 /* save 2 */
-SCM r2;
+SCM R2;
 /* continuation */
-SCM r3;
+SCM R3;
 /* current-module */
-SCM m0;
+SCM M0;
 /* macro */
 SCM g_macros;
 SCM g_ports;

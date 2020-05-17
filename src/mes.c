@@ -201,8 +201,8 @@ error (SCM key, SCM x)
 {
 #if !__MESC_MES__
   SCM throw;
-  if ((throw = module_ref (r0, cell_symbol_throw)) != cell_undefined)
-    return apply (throw, cons (key, cons (x, cell_nil)), r0);
+  if ((throw = module_ref (R0, cell_symbol_throw)) != cell_undefined)
+    return apply (throw, cons (key, cons (x, cell_nil)), R0);
 #endif
   display_error_ (key);
   eputs (": ");
@@ -304,11 +304,11 @@ SCM
 mes_g_stack (SCM a)             /*:((internal)) */
 {
   g_stack = STACK_SIZE;
-  r0 = a;
-  r1 = MAKE_CHAR (0);
-  r2 = MAKE_CHAR (0);
-  r3 = MAKE_CHAR (0);
-  return r0;
+  R0 = a;
+  R1 = MAKE_CHAR (0);
+  R2 = MAKE_CHAR (0);
+  R3 = MAKE_CHAR (0);
+  return R0;
 }
 
 SCM
@@ -423,9 +423,9 @@ open_boot ()
 SCM
 read_boot ()                    /*:((internal)) */
 {
-  r2 = read_input_file_env (r0);
+  R2 = read_input_file_env (R0);
   __stdin = STDIN;
-  return r2;
+  return R2;
 }
 
 void
@@ -456,14 +456,14 @@ main (int argc, char **argv, char **envp)
   SCM a = mes_environment (argc, argv);
   a = mes_builtins (a);
   a = init_time (a);
-  m0 = make_initial_module (a);
+  M0 = make_initial_module (a);
   g_macros = make_hash_table_ (0);
 
   if (g_debug > 5)
-    module_printer (m0);
+    module_printer (M0);
 
   SCM program = read_boot ();
-  push_cc (r2, cell_unspecified, r0, cell_unspecified);
+  push_cc (R2, cell_unspecified, R0, cell_unspecified);
 
   if (g_debug > 2)
     {
@@ -474,20 +474,20 @@ main (int argc, char **argv, char **envp)
   if (g_debug > 3)
     {
       eputs ("program: ");
-      write_error_ (r1);
+      write_error_ (R1);
       eputs ("\n");
     }
-  r3 = cell_vm_begin_expand;
-  r1 = eval_apply ();
+  R3 = cell_vm_begin_expand;
+  R1 = eval_apply ();
   if (g_debug != 0)
     {
-      write_error_ (r1);
+      write_error_ (R1);
       eputs ("\n");
     }
   if (g_debug != 0)
     {
       if (g_debug > 5)
-        module_printer (m0);
+        module_printer (M0);
 
       eputs ("\ngc stats: [");
       eputs (itoa (g_free));

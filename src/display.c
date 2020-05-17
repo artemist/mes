@@ -198,7 +198,7 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
       if (TYPE (printer) == TREF)
         printer = REF (printer);
       if (TYPE (printer) == TCLOSURE || builtin_p (printer) == cell_t)
-        apply (printer, cons (x, cell_nil), r0);
+        apply (printer, cons (x, cell_nil), R0);
       else
         {
           fdputs ("#<", fd);

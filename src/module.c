@@ -52,10 +52,10 @@ make_initial_module (SCM a)     /*:((internal)) */
   values = cons (name, values);
   values = cons (cell_symbol_module, values);
   SCM module = make_struct (module_type, values, cstring_to_symbol ("module-printer"));
-  r0 = cell_nil;
-  r0 = cons (CADR (a), r0);
-  r0 = cons (CAR (a), r0);
-  m0 = module;
+  R0 = cell_nil;
+  R0 = cons (CADR (a), R0);
+  R0 = cons (CAR (a), R0);
+  M0 = module;
   while (TYPE (a) == TPAIR)
     {
       module_define_x (module, CAAR (a), CDAR (a));
@@ -91,7 +91,7 @@ module_variable (SCM module, SCM name)
   SCM x = assq (name, locals);
   if (x == cell_f)
     {
-      module = m0;
+      module = M0;
       SCM globals = struct_ref_ (module, 5);
       x = hashq_get_handle (globals, name, cell_f);
     }
@@ -110,7 +110,7 @@ module_ref (SCM module, SCM name)
 SCM
 module_define_x (SCM module, SCM name, SCM value)
 {
-  module = m0;
+  module = M0;
   SCM globals = struct_ref_ (module, 5);
   return hashq_set_x (globals, name, value);
 }

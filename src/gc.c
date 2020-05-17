@@ -271,7 +271,7 @@ gc_ ()                          /*:((internal)) */
   g_symbols = gc_copy (g_symbols);
   g_macros = gc_copy (g_macros);
   g_ports = gc_copy (g_ports);
-  m0 = gc_copy (m0);
+  M0 = gc_copy (M0);
   for (i = g_stack; i < STACK_SIZE; i = i + 1)
     g_stack_array[i] = gc_copy (g_stack_array[i]);
   gc_loop (1);
@@ -286,7 +286,7 @@ gc ()
       write_error_ (g_symbols);
       eputs ("\n");
       eputs ("R0: ");
-      write_error_ (r0);
+      write_error_ (R0);
       eputs ("\n");
     }
   gc_push_frame ();
@@ -298,7 +298,7 @@ gc ()
       write_error_ (g_symbols);
       eputs ("\n");
       eputs ("R0: ");
-      write_error_ (r0);
+      write_error_ (R0);
       eputs ("\n");
     }
 }
@@ -309,10 +309,10 @@ gc_push_frame ()                /*:((internal)) */
   if (g_stack < 5)
     assert_msg (0, "STACK FULL");
   g_stack_array[g_stack - 1] = cell_f;
-  g_stack_array[g_stack - 2] = r0;
-  g_stack_array[g_stack - 3] = r1;
-  g_stack_array[g_stack - 4] = r2;
-  g_stack_array[g_stack - 5] = r3;
+  g_stack_array[g_stack - 2] = R0;
+  g_stack_array[g_stack - 3] = R1;
+  g_stack_array[g_stack - 4] = R2;
+  g_stack_array[g_stack - 5] = R3;
   g_stack = g_stack - 5;
   return g_stack;
 }
@@ -320,10 +320,10 @@ gc_push_frame ()                /*:((internal)) */
 SCM
 gc_peek_frame ()                /*:((internal)) */
 {
-  r3 = g_stack_array[g_stack];
-  r2 = g_stack_array[g_stack + 1];
-  r1 = g_stack_array[g_stack + 2];
-  r0 = g_stack_array[g_stack + 3];
+  R3 = g_stack_array[g_stack];
+  R2 = g_stack_array[g_stack + 1];
+  R1 = g_stack_array[g_stack + 2];
+  R0 = g_stack_array[g_stack + 3];
   return g_stack_array[g_stack + FRAME_PROCEDURE];
 }
 
