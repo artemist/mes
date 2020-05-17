@@ -1,4 +1,4 @@
-/* -*-comment-start: "//";comment-end:""-*-
+/*
  * GNU Mes --- Maxwell Equations of Software
  * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
@@ -22,16 +22,30 @@
 #include <string.h>
 #include <stdlib.h>
 
+// CONSTANT M2_PTR_SIZE 4
+#define M2_PTR_SIZE 1
+
 char *
 getenv (char const *s)
 {
+  /* eputs ("\ngetenv s="); eputs (s); eputs ("\n"); */
   char **p = environ;
   int length = strlen (s);
-  while (*p)
+
+  while (p[0] != 0)
     {
-      if (!strncmp (s, *p, length) && *(*p + length) == '=')
-        return (*p + length + 1);
-      p++;
+      /* eputs ("getenv p[0]="); eputs (p[0]); eputs ("\n"); */
+      if (strncmp (s, p[0], length) == 0)
+        {
+          /* eputs ("found!\n"); */
+          char *q = p[0] + length;
+          if (q[0] == '=')
+            return q + 1;
+        }
+      /* else */
+      /*   eputs ("not found!\n"); */
+      p = p + M2_PTR_SIZE;
     }
+
   return 0;
 }
