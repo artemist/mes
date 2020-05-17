@@ -62,6 +62,7 @@ MES_SOURCES =					\
 
 LIB_SOURCES =					\
  lib/mes/eputs.c				\
+ lib/mes/assert_msg.c				\
  lib/mes/itoa.c
 
 M2_SOURCES =					\

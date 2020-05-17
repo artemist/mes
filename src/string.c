@@ -21,8 +21,6 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-#include <assert.h>
-
 #include <limits.h>
 #include <string.h>
 
@@ -115,7 +113,7 @@ string_equal_p (SCM a, SCM b)   /*:((name . "string=?")) */
       eputs ("b= ");
       write_error_ (b);
       eputs ("\n");
-      assert ((TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD));
+      assert_msg ((TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD), "(TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD)");
     }
   if (a == b
       || STRING (a) == STRING (b)
@@ -231,7 +229,7 @@ string_append (SCM x)           /*:((arity . n)) */
   while (x != cell_nil)
     {
       SCM string = CAR (x);
-      assert (TYPE (string) == TSTRING);
+      assert_msg (TYPE (string) == TSTRING, "TYPE (string) == TSTRING");
       memcpy (p, CSTRING (string), LENGTH (string) + 1);
       p = p + LENGTH (string);
       size = size + LENGTH (string);
@@ -245,15 +243,15 @@ string_append (SCM x)           /*:((arity . n)) */
 SCM
 string_length (SCM string)
 {
-  assert (TYPE (string) == TSTRING);
+  assert_msg (TYPE (string) == TSTRING, "TYPE (string) == TSTRING");
   return MAKE_NUMBER (LENGTH (string));
 }
 
 SCM
 string_ref (SCM str, SCM k)
 {
-  assert (TYPE (str) == TSTRING);
-  assert (TYPE (k) == TNUMBER);
+  assert_msg (TYPE (str) == TSTRING, "TYPE (str) == TSTRING");
+  assert_msg (TYPE (k) == TNUMBER, "TYPE (k) == TNUMBER");
   size_t size = LENGTH (str);
   size_t i = VALUE (k);
   if (i > size)

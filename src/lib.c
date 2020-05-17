@@ -22,7 +22,6 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-#include <assert.h>
 #include <stdlib.h>
 
 int g_depth;
@@ -257,7 +256,7 @@ display_error_ (SCM x)
 SCM
 display_port_ (SCM x, SCM p)
 {
-  assert (TYPE (p) == TNUMBER);
+  assert_msg (TYPE (p) == TNUMBER, "TYPE (p) == TNUMBER");
   return fdisplay_ (x, VALUE (p), 0);
 }
 
@@ -278,7 +277,7 @@ write_error_ (SCM x)
 SCM
 write_port_ (SCM x, SCM p)
 {
-  assert (TYPE (p) == TNUMBER);
+  assert_msg (TYPE (p) == TNUMBER, "TYPE (p) == TNUMBER");
   return fdisplay_ (x, VALUE (p), 1);
 }
 
@@ -292,7 +291,7 @@ fdisplay_ (SCM x, int fd, int write_p)  /*:((internal)) */
 SCM
 exit_ (SCM x)                   /*:((name . "exit")) */
 {
-  assert (TYPE (x) == TNUMBER);
+  assert_msg (TYPE (x) == TNUMBER, "TYPE (x) == TNUMBER");
   exit (VALUE (x));
 }
 

@@ -22,7 +22,6 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-#include <assert.h>
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>

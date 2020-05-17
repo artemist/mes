@@ -21,7 +21,6 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-#include <assert.h>
 #include <string.h>
 
 int
@@ -30,7 +29,7 @@ hash_cstring (char const *s, long size)
   int hash = s[0] * 37;
   if (s[0] != 0 && s[1] != 0)
     hash = hash + s[1] * 43;
-  assert (size);
+  assert_msg (size, "size");
   hash = hash % size;
   return hash;
 }
@@ -48,21 +47,21 @@ hash_ (SCM x, long size)
 {
   if (TYPE (x) == TSTRING)
     return hash_cstring (CSTRING (x), size);
-  assert (0);
+  assert_msg (0, "0");
   return hashq_ (x, size);
 }
 
 SCM
 hashq (SCM x, SCM size)
 {
-  assert (0);
+  assert_msg (0, "0");
   return MAKE_NUMBER (hashq_ (x, VALUE (size)));
 }
 
 SCM
 hash (SCM x, SCM size)
 {
-  assert (0);
+  assert_msg (0, "0");
   return MAKE_NUMBER (hash_ (x, VALUE (size)));
 }
 
@@ -237,7 +236,7 @@ make_hash_table (SCM x)
   long size = 0;
   if (TYPE (x) == TPAIR)
     {
-      assert (TYPE (x) == TNUMBER);
+      assert_msg (TYPE (x) == TNUMBER, "TYPE (x) == TNUMBER");
       size = VALUE (x);
     }
   return make_hash_table_ (size);

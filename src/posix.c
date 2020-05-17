@@ -21,7 +21,6 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-#include <assert.h>
 #include <fcntl.h>
 #include <limits.h>
 #include <stdio.h>
@@ -151,7 +150,7 @@ write_byte (SCM x)              /*:((arity . n)) */
   char cc = VALUE (c);
   write (fd, &cc, 1);
 #if !__MESC__
-  assert (TYPE (c) == TNUMBER || TYPE (c) == TCHAR);
+  assert_msg (TYPE (c) == TNUMBER || TYPE (c) == TCHAR, "TYPE (c) == TNUMBER || TYPE (c) == TCHAR");
 #endif
   return c;
 }
@@ -305,7 +304,7 @@ execl_ (SCM file_name, SCM args)        /*:((name . "execl")) */
   i = i + 1;
   while (args != cell_nil)
     {
-      assert (TYPE (CAR (args)) == TSTRING);
+      assert_msg (TYPE (CAR (args)) == TSTRING, "TYPE (CAR (args)) == TSTRING");
       c_argv[i] = CSTRING (CAR (args));
       i = i + 1;
       args = CDR (args);

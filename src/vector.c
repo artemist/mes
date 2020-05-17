@@ -21,8 +21,6 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-#include <assert.h>
-
 SCM
 make_vector__ (long k)
 {
@@ -43,15 +41,15 @@ make_vector_ (SCM n)
 SCM
 vector_length (SCM x)
 {
-  assert (TYPE (x) == TVECTOR);
+  assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
   return MAKE_NUMBER (LENGTH (x));
 }
 
 SCM
 vector_ref_ (SCM x, long i)
 {
-  assert (TYPE (x) == TVECTOR);
-  assert (i < LENGTH (x));
+  assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
+  assert_msg (i < LENGTH (x), "i < LENGTH (x)");
   SCM e = VECTOR (x) + i;
   if (TYPE (e) == TREF)
     e = REF (e);
@@ -79,8 +77,8 @@ vector_entry (SCM x)
 SCM
 vector_set_x_ (SCM x, long i, SCM e)
 {
-  assert (TYPE (x) == TVECTOR);
-  assert (i < LENGTH (x));
+  assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
+  assert_msg (i < LENGTH (x), "i < LENGTH (x)");
   g_cells[VECTOR (x) + i] = g_cells[vector_entry (e)];
   return cell_unspecified;
 }

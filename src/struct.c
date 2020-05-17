@@ -21,8 +21,6 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-#include <assert.h>
-
 SCM
 make_struct (SCM type, SCM fields, SCM printer)
 {
@@ -57,15 +55,15 @@ make_struct (SCM type, SCM fields, SCM printer)
 SCM
 struct_length (SCM x)
 {
-  assert (TYPE (x) == TSTRUCT);
+  assert_msg (TYPE (x) == TSTRUCT, "TYPE (x) == TSTRUCT");
   return MAKE_NUMBER (LENGTH (x));
 }
 
 SCM
 struct_ref_ (SCM x, long i)
 {
-  assert (TYPE (x) == TSTRUCT);
-  assert (i < LENGTH (x));
+  assert_msg (TYPE (x) == TSTRUCT, "TYPE (x) == TSTRUCT");
+  assert_msg (i < LENGTH (x), "i < LENGTH (x)");
   SCM e = STRUCT (x) + i;
   if (TYPE (e) == TREF)
     e = REF (e);
@@ -79,8 +77,8 @@ struct_ref_ (SCM x, long i)
 SCM
 struct_set_x_ (SCM x, long i, SCM e)
 {
-  assert (TYPE (x) == TSTRUCT);
-  assert (i < LENGTH (x));
+  assert_msg (TYPE (x) == TSTRUCT, "TYPE (x) == TSTRUCT");
+  assert_msg (i < LENGTH (x), "i < LENGTH (x)");
   g_cells[STRUCT (x) + i] = g_cells[vector_entry (e)];
   return cell_unspecified;
 }

@@ -52,6 +52,7 @@ int oputc (int c);
 int oputs (char const *s);
 char *search_path (char const *file_name);
 ssize_t _read (int fd, void *buffer, size_t size);
+void assert_msg (int check, char *msg);
 
 extern char *__brk;
 extern void (*__call_at_exit) (void);
