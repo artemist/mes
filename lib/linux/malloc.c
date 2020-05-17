@@ -37,6 +37,6 @@ malloc (size_t size)
   if (brk (__brk + size) == -1)
     return 0;
   char *p = __brk;
-  __brk += size;
+  __brk = __brk + size;
   return p;
 }
