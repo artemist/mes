@@ -25,6 +25,83 @@
 
 int g_depth;
 
+void
+fdwrite_char (char v, int fd)
+{
+  if (v == '\0')
+    fdputs ("\\nul", fd);
+  else if (v == '\a')
+    fdputs ("\\alarm", fd);
+  else if (v == '\b')
+    fdputs ("\\backspace", fd);
+  else if (v == '\t')
+    fdputs ("\\tab", fd);
+  else if (v == '\n')
+    fdputs ("\\newline", fd);
+  else if (v == '\v')
+    fdputs ("\\vtab", fd);
+  else if (v == '\f')
+    fdputs ("\\page", fd);
+  //Nyacc bug
+  // else if (v == '\r') fdputs ("return", fd);
+  else if (v == 13)
+    fdputs ("\\return", fd);
+  else if (v == ' ')
+    fdputs ("\\space", fd);
+  else
+    {
+      if (v >= 32 && v <= 127)
+        fdputc ('\\', fd);
+      fdputc (v, fd);
+    }
+}
+
+void
+fdwrite_string_char (char v, int fd)
+{
+  if (v == '\0')
+    fdputs ("\\0", fd);
+  else if (v == '\a')
+    fdputs ("\\a", fd);
+  else if (v == '\b')
+    fdputs ("\\b", fd);
+  else if (v == '\t')
+    fdputs ("\\t", fd);
+  else if (v == '\v')
+    fdputs ("\\v", fd);
+  else if (v == '\n')
+    fdputs ("\\n", fd);
+  else if (v == '\f')
+    fdputs ("\\f", fd);
+#if 1                           //__MESC__
+  //Nyacc bug
+  else if (v == 13)
+    fdputs ("\\r", fd);
+  else if (v == 27)
+    fdputs ("\\e", fd);
+#else
+  //else if (v == '\r') fdputs ("\\r", fd);
+  //Nyacc crash
+  //else if (v == '\e') fdputs ("\\e", fd);
+#endif
+  else if (v == '\\')
+    fdputs ("\\\\", fd);
+  else if (v == '"')
+    fdputs ("\\\"", fd);
+  else
+    fdputc (v, fd);
+}
+
+void
+fdwrite_string (char *s, int length, int fd)
+{
+  int i;
+  for (i = 0; i < length; i = i + 1)
+    fdwrite_string_char (s[i], fd);
+}
+
+SCM display_helper (SCM x, int cont, char *sep, int fd, int write_p);
+
 SCM
 display_helper (SCM x, int cont, char *sep, int fd, int write_p)
 {
@@ -38,36 +115,10 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
     {
       if (write_p == 0)
         fdputc (VALUE (x), fd);
-      else
+      else if (1)
         {
           fdputs ("#", fd);
-          long v = VALUE (x);
-          if (v == '\0')
-            fdputs ("\\nul", fd);
-          else if (v == '\a')
-            fdputs ("\\alarm", fd);
-          else if (v == '\b')
-            fdputs ("\\backspace", fd);
-          else if (v == '\t')
-            fdputs ("\\tab", fd);
-          else if (v == '\n')
-            fdputs ("\\newline", fd);
-          else if (v == '\v')
-            fdputs ("\\vtab", fd);
-          else if (v == '\f')
-            fdputs ("\\page", fd);
-          //Nyacc bug
-          // else if (v == '\r') fdputs ("return", fd);
-          else if (v == 13)
-            fdputs ("\\return", fd);
-          else if (v == ' ')
-            fdputs ("\\space", fd);
-          else
-            {
-              if (v >= 32 && v <= 127)
-                fdputc ('\\', fd);
-              fdputc (VALUE (x), fd);
-            }
+          fdwrite_char (VALUE (x), fd);
         }
     }
   else if (t == TCLOSURE)
@@ -131,64 +182,35 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
       if (cont == 0)
         fdputs (")", fd);
     }
-  else if (t == TKEYWORD || t == TPORT || t == TSPECIAL || t == TSTRING || t == TSYMBOL)
+  else if (t == TPORT)
     {
-      if (t == TPORT)
-        {
-          fdputs ("#<port ", fd);
-          fdputs (itoa (PORT (x)), fd);
-          fdputs (" ", fd);
-          x = STRING (x);
-        }
-      if (t == TKEYWORD)
-        fdputs ("#:", fd);
-      if ((write_p && t == TSTRING) || t == TPORT)
-        fdputc ('"', fd);
-      char const *s = CSTRING (x);
-      size_t length = LENGTH (x);
-      size_t i;
-      for (i = 0; i < length; i = i + 1)
-        {
-          long v = -1;
-          if (write_p != 0)
-            v = s[i];
-          if (v == '\0')
-            fdputs ("\\0", fd);
-          else if (v == '\a')
-            fdputs ("\\a", fd);
-          else if (v == '\b')
-            fdputs ("\\b", fd);
-          else if (v == '\t')
-            fdputs ("\\t", fd);
-          else if (v == '\v')
-            fdputs ("\\v", fd);
-          else if (v == '\n')
-            fdputs ("\\n", fd);
-          else if (v == '\f')
-            fdputs ("\\f", fd);
-#if 1                           //__MESC__
-          //Nyacc bug
-          else if (v == 13)
-            fdputs ("\\r", fd);
-          else if (v == 27)
-            fdputs ("\\e", fd);
-#else
-          //else if (v == '\r') fdputs ("\\r", fd);
-          //Nyacc crash
-          //else if (v == '\e') fdputs ("\\e", fd);
-#endif
-          else if (v == '\\')
-            fdputs ("\\\\", fd);
-          else if (v == '"')
-            fdputs ("\\\"", fd);
-          else
-            fdputc (s[i], fd);
-        }
-      if ((write_p && t == TSTRING) || t == TPORT)
-        fdputc ('"', fd);
-      if (t == TPORT)
-        fdputs (">", fd);
+      fdputs ("#<port ", fd);
+      fdputs (itoa (PORT (x)), fd);
+      fdputs (" ", fd);
+      x = STRING (x);
+      fdputc ('"', fd);
+      fdwrite_string (CSTRING (x), LENGTH (x), fd);
+      fdputc ('"', fd);
+      fdputs (">", fd);
     }
+  else if (t == TKEYWORD)
+    {
+      fdputs ("#:", fd);
+      fdwrite_string (CSTRING (x), LENGTH (x), fd);
+    }
+  else if (t == TSTRING)
+    {
+      if (write_p == 1)
+        {
+          fdputc ('"', fd);
+          fdwrite_string (CSTRING (x), LENGTH (x), fd);
+          fdputc ('"', fd);
+        }
+      else
+        fdputs (CSTRING (x), fd);
+    }
+  else if (t == TSPECIAL || t == TSYMBOL)
+    fdwrite_string (CSTRING (x), LENGTH (x), fd);
   else if (t == TREF)
     fdisplay_ (REF (x), fd, write_p);
   else if (t == TSTRUCT)
