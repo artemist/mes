@@ -24,27 +24,32 @@
 long
 abtol (char const **p, int base)
 {
-  char const *s = *p;
+  char const *s = p[0];
   int i = 0;
   int sign_p = 0;
-  if (!base)
+  if (base == 0)
     base = 10;
-  while (isspace (*s))
-    s++;
-  if (*s && *s == '+')
-    s++;
-  if (*s && *s == '-')
+  while (isspace (s[0]) != 0)
+    s = s + 1;
+  if (s[0] != 0 && s[0] == '+')
+    s = s + 1;
+  if (s[0] != 0 && s[0] == '-')
     {
       sign_p = 1;
-      s++;
+      s = s + 1;
     }
-  while (isnumber (*s, base))
+  while (isnumber (s[0], base) != 0)
     {
-      i *= base;
-      int m = *s > '9' ? 'a' - 10 : '0';
-      i += *s - m;
-      s++;
+      i = i * base;
+      int m = '0';
+      if (s[0] > '9')
+        m = 'a' - 10;
+      i = i + s[0] - m;
+      s = s + 1;
     }
-  *p = s;
-  return sign_p ? -i : i;
+  p[0] = s;
+  if (sign_p != 0)
+    return -i;
+
+  return i;
 }
