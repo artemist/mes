@@ -111,17 +111,36 @@ mes_builtins (SCM a)            /*:((internal)) */
 
   SCM builtin_type = make_builtin_type ();
 
-  /* src/builtins.mes */
-  a = init_builtin (builtin_type, "make-builtin-type", 0, &make_builtin_type, a);
+  /* src/builtins.c */
   a = init_builtin (builtin_type, "make-builtin", 4, &make_builtin, a);
   a = init_builtin (builtin_type, "builtin-name", 1, &builtin_name, a);
   a = init_builtin (builtin_type, "builtin-arity", 1, &builtin_arity, a);
   a = init_builtin (builtin_type, "builtin?", 1, &builtin_p, a);
   a = init_builtin (builtin_type, "builtin-printer", 1, &builtin_printer, a);
-  /* src/gc.mes */
+  /* src/eval-apply.c */
+  a = init_builtin (builtin_type, "assert-defined", 2, &assert_defined, a);
+  a = init_builtin (builtin_type, "check-formals", 3, &check_formals, a);
+  a = init_builtin (builtin_type, "check-apply", 2, &check_apply, a);
+  a = init_builtin (builtin_type, "pairlis", 3, &pairlis, a);
+  a = init_builtin (builtin_type, "set-car!", 2, &set_car_x, a);
+  a = init_builtin (builtin_type, "set-cdr!", 2, &set_cdr_x, a);
+  a = init_builtin (builtin_type, "set-env!", 3, &set_env_x, a);
+  a = init_builtin (builtin_type, "call-lambda", 4, &call_lambda, a);
+  a = init_builtin (builtin_type, "core:make-closure", 3, &make_closure_, a);
+  a = init_builtin (builtin_type, "core:make-variable", 1, &make_variable_, a);
+  a = init_builtin (builtin_type, "macro-get-handle", 1, &macro_get_handle, a);
+  a = init_builtin (builtin_type, "get-macro", 1, &get_macro, a);
+  a = init_builtin (builtin_type, "macro-set!", 2, &macro_set_x, a);
+  a = init_builtin (builtin_type, "push-cc", 4, &push_cc, a);
+  a = init_builtin (builtin_type, "add-formals", 2, &add_formals, a);
+  a = init_builtin (builtin_type, "expand-variable", 2, &expand_variable, a);
+  a = init_builtin (builtin_type, "apply-builtin", 2, &apply_builtin, a);
+  a = init_builtin (builtin_type, "eval-apply", 0, &eval_apply, a);
+  a = init_builtin (builtin_type, "apply", 3, &apply, a);
+  /* src/gc.c */
   a = init_builtin (builtin_type, "gc-check", 0, &gc_check, a);
   a = init_builtin (builtin_type, "gc", 0, &gc, a);
-  /* src/hash.mes */
+  /* src/hash.c */
   a = init_builtin (builtin_type, "hashq", 2, &hashq, a);
   a = init_builtin (builtin_type, "hash", 2, &hash, a);
   a = init_builtin (builtin_type, "hashq-get-handle", 3, &hashq_get_handle, a);
@@ -131,7 +150,7 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "hash-set!", 3, &hash_set_x, a);
   a = init_builtin (builtin_type, "hash-table-printer", 1, &hash_table_printer, a);
   a = init_builtin (builtin_type, "make-hash-table", 1, &make_hash_table, a);
-  /* src/lib.mes */
+  /* src/lib.c */
   a = init_builtin (builtin_type, "core:display", 1, &display_, a);
   a = init_builtin (builtin_type, "core:display-error", 1, &display_error_, a);
   a = init_builtin (builtin_type, "core:display-port", 2, &display_port_, a);
@@ -148,7 +167,7 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "equal2?", 2, &equal2_p, a);
   a = init_builtin (builtin_type, "last-pair", 1, &last_pair, a);
   a = init_builtin (builtin_type, "pair?", 1, &pair_p, a);
-  /* src/math.mes */
+  /* src/math.c */
   a = init_builtin (builtin_type, ">", -1, &greater_p, a);
   a = init_builtin (builtin_type, "<", -1, &less_p, a);
   a = init_builtin (builtin_type, "=", -1, &is_p, a);
@@ -162,7 +181,7 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "lognot", 1, &lognot, a);
   a = init_builtin (builtin_type, "logxor", -1, &logxor, a);
   a = init_builtin (builtin_type, "ash", 2, &ash, a);
-  /* src/mes.mes */
+  /* src/mes.c */
   a = init_builtin (builtin_type, "core:make-cell", 3, &make_cell_, a);
   a = init_builtin (builtin_type, "core:type", 1, &type_, a);
   a = init_builtin (builtin_type, "core:car", 1, &car_, a);
@@ -180,22 +199,14 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "append2", 2, &append2, a);
   a = init_builtin (builtin_type, "append-reverse", 2, &append_reverse, a);
   a = init_builtin (builtin_type, "core:reverse!", 2, &reverse_x_, a);
-  a = init_builtin (builtin_type, "pairlis", 3, &pairlis, a);
   a = init_builtin (builtin_type, "assq", 2, &assq, a);
   a = init_builtin (builtin_type, "assoc", 2, &assoc, a);
-  a = init_builtin (builtin_type, "set-car!", 2, &set_car_x, a);
-  a = init_builtin (builtin_type, "set-cdr!", 2, &set_cdr_x, a);
-  a = init_builtin (builtin_type, "set-env!", 3, &set_env_x, a);
-  a = init_builtin (builtin_type, "macro-get-handle", 1, &macro_get_handle, a);
-  a = init_builtin (builtin_type, "add-formals", 2, &add_formals, a);
-  a = init_builtin (builtin_type, "eval-apply", 0, &eval_apply, a);
-  /* src/module.mes */
-  a = init_builtin (builtin_type, "make-module-type", 0, &make_module_type, a);
+  /* src/module.c */
   a = init_builtin (builtin_type, "module-printer", 1, &module_printer, a);
   a = init_builtin (builtin_type, "module-variable", 2, &module_variable, a);
   a = init_builtin (builtin_type, "module-ref", 2, &module_ref, a);
   a = init_builtin (builtin_type, "module-define!", 3, &module_define_x, a);
-  /* src/posix.mes */
+  /* src/posix.c */
   a = init_builtin (builtin_type, "peek-byte", 0, &peek_byte, a);
   a = init_builtin (builtin_type, "read-byte", 0, &read_byte, a);
   a = init_builtin (builtin_type, "unread-byte", 1, &unread_byte, a);
@@ -222,13 +233,11 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "execl", 2, &execl_, a);
   a = init_builtin (builtin_type, "core:waitpid", 2, &waitpid_, a);
   a = init_builtin (builtin_type, "current-time", 0, &current_time, a);
-  a = init_builtin (builtin_type, "gettimeofday", 0, &gettimeofday_, a);
   a = init_builtin (builtin_type, "get-internal-run-time", 0, &get_internal_run_time, a);
-  a = init_builtin (builtin_type, "getcwd", 0, &getcwd_, a);
   a = init_builtin (builtin_type, "dup", 1, &dup_, a);
   a = init_builtin (builtin_type, "dup2", 2, &dup2_, a);
   a = init_builtin (builtin_type, "delete-file", 1, &delete_file, a);
-  /* src/reader.mes */
+  /* src/reader.c */
   a = init_builtin (builtin_type, "core:read-input-file-env", 2, &read_input_file_env_, a);
   a = init_builtin (builtin_type, "read-input-file-env", 1, &read_input_file_env, a);
   a = init_builtin (builtin_type, "read-env", 1, &read_env, a);
@@ -238,7 +247,7 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "reader-read-octal", 0, &reader_read_octal, a);
   a = init_builtin (builtin_type, "reader-read-hex", 0, &reader_read_hex, a);
   a = init_builtin (builtin_type, "reader-read-string", 0, &reader_read_string, a);
-  /* src/strings.mes */
+  /* src/string.c */
   a = init_builtin (builtin_type, "string=?", 2, &string_equal_p, a);
   a = init_builtin (builtin_type, "symbol->string", 1, &symbol_to_string, a);
   a = init_builtin (builtin_type, "symbol->keyword", 1, &symbol_to_keyword, a);
@@ -251,12 +260,12 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "string-append", -1, &string_append, a);
   a = init_builtin (builtin_type, "string-length", 1, &string_length, a);
   a = init_builtin (builtin_type, "string-ref", 2, &string_ref, a);
-  /* src/struct.mes */
+  /* src/struct.c */
   a = init_builtin (builtin_type, "make-struct", 3, &make_struct, a);
   a = init_builtin (builtin_type, "struct-length", 1, &struct_length, a);
   a = init_builtin (builtin_type, "struct-ref", 2, &struct_ref, a);
   a = init_builtin (builtin_type, "struct-set!", 3, &struct_set_x, a);
-  /* src/vector.mes */
+  /* src/vector.c */
   a = init_builtin (builtin_type, "core:make-vector", 1, &make_vector_, a);
   a = init_builtin (builtin_type, "vector-length", 1, &vector_length, a);
   a = init_builtin (builtin_type, "vector-ref", 2, &vector_ref, a);

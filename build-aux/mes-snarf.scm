@@ -116,7 +116,7 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
                     (if (string-null? (function.formals f)) 0
                         (length (string-split (function.formals f) #\,)))))
          (n (if (eq? arity 'n) -1 arity)))
-    (format #f "  a = init_builtin (builtin_type, ~s, ~a, (function1_t) & ~a, a);\n" (function-scm-name f) n (function.name f))))
+    (format #f "  a = init_builtin (builtin_type, ~s, ~a, &~a, a);\n" (function-scm-name f) n (function.name f))))
 
 (define (disjoin . predicates)
   (lambda (. arguments)
@@ -150,7 +150,8 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
               rest
               (receive (parameter-list annotation)
                   (apply values (string-split-string rest " /*:"))
-                (let* ((parameters (string-drop parameter-list 1))
+                (let* ((parameters (string-trim-both parameter-list))
+                       (parameters (string-drop parameters 1))
                        (parameters (string-drop-right parameters 1))
                        (annotation (if (string? annotation) (string-trim-both annotation)
                                        annotation))

@@ -27,6 +27,14 @@ SCM builtin_name (SCM builtin);
 SCM builtin_arity (SCM builtin);
 SCM builtin_p (SCM x);
 SCM builtin_printer (SCM builtin);
+/* src/eval-apply.c */
+SCM pairlis (SCM x, SCM y, SCM a);
+SCM set_car_x (SCM x, SCM e);
+SCM set_cdr_x (SCM x, SCM e);
+SCM set_env_x (SCM x, SCM e, SCM a);
+SCM macro_get_handle (SCM name);
+SCM add_formals (SCM formals, SCM x);
+SCM eval_apply ();
 /* src/gc.c */
 SCM gc_check ();
 SCM gc ();
@@ -89,15 +97,8 @@ SCM error (SCM key, SCM x);
 SCM append2 (SCM x, SCM y);
 SCM append_reverse (SCM x, SCM y);
 SCM reverse_x_ (SCM x, SCM t);
-SCM pairlis (SCM x, SCM y, SCM a);
 SCM assq (SCM x, SCM a);
 SCM assoc (SCM x, SCM a);
-SCM set_car_x (SCM x, SCM e);
-SCM set_cdr_x (SCM x, SCM e);
-SCM set_env_x (SCM x, SCM e, SCM a);
-SCM macro_get_handle (SCM name);
-SCM add_formals (SCM formals, SCM x);
-SCM eval_apply ();
 /* src/module.c */
 SCM make_module_type ();
 SCM module_printer (SCM module);

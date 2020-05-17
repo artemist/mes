@@ -95,6 +95,7 @@ SCM make_initial_module (SCM a);
 SCM make_string (char const *s, size_t length);
 SCM make_vector__ (long k);
 SCM mes_builtins (SCM a);
+SCM push_cc (SCM p1, SCM p2, SCM a, SCM c);
 SCM struct_ref_ (SCM x, long i);
 SCM struct_set_x_ (SCM x, long i, SCM e);
 SCM vector_ref_ (SCM x, long i);
