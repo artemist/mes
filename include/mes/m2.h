@@ -90,9 +90,6 @@ struct timeval
 
 #define CSTRING(x) CBYTES (STRING (x))
 
-#define MAKE_BYTES0(x) make_bytes (x, strlen (x))
-#define NAME_SYMBOL(symbol,name) {size_t s = strlen (name); CAR (symbol) = s; CDR (symbol) = make_bytes (name, s);}
-
 #define MAKE_CHAR(n) make_cell (TCHAR, 0, n)
 #define MAKE_CONTINUATION(n) make_cell (TCONTINUATION, n, g_stack)
 #define MAKE_NUMBER(n) make_cell (TNUMBER, 0, n)

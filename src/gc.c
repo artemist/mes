@@ -116,6 +116,33 @@ cons (SCM x, SCM y)
   return make_cell (TPAIR, x, y);
 }
 
+size_t
+bytes_cells (size_t length)
+{
+  return (1 + sizeof (long) + sizeof (long) + length + sizeof (SCM)) / sizeof (SCM);
+}
+
+SCM
+make_bytes (char const *s, size_t length)
+{
+  size_t size = bytes_cells (length);
+  SCM x = alloc (size);
+  TYPE (x) = TBYTES;
+  LENGTH (x) = length;
+#if __M2_PLANET__
+  char *p = &g_cells[x];
+  p = p + 2 * sizeof (SCM);
+#else
+  char *p = &CDR (x);
+#endif
+  if (length == 0)
+    p[0] = 0;
+  else
+    memcpy (p, s, length + 1);
+
+  return x;
+}
+
 SCM
 gc_up_arena ()                  /*:((internal)) */
 {
