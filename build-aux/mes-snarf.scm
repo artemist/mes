@@ -4,7 +4,7 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
 !#
 
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
 ;;; mes-snarf.scm: This file is part of GNU Mes.
 ;;;
@@ -149,9 +149,8 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
               (not (string-prefix? "/" function))
               rest
               (receive (parameter-list annotation)
-                  (apply values (string-split-string rest " ///"))
-                (let* ((parameters (string-trim-both parameter-list))
-                       (parameters (string-drop parameters 1))
+                  (apply values (string-split-string rest " /*:"))
+                (let* ((parameters (string-drop parameter-list 1))
                        (parameters (string-drop-right parameters 1))
                        (annotation (if (string? annotation) (string-trim-both annotation)
                                        annotation))
