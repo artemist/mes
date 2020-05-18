@@ -42,7 +42,7 @@ assoc_string (SCM x, SCM a)     /*:((internal)) */
 SCM
 type_ (SCM x)
 {
-  return MAKE_NUMBER (TYPE (x));
+  return make_number (TYPE (x));
 }
 
 SCM
@@ -53,7 +53,7 @@ car_ (SCM x)
                                     || TYPE (CAR (x)) == TSPECIAL
                                     || TYPE (CAR (x)) == TSYMBOL || TYPE (CAR (x)) == TSTRING))
     return CAR (x);
-  return MAKE_NUMBER (CAR (x));
+  return make_number (CAR (x));
 }
 
 SCM
@@ -66,7 +66,7 @@ cdr_ (SCM x)
           || TYPE (CDR (x)) == TREF
           || TYPE (CDR (x)) == TSPECIAL || TYPE (CDR (x)) == TSYMBOL || TYPE (CDR (x)) == TSTRING))
     return CDR (x);
-  return MAKE_NUMBER (CDR (x));
+  return make_number (CDR (x));
 }
 
 SCM
@@ -147,7 +147,7 @@ length__ (SCM x)                /*:((internal)) */
 SCM
 length (SCM x)
 {
-  return MAKE_NUMBER (length__ (x));
+  return make_number (length__ (x));
 }
 
 SCM
@@ -259,9 +259,9 @@ mes_g_stack (SCM a)             /*:((internal)) */
 {
   g_stack = STACK_SIZE;
   R0 = a;
-  R1 = MAKE_CHAR (0);
-  R2 = MAKE_CHAR (0);
-  R3 = MAKE_CHAR (0);
+  R1 = make_char (0);
+  R2 = make_char (0);
+  R3 = make_char (0);
   return R0;
 }
 
@@ -276,7 +276,7 @@ mes_environment (int argc, char **argv)
 #elif __TINYC__
   compiler = "tcc";
 #endif
-  a = acons (cell_symbol_compiler, MAKE_STRING0 (compiler), a);
+  a = acons (cell_symbol_compiler, make_string0 (compiler), a);
 
   char *arch;
 #if __i386__
@@ -288,13 +288,13 @@ mes_environment (int argc, char **argv)
 #else
 #error arch not supported
 #endif
-  a = acons (cell_symbol_arch, MAKE_STRING0 (arch), a);
+  a = acons (cell_symbol_arch, make_string0 (arch), a);
 
 #if !MES_MINI
   SCM lst = cell_nil;
   int i;
   for (i = argc - 1; i >= 0; i = i - 1)
-    lst = cons (MAKE_STRING0 (argv[i]), lst);
+    lst = cons (make_string0 (argv[i]), lst);
   a = acons (cell_symbol_argv, lst, a);
 #endif
 

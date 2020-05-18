@@ -51,7 +51,7 @@ reader_read_line_comment (int c)
         return c;
       c = readchar ();
     }
-  error (cell_symbol_system_error, MAKE_STRING0 ("reader_read_line_comment"));
+  error (cell_symbol_system_error, make_string0 ("reader_read_line_comment"));
 }
 
 SCM reader_read_block_comment (int s, int c);
@@ -96,7 +96,7 @@ reader_read_identifier_or_number (int c)
       unreadchar (c);
       if (negative_p != 0)
         n = 0 - n;
-      return MAKE_NUMBER (n);
+      return make_number (n);
     }
   /* Fallthrough: Note that `4a', `+1b' are identifiers */
   while (reader_end_of_word_p (c) == 0)
@@ -175,7 +175,7 @@ reader_read_list (int c, SCM a)
   if (c == ')')
     return cell_nil;
   if (c == EOF)
-    error (cell_symbol_not_a_pair, MAKE_STRING0 ("EOF in list"));
+    error (cell_symbol_not_a_pair, make_string0 ("EOF in list"));
   SCM s = reader_read_sexp_ (c, a);
   if (s == cell_dot)
     return CAR (reader_read_list (readchar (), a));
@@ -230,7 +230,7 @@ reader_read_hash (int c, SCM a)
   if (c == ':')
     {
       SCM x = reader_read_identifier_or_number (readchar ());
-      SCM msg = MAKE_STRING0 ("keyword perifx ':' not followed by a symbol: ");
+      SCM msg = make_string0 ("keyword perifx ':' not followed by a symbol: ");
       if (TYPE (x) == TNUMBER)
         error (cell_symbol_system_error, cons (msg, x));
       return symbol_to_keyword (x);
@@ -338,10 +338,10 @@ reader_read_character ()
           eputs ("char not supported: ");
           eputs (buf);
           eputs ("\n");
-          error (cell_symbol_system_error, MAKE_STRING0 ("char not supported"));
+          error (cell_symbol_system_error, make_string0 ("char not supported"));
         }
     }
-  return MAKE_CHAR (c);
+  return make_char (c);
 }
 
 SCM
@@ -365,7 +365,7 @@ reader_read_binary ()
     }
   if (negative_p != 0)
     n = 0 - n;
-  return MAKE_NUMBER (n);
+  return make_number (n);
 }
 
 SCM
@@ -389,7 +389,7 @@ reader_read_octal ()
     }
   if (negative_p != 0)
     n = 0 - n;
-  return MAKE_NUMBER (n);
+  return make_number (n);
 }
 
 SCM
@@ -418,7 +418,7 @@ reader_read_hex ()
     }
   if (negative_p != 0)
     n = 0 - n;
-  return MAKE_NUMBER (n);
+  return make_number (n);
 }
 
 SCM

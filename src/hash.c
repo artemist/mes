@@ -39,7 +39,7 @@ hashq_ (SCM x, long size)
 {
   if (TYPE (x) == TSPECIAL || TYPE (x) == TSYMBOL)
     return hash_cstring (CSTRING (x), size);    /* FIXME: hash x directly. */
-  error (cell_symbol_system_error, cons (MAKE_STRING0 ("hashq_: not a symbol"), x));
+  error (cell_symbol_system_error, cons (make_string0 ("hashq_: not a symbol"), x));
 }
 
 int
@@ -55,14 +55,14 @@ SCM
 hashq (SCM x, SCM size)
 {
   assert_msg (0, "0");
-  return MAKE_NUMBER (hashq_ (x, VALUE (size)));
+  return make_number (hashq_ (x, VALUE (size)));
 }
 
 SCM
 hash (SCM x, SCM size)
 {
   assert_msg (0, "0");
-  return MAKE_NUMBER (hash_ (x, VALUE (size)));
+  return make_number (hash_ (x, VALUE (size)));
 }
 
 SCM
@@ -223,7 +223,7 @@ make_hash_table_ (long size)
   SCM buckets = make_vector__ (size);
   SCM values = cell_nil;
   values = cons (buckets, values);
-  values = cons (MAKE_NUMBER (size), values);
+  values = cons (make_number (size), values);
   values = cons (cell_symbol_hashq_table, values);
   /*FIXME: symbol/printer
     return make_struct (hashq_type, values, cstring_to_symbol ("hash-table-printer");*/

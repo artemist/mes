@@ -90,13 +90,13 @@ unreadchar (int c)
 SCM
 peek_byte ()
 {
-  return MAKE_NUMBER (peekchar ());
+  return make_number (peekchar ());
 }
 
 SCM
 read_byte ()
 {
-  return MAKE_NUMBER (readchar ());
+  return make_number (readchar ());
 }
 
 SCM
@@ -109,7 +109,7 @@ unread_byte (SCM i)
 SCM
 peek_char ()
 {
-  return MAKE_CHAR (peekchar ());
+  return make_char (peekchar ());
 }
 
 SCM
@@ -118,7 +118,7 @@ read_char (SCM port)            /*:((arity . n)) */
   int fd = __stdin;
   if (TYPE (port) == TPAIR && TYPE (car (port)) == TNUMBER)
     __stdin = VALUE (CAR (port));
-  SCM c = MAKE_CHAR (readchar ());
+  SCM c = make_char (readchar ());
   __stdin = fd;
   return c;
 }
@@ -161,7 +161,7 @@ getenv_ (SCM s)                 /*:((name . "getenv")) */
   char *p;
   p = getenv (CSTRING (s));
   if (p != 0)
-    return MAKE_STRING0 (p);
+    return make_string0 (p);
   return cell_f;
 }
 
@@ -186,7 +186,7 @@ SCM
 current_input_port ()
 {
   if (__stdin >= 0)
-    return MAKE_NUMBER (__stdin);
+    return make_number (__stdin);
   SCM x = g_ports;
   while (x && PORT (CAR (x)) != __stdin)
     x = CDR (x);
@@ -198,14 +198,14 @@ open_input_file (SCM file_name)
 {
   int filedes = mes_open (CSTRING (file_name), O_RDONLY, 0);
   if (filedes == -1)
-    error (cell_symbol_system_error, cons (MAKE_STRING0 ("No such file or directory"), file_name));
-  return MAKE_NUMBER (filedes);
+    error (cell_symbol_system_error, cons (make_string0 ("No such file or directory"), file_name));
+  return make_number (filedes);
 }
 
 SCM
 open_input_string (SCM string)
 {
-  SCM port = MAKE_STRING_PORT (string);
+  SCM port = make_string_port (string);
   g_ports = cons (port, g_ports);
   return port;
 }
@@ -230,13 +230,13 @@ set_current_input_port (SCM port)
 SCM
 current_output_port ()
 {
-  return MAKE_NUMBER (__stdout);
+  return make_number (__stdout);
 }
 
 SCM
 current_error_port ()
 {
-  return MAKE_NUMBER (__stderr);
+  return make_number (__stderr);
 }
 
 SCM
@@ -247,7 +247,7 @@ open_output_file (SCM x)        /*:((arity . n)) */
   int mode = S_IRUSR | S_IWUSR;
   if (TYPE (x) == TPAIR && TYPE (car (x)) == TNUMBER)
     mode = VALUE (car (x));
-  return MAKE_NUMBER (mes_open (CSTRING (file_name), O_WRONLY | O_CREAT | O_TRUNC, mode));
+  return make_number (mes_open (CSTRING (file_name), O_WRONLY | O_CREAT | O_TRUNC, mode));
 }
 
 SCM
@@ -288,7 +288,7 @@ isatty_p (SCM port)
 SCM
 primitive_fork ()
 {
-  return MAKE_NUMBER (fork ());
+  return make_number (fork ());
 }
 
 SCM
@@ -299,7 +299,7 @@ execl_ (SCM file_name, SCM args)        /*:((name . "execl")) */
 
   if (length__ (args) > 1000)
     error (cell_symbol_system_error,
-           cons (file_name, cons (MAKE_STRING0 ("too many arguments"), cons (file_name, args))));
+           cons (file_name, cons (make_string0 ("too many arguments"), cons (file_name, args))));
   c_argv[i] = CSTRING (file_name);
   i = i + 1;
   while (args != cell_nil)
@@ -318,7 +318,7 @@ execl_ (SCM file_name, SCM args)        /*:((name . "execl")) */
         }
     }
   c_argv[i] = 0;
-  return MAKE_NUMBER (execv (c_argv[0], c_argv));
+  return make_number (execv (c_argv[0], c_argv));
 }
 
 SCM
@@ -326,7 +326,7 @@ waitpid_ (SCM pid, SCM options)
 {
   int status;
   int child = waitpid (VALUE (pid), &status, VALUE (options));
-  return cons (MAKE_NUMBER (child), MAKE_NUMBER (status));
+  return cons (make_number (child), make_number (status));
 }
 
 #if __x86_64__
@@ -355,24 +355,24 @@ SCM
 init_time (SCM a)               /*:((internal)) */
 {
   clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &g_start_time);
-  a = acons (cell_symbol_internal_time_units_per_second, MAKE_NUMBER (TIME_UNITS_PER_SECOND), a);
+  a = acons (cell_symbol_internal_time_units_per_second, make_number (TIME_UNITS_PER_SECOND), a);
 }
 
 SCM
 current_time ()
 {
-  return MAKE_NUMBER (time (0));
+  return make_number (time (0));
 }
 
 SCM
 gettimeofday_ ()                /*:((name . "gettimeofday")) */
 {
 #if __M2_PLANET__
-  return MAKE_NUMBER (0);
+  return make_number (0);
 #else
   struct timeval time;
   gettimeofday (&time, 0);
-  return cons (MAKE_NUMBER (time.tv_sec), MAKE_NUMBER (time.tv_usec));
+  return cons (make_number (time.tv_sec), make_number (time.tv_usec));
 #endif
 }
 
@@ -386,13 +386,13 @@ SCM
 get_internal_run_time ()
 {
 #if __M2_PLANET__
-  return MAKE_NUMBER (0);
+  return make_number (0);
 #else
   struct timespec ts;
   clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &ts);
   long time = seconds_and_nanoseconds_to_long (ts.tv_sec - g_start_time.tv_sec,
                                                ts.tv_nsec - g_start_time.tv_nsec);
-  return MAKE_NUMBER (time);
+  return make_number (time);
 #endif
 }
 
@@ -400,13 +400,13 @@ SCM
 getcwd_ ()                      /*:((name . "getcwd")) */
 {
   char *buf = __getcwd_buf;
-  return MAKE_STRING0 (getcwd (buf, PATH_MAX));
+  return make_string0 (getcwd (buf, PATH_MAX));
 }
 
 SCM
 dup_ (SCM port)                 /*:((name . "dup")) */
 {
-  return MAKE_NUMBER (dup (VALUE (port)));
+  return make_number (dup (VALUE (port)));
 }
 
 SCM

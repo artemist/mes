@@ -49,7 +49,7 @@ check_formals (SCM f, SCM formals, SCM args)    /*:((internal)) */
       eputs (itoa (alen));
       eputs ("\n");
       write_error_ (f);
-      SCM e = MAKE_STRING0 (s);
+      SCM e = make_string0 (s);
       return error (cell_symbol_wrong_number_of_args, cons (e, f));
     }
   return cell_unspecified;
@@ -86,7 +86,7 @@ check_apply (SCM f, SCM e)      /*:((internal)) */
       eputs ("[");
       write_error_ (e);
       eputs ("]\n");
-      SCM e = MAKE_STRING0 (s);
+      SCM e = make_string0 (s);
       return error (cell_symbol_wrong_type_arg, cons (e, f));
     }
   return cell_unspecified;
@@ -425,7 +425,7 @@ eval_apply:
   else if (R3 == cell_unspecified)
     return R1;
   else
-    error (cell_symbol_system_error, MAKE_STRING0 ("eval/apply unknown continuation"));
+    error (cell_symbol_system_error, make_string0 ("eval/apply unknown continuation"));
 
 evlis:
   if (R1 == cell_nil)
@@ -652,7 +652,7 @@ eval:
               if (macro_p != 0)
                 {
                   entry = macro_get_handle (name);
-                  R1 = MAKE_MACRO (name, R1);
+                  R1 = make_macro (name, R1);
                   set_cdr_x (entry, R1);
                 }
               else if (global_p != 0)
@@ -907,7 +907,7 @@ if_expr:
 
 call_with_current_continuation:
   gc_push_frame ();
-  x = MAKE_CONTINUATION (g_continuations);
+  x = make_continuation (g_continuations);
   g_continuations = g_continuations + 1;
   v = make_vector__ (STACK_SIZE - g_stack);
   for (t = g_stack; t < STACK_SIZE; t = t + 1)

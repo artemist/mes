@@ -144,6 +144,59 @@ make_bytes (char const *s, size_t length)
 }
 
 SCM
+make_char (int n)
+{
+  return make_cell (TCHAR, 0, n);
+}
+
+SCM
+make_continuation (long n)
+{
+  return make_cell (TCONTINUATION, n, g_stack);
+}
+
+SCM
+make_macro (SCM name, SCM x)    /*:((internal)) */
+{
+  return make_cell (TMACRO, x, STRING (name));
+}
+
+SCM
+make_number (long n)
+{
+  return make_cell (TNUMBER, 0, n);
+}
+
+SCM
+make_ref (SCM x)                /*:((internal)) */
+{
+  return make_cell (TREF, x, 0);
+}
+
+SCM
+make_string (char const *s, size_t length)
+{
+  if (length > MAX_STRING)
+    assert_max_string (length, "make_string", s);
+  SCM x = make_cell (TSTRING, length, 0);
+  SCM v = make_bytes (s, length);
+  CDR (x) = v;
+  return x;
+}
+
+SCM
+make_string0 (char const *s)
+{
+  return make_string (s, strlen (s));
+}
+
+SCM
+make_string_port (SCM x)        /*:((internal)) */
+{
+  return make_cell (TPORT, -length__ (g_ports) - 2, x);
+}
+
+SCM
 gc_up_arena ()                  /*:((internal)) */
 {
   long old_arena_bytes = (ARENA_SIZE + JAM_SIZE) * sizeof (struct scm);

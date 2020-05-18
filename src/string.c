@@ -59,17 +59,6 @@ list_to_cstring (SCM list, size_t *size)
 }
 
 SCM
-make_string (char const *s, size_t length)
-{
-  if (length > MAX_STRING)
-    assert_max_string (length, "make_string", s);
-  SCM x = make_cell (TSTRING, length, 0);
-  SCM v = make_bytes (s, length);
-  CDR (x) = v;
-  return x;
-}
-
-SCM
 string_equal_p (SCM a, SCM b)   /*:((name . "string=?")) */
 {
   if (!((TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD)))
@@ -140,7 +129,7 @@ bytes_to_list (char const *s, size_t i)
     {
       i = i - 1;
       int c = (0x100 + s[i]) % 0x100;
-      p = cons (MAKE_CHAR (c), p);
+      p = cons (make_char (c), p);
     }
   return p;
 }
@@ -154,7 +143,7 @@ cstring_to_list (char const *s)
 SCM
 cstring_to_symbol (char const *s)
 {
-  SCM string = MAKE_STRING0 (s);
+  SCM string = make_string0 (s);
   return string_to_symbol (string);
 }
 
@@ -217,7 +206,7 @@ SCM
 string_length (SCM string)
 {
   assert_msg (TYPE (string) == TSTRING, "TYPE (string) == TSTRING");
-  return MAKE_NUMBER (LENGTH (string));
+  return make_number (LENGTH (string));
 }
 
 SCM
@@ -228,7 +217,7 @@ string_ref (SCM str, SCM k)
   size_t size = LENGTH (str);
   size_t i = VALUE (k);
   if (i > size)
-    error (cell_symbol_system_error, cons (MAKE_STRING0 ("value out of range"), k));
+    error (cell_symbol_system_error, cons (make_string0 ("value out of range"), k));
   char const *p = CSTRING (str);
-  return MAKE_CHAR (p[i]);
+  return make_char (p[i]);
 }

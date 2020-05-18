@@ -206,11 +206,11 @@ pair_p (SCM x)
 SCM
 char_to_integer (SCM x)
 {
-  return MAKE_NUMBER (VALUE (x));
+  return make_number (VALUE (x));
 }
 
 SCM
 integer_to_char (SCM x)
 {
-  return MAKE_CHAR (VALUE (x));
+  return make_char (VALUE (x));
 }

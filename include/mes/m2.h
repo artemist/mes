@@ -90,14 +90,6 @@ struct timeval
 
 #define CSTRING(x) CBYTES (STRING (x))
 
-#define MAKE_CHAR(n) make_cell (TCHAR, 0, n)
-#define MAKE_CONTINUATION(n) make_cell (TCONTINUATION, n, g_stack)
-#define MAKE_NUMBER(n) make_cell (TNUMBER, 0, n)
-#define MAKE_REF(n) make_cell (TREF, n, 0)
-#define MAKE_STRING0(x) make_string (x, strlen (x))
-#define MAKE_STRING_PORT(x) make_cell (TPORT, -length__ (g_ports) - 2, x)
-#define MAKE_MACRO(name, x) make_cell (TMACRO, x, STRING (name))
-
 #define CAAR(x) CAR (CAR (x))
 #define CADR(x) CAR (CDR (x))
 #define CDAR(x) CDR (CAR (x))

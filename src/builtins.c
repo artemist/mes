@@ -99,8 +99,8 @@ init_builtin (SCM builtin_type, char const *name, int arity, FUNCTION function, 
 {
   SCM s = cstring_to_symbol (name);
   return acons (s,
-                make_builtin (builtin_type, symbol_to_string (s), MAKE_NUMBER (arity),
-                              MAKE_NUMBER (function)), a);
+                make_builtin (builtin_type, symbol_to_string (s), make_number (arity),
+                              make_number (function)), a);
 }
 
 SCM

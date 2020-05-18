@@ -184,27 +184,27 @@ init_symbols ()                  /*:((internal)) */
   a = acons (cell_symbol_current_module, cell_symbol_current_module, a);
   a = acons (cell_symbol_call_with_current_continuation, cell_call_with_current_continuation, a);
 
-  a = acons (cell_symbol_mes_version, MAKE_STRING0 (MES_VERSION), a);
-  a = acons (cell_symbol_mes_datadir, MAKE_STRING0 (g_datadir), a);
+  a = acons (cell_symbol_mes_version, make_string0 (MES_VERSION), a);
+  a = acons (cell_symbol_mes_datadir, make_string0 (g_datadir), a);
 
-  a = acons (cell_type_bytes, MAKE_NUMBER (TBYTES), a);
-  a = acons (cell_type_char, MAKE_NUMBER (TCHAR), a);
-  a = acons (cell_type_closure, MAKE_NUMBER (TCLOSURE), a);
-  a = acons (cell_type_continuation, MAKE_NUMBER (TCONTINUATION), a);
-  a = acons (cell_type_keyword, MAKE_NUMBER (TKEYWORD), a);
-  a = acons (cell_type_macro, MAKE_NUMBER (TMACRO), a);
-  a = acons (cell_type_number, MAKE_NUMBER (TNUMBER), a);
-  a = acons (cell_type_pair, MAKE_NUMBER (TPAIR), a);
-  a = acons (cell_type_port, MAKE_NUMBER (TPORT), a);
-  a = acons (cell_type_ref, MAKE_NUMBER (TREF), a);
-  a = acons (cell_type_special, MAKE_NUMBER (TSPECIAL), a);
-  a = acons (cell_type_string, MAKE_NUMBER (TSTRING), a);
-  a = acons (cell_type_struct, MAKE_NUMBER (TSTRUCT), a);
-  a = acons (cell_type_symbol, MAKE_NUMBER (TSYMBOL), a);
-  a = acons (cell_type_values, MAKE_NUMBER (TVALUES), a);
-  a = acons (cell_type_variable, MAKE_NUMBER (TVARIABLE), a);
-  a = acons (cell_type_vector, MAKE_NUMBER (TVECTOR), a);
-  a = acons (cell_type_broken_heart, MAKE_NUMBER (TBROKEN_HEART), a);
+  a = acons (cell_type_bytes, make_number (TBYTES), a);
+  a = acons (cell_type_char, make_number (TCHAR), a);
+  a = acons (cell_type_closure, make_number (TCLOSURE), a);
+  a = acons (cell_type_continuation, make_number (TCONTINUATION), a);
+  a = acons (cell_type_keyword, make_number (TKEYWORD), a);
+  a = acons (cell_type_macro, make_number (TMACRO), a);
+  a = acons (cell_type_number, make_number (TNUMBER), a);
+  a = acons (cell_type_pair, make_number (TPAIR), a);
+  a = acons (cell_type_port, make_number (TPORT), a);
+  a = acons (cell_type_ref, make_number (TREF), a);
+  a = acons (cell_type_special, make_number (TSPECIAL), a);
+  a = acons (cell_type_string, make_number (TSTRING), a);
+  a = acons (cell_type_struct, make_number (TSTRUCT), a);
+  a = acons (cell_type_symbol, make_number (TSYMBOL), a);
+  a = acons (cell_type_values, make_number (TVALUES), a);
+  a = acons (cell_type_variable, make_number (TVARIABLE), a);
+  a = acons (cell_type_vector, make_number (TVECTOR), a);
+  a = acons (cell_type_broken_heart, make_number (TBROKEN_HEART), a);
 
   a = acons (cell_closure, a, a);
 

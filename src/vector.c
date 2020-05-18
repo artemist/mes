@@ -42,7 +42,7 @@ SCM
 vector_length (SCM x)
 {
   assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
-  return MAKE_NUMBER (LENGTH (x));
+  return make_number (LENGTH (x));
 }
 
 SCM
@@ -54,9 +54,9 @@ vector_ref_ (SCM x, long i)
   if (TYPE (e) == TREF)
     e = REF (e);
   if (TYPE (e) == TCHAR)
-    e = MAKE_CHAR (VALUE (e));
+    e = make_char (VALUE (e));
   if (TYPE (e) == TNUMBER)
-    e = MAKE_NUMBER (VALUE (e));
+    e = make_number (VALUE (e));
   return e;
 }
 
@@ -70,7 +70,7 @@ SCM
 vector_entry (SCM x)
 {
   if (TYPE (x) != TCHAR && TYPE (x) != TNUMBER)
-    x = MAKE_REF (x);
+    x = make_ref (x);
   return x;
 }
 
