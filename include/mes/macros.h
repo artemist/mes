@@ -32,15 +32,12 @@
 #define BYTES(x) g_cells[x].car
 #define LENGTH(x) g_cells[x].car
 #define REF(x) g_cells[x].car
-#define START(x) (g_cells[x].car >> 16)
-#define LEN(x) (g_cells[x].car & 0xffff)
 #define VARIABLE(x) g_cells[x].car
 
 #define CLOSURE(x) g_cells[x].cdr
 #define CONTINUATION(x) g_cells[x].cdr
 
 #define CBYTES(x) (char*)&g_cells[x].cdr
-#define CSTRING_STRUCT(x) (char*)&g_cells[x.cdr].cdr
 
 #define MACRO(x) g_cells[x].car
 #define NAME(x) g_cells[x].cdr
