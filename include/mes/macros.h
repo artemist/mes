@@ -37,8 +37,6 @@
 #define CLOSURE(x) g_cells[x].cdr
 #define CONTINUATION(x) g_cells[x].cdr
 
-#define CBYTES(x) (char*)&g_cells[x].cdr
-
 #define MACRO(x) g_cells[x].car
 #define NAME(x) g_cells[x].cdr
 #define PORT(x) g_cells[x].car
@@ -48,12 +46,9 @@
 #define VECTOR(x) g_cells[x].cdr
 
 #define NLENGTH(x) g_news[x].car
-#define NCBYTES(x) (char*)&g_news[x].cdr
 #define NVALUE(x) g_news[x].cdr
 #define NSTRING(x) g_news[x].cdr
 #define NVECTOR(x) g_news[x].cdr
-
-#define CSTRING(x) CBYTES (STRING (x))
 
 #define CAAR(x) CAR (CAR (x))
 #define CADR(x) CAR (CDR (x))

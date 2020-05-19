@@ -83,12 +83,9 @@ struct timeval
 
 #define NLENGTH(x) ((x*struct_size)+g_news)->car
 
-#define NCBYTES(x) (((x*struct_size)+g_news) + 8)
 #define NVALUE(x) ((x*struct_size)+g_news)->cdr
 #define NSTRING(x) ((x*struct_size)+g_news)->cdr
 #define NVECTOR(x) ((x*struct_size)+g_news)->cdr
-
-#define CSTRING(x) CBYTES (STRING (x))
 
 #define CAAR(x) CAR (CAR (x))
 #define CADR(x) CAR (CDR (x))

@@ -189,28 +189,28 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
       fdputs (" ", fd);
       x = STRING (x);
       fdputc ('"', fd);
-      fdwrite_string (CSTRING (x), LENGTH (x), fd);
+      fdwrite_string (cell_bytes (STRING (x)), LENGTH (x), fd);
       fdputc ('"', fd);
       fdputs (">", fd);
     }
   else if (t == TKEYWORD)
     {
       fdputs ("#:", fd);
-      fdwrite_string (CSTRING (x), LENGTH (x), fd);
+      fdwrite_string (cell_bytes (STRING (x)), LENGTH (x), fd);
     }
   else if (t == TSTRING)
     {
       if (write_p == 1)
         {
           fdputc ('"', fd);
-          fdwrite_string (CSTRING (x), LENGTH (x), fd);
+          fdwrite_string (cell_bytes (STRING (x)), LENGTH (x), fd);
           fdputc ('"', fd);
         }
       else
-        fdputs (CSTRING (x), fd);
+        fdputs (cell_bytes (STRING (x)), fd);
     }
   else if (t == TSPECIAL || t == TSYMBOL)
-    fdwrite_string (CSTRING (x), LENGTH (x), fd);
+    fdwrite_string (cell_bytes (STRING (x)), LENGTH (x), fd);
   else if (t == TREF)
     fdisplay_ (REF (x), fd, write_p);
   else if (t == TSTRUCT)

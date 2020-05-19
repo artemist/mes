@@ -38,7 +38,7 @@ int
 hashq_ (SCM x, long size)
 {
   if (TYPE (x) == TSPECIAL || TYPE (x) == TSYMBOL)
-    return hash_cstring (CSTRING (x), size);    /* FIXME: hash x directly. */
+    return hash_cstring (cell_bytes (STRING (x)), size);    /* FIXME: hash x directly. */
   error (cell_symbol_system_error, cons (make_string0 ("hashq_: not a symbol"), x));
 }
 
@@ -46,7 +46,7 @@ int
 hash_ (SCM x, long size)
 {
   if (TYPE (x) == TSTRING)
-    return hash_cstring (CSTRING (x), size);
+    return hash_cstring (cell_bytes (STRING (x)), size);
   assert_msg (0, "0");
   return hashq_ (x, size);
 }

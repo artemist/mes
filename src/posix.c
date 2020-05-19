@@ -47,7 +47,7 @@ peekchar ()
   size_t length = LENGTH (string);
   if (length == 0)
     return -1;
-  char const *p = CSTRING (string);
+  char const *p = cell_bytes (STRING (string));
   return p[0];
 }
 
@@ -61,7 +61,7 @@ readchar ()
   size_t length = LENGTH (string);
   if (length == 0)
     return -1;
-  char const *p = CSTRING (string);
+  char const *p = cell_bytes (STRING (string));
   int c = p[0];
   p = p + 1;
   STRING (port) = make_string (p, length - 1);
@@ -78,10 +78,10 @@ unreadchar (int c)
   SCM port = current_input_port ();
   SCM string = STRING (port);
   size_t length = LENGTH (string);
-  char *p = CSTRING (string);
+  char *p = cell_bytes (STRING (string));
   p = p - 1;
   string = make_string (p, length + 1);
-  p = CSTRING (string);
+  p = cell_bytes (STRING (string));
   p[0] = c;
   STRING (port) = string;
   return c;
@@ -159,7 +159,7 @@ SCM
 getenv_ (SCM s)                 /*:((name . "getenv")) */
 {
   char *p;
-  p = getenv (CSTRING (s));
+  p = getenv (cell_bytes (STRING (s)));
   if (p != 0)
     return make_string0 (p);
   return cell_f;
@@ -169,15 +169,15 @@ SCM
 setenv_ (SCM s, SCM v)          /*:((name . "setenv")) */
 {
   char *buf = __setenv_buf;
-  strcpy (buf, CSTRING (s));
-  setenv (buf, CSTRING (v), 1);
+  strcpy (buf, cell_bytes (STRING (s)));
+  setenv (buf, cell_bytes (STRING (v)), 1);
   return cell_unspecified;
 }
 
 SCM
 access_p (SCM file_name, SCM mode)
 {
-  if (access (CSTRING (file_name), VALUE (mode)) == 0)
+  if (access (cell_bytes (STRING (file_name)), VALUE (mode)) == 0)
     return cell_t;
   return cell_f;
 }
@@ -196,7 +196,7 @@ current_input_port ()
 SCM
 open_input_file (SCM file_name)
 {
-  int filedes = mes_open (CSTRING (file_name), O_RDONLY, 0);
+  int filedes = mes_open (cell_bytes (STRING (file_name)), O_RDONLY, 0);
   if (filedes == -1)
     error (cell_symbol_system_error, cons (make_string0 ("No such file or directory"), file_name));
   return make_number (filedes);
@@ -247,7 +247,7 @@ open_output_file (SCM x)        /*:((arity . n)) */
   int mode = S_IRUSR | S_IWUSR;
   if (TYPE (x) == TPAIR && TYPE (car (x)) == TNUMBER)
     mode = VALUE (car (x));
-  return make_number (mes_open (CSTRING (file_name), O_WRONLY | O_CREAT | O_TRUNC, mode));
+  return make_number (mes_open (cell_bytes (STRING (file_name)), O_WRONLY | O_CREAT | O_TRUNC, mode));
 }
 
 SCM
@@ -273,7 +273,7 @@ set_current_error_port (SCM port)
 SCM
 chmod_ (SCM file_name, SCM mode)        /*:((name . "chmod")) */
 {
-  chmod (CSTRING (file_name), VALUE (mode));
+  chmod (cell_bytes (STRING (file_name)), VALUE (mode));
   return cell_unspecified;
 }
 
@@ -300,13 +300,13 @@ execl_ (SCM file_name, SCM args)        /*:((name . "execl")) */
   if (length__ (args) > 1000)
     error (cell_symbol_system_error,
            cons (file_name, cons (make_string0 ("too many arguments"), cons (file_name, args))));
-  c_argv[i] = CSTRING (file_name);
+  c_argv[i] = cell_bytes (STRING (file_name));
   i = i + 1;
   while (args != cell_nil)
     {
       assert_msg (TYPE (CAR (args)) == TSTRING, "TYPE (CAR (args)) == TSTRING");
       SCM arg = CAR (args);
-      c_argv[i] = CSTRING (arg);
+      c_argv[i] = cell_bytes (STRING (arg));
       i = i + 1;
       args = CDR (args);
       if (g_debug > 2)
@@ -420,6 +420,6 @@ dup2_ (SCM old, SCM new)        /*:((name . "dup2")) */
 SCM
 delete_file (SCM file_name)
 {
-  unlink (CSTRING (file_name));
+  unlink (cell_bytes (STRING (file_name)));
   return cell_unspecified;
 }
