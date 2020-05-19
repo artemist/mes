@@ -305,7 +305,8 @@ execl_ (SCM file_name, SCM args)        /*:((name . "execl")) */
   while (args != cell_nil)
     {
       assert_msg (TYPE (CAR (args)) == TSTRING, "TYPE (CAR (args)) == TSTRING");
-      c_argv[i] = CSTRING (CAR (args));
+      SCM arg = CAR (args);
+      c_argv[i] = CSTRING (arg);
       i = i + 1;
       args = CDR (args);
       if (g_debug > 2)
