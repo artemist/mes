@@ -5,6 +5,7 @@ MES_ARENA=100000000 exec ${SCHEME-guile} -L . --no-auto-compile -e '(configure)'
 
 ;;; GNU Mes --- Maxwell Equations of Software
 ;;; Copyright © 2016,2017,2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2020 Vagrant Cascadian <vagrant@reproducible-builds.org>
 ;;;
 ;;; configure: This file is part of GNU Mes.
 ;;;
@@ -321,14 +322,14 @@ MES_ARENA=100000000 exec ${SCHEME-guile} -L . --no-auto-compile -e '(configure)'
             (enable-silent-rules)
             (with-system-libc)
 
-            (enable-fast-install)       ; Ignored for Guix
-            (mandir (value #t))         ; Ignored for Debian
-            (localstatedir (value #t))  ; Ignored for Debian
-            (libexecdir (value #t))     ; Ignored for Debian
-            (runstatedir (value #t))    ; Ignored for Debian
-            (disable-maintainer-mode)   ; Ignored for Debian
+            (enable-fast-install)         ; Ignored for Guix
             (disable-dependency-tracking) ; Ignored for Debian
-            )))
+            (disable-maintainer-mode)     ; Ignored for Debian
+            (disable-option-checking)     ; Ignored for Debian
+            (libexecdir (value #t))       ; Ignored for Debian
+            (localstatedir (value #t))    ; Ignored for Debian
+            (mandir (value #t))           ; Ignored for Debian
+            (runstatedir (value #t)))))   ; Ignored for Debian
 
     (getopt-long args option-spec)))
 
