@@ -209,9 +209,9 @@ formal_p (SCM x, SCM formals)   /*:((internal)) */
   if (TYPE (formals) == TSYMBOL)
     {
       if (x == formals)
-        return x;
+        return 1;
       else
-        return cell_f;
+        return 0;
     }
   while (TYPE (formals) == TPAIR && CAR (formals) != x)
     formals = CDR (formals);
