@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,23 +18,29 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mes/lib.h>
+
 #include <string.h>
 
 int
-memcmp (void const *s1, void const *s2, size_t size)
+main ()
 {
-  if (size == 0)
-    return 0;
+  char *p = "mes";
 
-  char const *a = s1;
-  char const *b = s2;
+  if (!memcmp (p, "foo", 3))
+    return 1;
 
-  while (a[0] == b[0] && size > 1)
-    {
-      size = size - 1;
-      a = a + 1;
-      b = b + 1;
-    }
+  if (memcmp (p, "mes", 3))
+    return 2;
 
-  return a[0] - b[0];
+  if (memcmp (p, "mes", 4))
+    return 3;
+
+  if (!memcmp (p, "mesx", 4))
+    return 4;
+
+  if (memcmp (p, "mesx", 3))
+    return 5;
+
+  return 0;
 }
