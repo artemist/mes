@@ -32,7 +32,6 @@ int __stderr = STDERR;
 int
 mes_open (char const *file_name, int flags, int mask)
 {
-  __ungetc_init ();
   int filedes = open (file_name, flags, mask);
   if (filedes > 2)
     __ungetc_clear (filedes);

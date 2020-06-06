@@ -31,6 +31,8 @@ int *__ungetc_buf;
 int
 __ungetc_p (int filedes)
 {
+  if (__ungetc_buf == 0)
+    __ungetc_init ();
   return __ungetc_buf[filedes] >= 0;
 }
 
@@ -49,19 +51,24 @@ __ungetc_init ()
 void
 __ungetc_clear (int filedes)
 {
+  if (__ungetc_buf == 0)
+    __ungetc_init ();
   __ungetc_buf[filedes] = -1;
 }
 
 void
 __ungetc_set (int filedes, int c)
 {
+  if (__ungetc_buf == 0)
+    __ungetc_init ();
   __ungetc_buf[filedes] = c;
 }
 
 int
 fdgetc (int fd)
 {
-  __ungetc_init ();
+  if (__ungetc_buf == 0)
+    __ungetc_init ();
 
   char c;
   int i = __ungetc_buf[fd];

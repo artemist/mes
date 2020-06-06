@@ -24,7 +24,6 @@
 int
 fdungetc (int c, int fd)
 {
-  __ungetc_init ();
   if (c == -1)
     return c;
   else if (__ungetc_p (fd))
