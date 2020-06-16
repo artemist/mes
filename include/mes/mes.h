@@ -122,5 +122,6 @@ void assert_msg (int check, char *msg);
 #include "mes/builtins.h"
 #include "mes/constants.h"
 #include "mes/macros.h"
+#include "mes/symbols.h"
 
 #endif /* __MES_MES_H */

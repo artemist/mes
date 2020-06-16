@@ -124,11 +124,11 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
 
 (define (snarf-symbols string)
   (let* ((lines (string-split string #\newline))
-         (symbols (filter (cut string-prefix? "  init_symbol (" <>) lines)))
+         (symbols (filter (cut string-contains <> " = init_symbol (") lines)))
     (define (line->symbol line)
       ((compose
-        (lambda (s) (string-take s (string-index s #\,)))
-        (cut string-drop <> (string-length "  init_symbol (")))
+        string-trim-both
+        (lambda (s) (string-take s (string-index s #\=))))
        line))
     (map line->symbol symbols)))
 

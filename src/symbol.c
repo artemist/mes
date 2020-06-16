@@ -23,8 +23,10 @@
 
 #include <string.h>
 
-void
-init_symbol (long x, long type, char const *name)
+long g_symbol;
+
+SCM
+init_symbol (SCM x, long type, char const *name)
 {
   TYPE (x) = type;
   int length = strlen (name);
@@ -32,151 +34,141 @@ init_symbol (long x, long type, char const *name)
   CAR (x) = length;
   CDR (x) = STRING (string);
   hash_set_x (g_symbols, string, x);
+  g_symbol = g_symbol + 1;
+  return x;
 }
 
 SCM
 init_symbols ()                  /*:((internal)) */
 {
-  g_free = cell_symbol_test + 1;
+  g_free = SYMBOL_MAX + 1;
   g_symbol_max = g_free;
   g_symbols = make_hash_table_ (500);
 
   int size = VALUE (struct_ref_ (g_symbols, 3));
-  // Weird: m2-planet exits 67 here...[printing size = 100]
-  // if (size == 0) exit (66);
-  // if (!size) exit (67);
 
-  init_symbol (cell_nil, TSPECIAL, "()");
-  init_symbol (cell_f, TSPECIAL, "#f");
-  init_symbol (cell_t, TSPECIAL, "#t");
-  init_symbol (cell_dot, TSPECIAL, ".");
-  init_symbol (cell_arrow, TSPECIAL, "=>");
-  init_symbol (cell_undefined, TSPECIAL, "*undefined*");
-  init_symbol (cell_unspecified, TSPECIAL, "*unspecified*");
-  init_symbol (cell_closure, TSPECIAL, "*closure*");
-  init_symbol (cell_circular, TSPECIAL, "*circular*");
-  init_symbol (cell_begin, TSPECIAL, "*begin*");
-  init_symbol (cell_call_with_current_continuation, TSPECIAL, "*call/cc*");
+  g_symbol = 1;
+  cell_nil = 1;
+  cell_nil = init_symbol (g_symbol, TSPECIAL, "()");
+  cell_f = init_symbol (g_symbol, TSPECIAL, "#f");
+  cell_t = init_symbol (g_symbol, TSPECIAL, "#t");
+  cell_dot = init_symbol (g_symbol, TSPECIAL, ".");
+  cell_arrow = init_symbol (g_symbol, TSPECIAL, "=>");
+  cell_undefined = init_symbol (g_symbol, TSPECIAL, "*undefined*");
+  cell_unspecified = init_symbol (g_symbol, TSPECIAL, "*unspecified*");
+  cell_closure = init_symbol (g_symbol, TSPECIAL, "*closure*");
+  cell_circular = init_symbol (g_symbol, TSPECIAL, "*circular*");
+  cell_begin = init_symbol (g_symbol, TSPECIAL, "*begin*");
+  cell_call_with_current_continuation = init_symbol (g_symbol, TSPECIAL, "*call/cc*");
+  cell_vm_apply = init_symbol (g_symbol, TSPECIAL, "core:apply");
+  cell_vm_apply2 = init_symbol (g_symbol, TSPECIAL, "*vm-apply2*");
+  cell_vm_begin = init_symbol (g_symbol, TSPECIAL, "*vm-begin*");
+  cell_vm_begin_eval = init_symbol (g_symbol, TSPECIAL, "*vm:begin-eval*");
+  cell_vm_begin_expand = init_symbol (g_symbol, TSPECIAL, "core:eval");
+  cell_vm_begin_expand_eval = init_symbol (g_symbol, TSPECIAL, "*vm:begin-expand-eval*");
+  cell_vm_begin_expand_macro = init_symbol (g_symbol, TSPECIAL, "*vm:begin-expand-macro*");
+  cell_vm_begin_expand_primitive_load = init_symbol (g_symbol, TSPECIAL, "*vm:core:begin-expand-primitive-load*");
+  cell_vm_begin_primitive_load = init_symbol (g_symbol, TSPECIAL, "*vm:core:begin-primitive-load*");
+  cell_vm_begin_read_input_file = init_symbol (g_symbol, TSPECIAL, "*vm-begin-read-input-file*");
+  cell_vm_call_with_current_continuation2 = init_symbol (g_symbol, TSPECIAL, "*vm-call-with-current-continuation2*");
+  cell_vm_call_with_values2 = init_symbol (g_symbol, TSPECIAL, "*vm-call-with-values2*");
+  cell_vm_eval = init_symbol (g_symbol, TSPECIAL, "core:eval-expanded");
+  cell_vm_eval2 = init_symbol (g_symbol, TSPECIAL, "*vm-eval2*");
+  cell_vm_eval_check_func = init_symbol (g_symbol, TSPECIAL, "*vm-eval-check-func*");
+  cell_vm_eval_define = init_symbol (g_symbol, TSPECIAL, "*vm-eval-define*");
+  cell_vm_eval_macro_expand_eval = init_symbol (g_symbol, TSPECIAL, "*vm:eval-macro-expand-eval*");
+  cell_vm_eval_macro_expand_expand = init_symbol (g_symbol, TSPECIAL, "*vm:eval-macro-expand-expand*");
+  cell_vm_eval_pmatch_car = init_symbol (g_symbol, TSPECIAL, "*vm-eval-pmatch-car*");
+  cell_vm_eval_pmatch_cdr = init_symbol (g_symbol, TSPECIAL, "*vm-eval-pmatch-cdr*");
+  cell_vm_eval_set_x = init_symbol (g_symbol, TSPECIAL, "*vm-eval-set!*");
+  cell_vm_evlis = init_symbol (g_symbol, TSPECIAL, "*vm-evlis*");
+  cell_vm_evlis2 = init_symbol (g_symbol, TSPECIAL, "*vm-evlis2*");
+  cell_vm_evlis3 = init_symbol (g_symbol, TSPECIAL, "*vm-evlis3*");
+  cell_vm_if = init_symbol (g_symbol, TSPECIAL, "*vm-if*");
+  cell_vm_if_expr = init_symbol (g_symbol, TSPECIAL, "*vm-if-expr*");
+  cell_vm_macro_expand = init_symbol (g_symbol, TSPECIAL, "core:macro-expand");
+  cell_vm_macro_expand_car = init_symbol (g_symbol, TSPECIAL, "*vm:core:macro-expand-car*");
+  cell_vm_macro_expand_cdr = init_symbol (g_symbol, TSPECIAL, "*vm:macro-expand-cdr*");
+  cell_vm_macro_expand_define = init_symbol (g_symbol, TSPECIAL, "*vm:core:macro-expand-define*");
+  cell_vm_macro_expand_define_macro = init_symbol (g_symbol, TSPECIAL, "*vm:core:macro-expand-define-macro*");
+  cell_vm_macro_expand_lambda = init_symbol (g_symbol, TSPECIAL, "*vm:core:macro-expand-lambda*");
+  cell_vm_macro_expand_set_x = init_symbol (g_symbol, TSPECIAL, "*vm:core:macro-expand-set!*");
+  cell_vm_return = init_symbol (g_symbol, TSPECIAL, "*vm-return*");
+  cell_symbol_dot = init_symbol (g_symbol, TSYMBOL, "*dot*");
+  cell_symbol_lambda = init_symbol (g_symbol, TSYMBOL, "lambda");
+  cell_symbol_begin = init_symbol (g_symbol, TSYMBOL, "begin");
+  cell_symbol_if = init_symbol (g_symbol, TSYMBOL, "if");
+  cell_symbol_quote = init_symbol (g_symbol, TSYMBOL, "quote");
+  cell_symbol_define = init_symbol (g_symbol, TSYMBOL, "define");
+  cell_symbol_define_macro = init_symbol (g_symbol, TSYMBOL, "define-macro");
+  cell_symbol_quasiquote = init_symbol (g_symbol, TSYMBOL, "quasiquote");
+  cell_symbol_unquote = init_symbol (g_symbol, TSYMBOL, "unquote");
+  cell_symbol_unquote_splicing = init_symbol (g_symbol, TSYMBOL, "unquote-splicing");
+  cell_symbol_syntax = init_symbol (g_symbol, TSYMBOL, "syntax");
+  cell_symbol_quasisyntax = init_symbol (g_symbol, TSYMBOL, "quasisyntax");
+  cell_symbol_unsyntax = init_symbol (g_symbol, TSYMBOL, "unsyntax");
+  cell_symbol_unsyntax_splicing = init_symbol (g_symbol, TSYMBOL, "unsyntax-splicing");
+  cell_symbol_set_x = init_symbol (g_symbol, TSYMBOL, "set!");
+  cell_symbol_sc_expand = init_symbol (g_symbol, TSYMBOL, "sc-expand");
+  cell_symbol_macro_expand = init_symbol (g_symbol, TSYMBOL, "macro-expand");
+  cell_symbol_portable_macro_expand = init_symbol (g_symbol, TSYMBOL, "portable-macro-expand");
+  cell_symbol_sc_expander_alist = init_symbol (g_symbol, TSYMBOL, "*sc-expander-alist*");
+  cell_symbol_call_with_values = init_symbol (g_symbol, TSYMBOL, "call-with-values");
+  cell_symbol_call_with_current_continuation = init_symbol (g_symbol, TSYMBOL, "call-with-current-continuation");
+  cell_symbol_boot_module = init_symbol (g_symbol, TSYMBOL, "boot-module");
+  cell_symbol_current_module = init_symbol (g_symbol, TSYMBOL, "current-module");
+  cell_symbol_primitive_load = init_symbol (g_symbol, TSYMBOL, "primitive-load");
+  cell_symbol_read_input_file = init_symbol (g_symbol, TSYMBOL, "read-input-file");
+  cell_symbol_write = init_symbol (g_symbol, TSYMBOL, "write");
+  cell_symbol_display = init_symbol (g_symbol, TSYMBOL, "display");
+  cell_symbol_car = init_symbol (g_symbol, TSYMBOL, "car");
+  cell_symbol_cdr = init_symbol (g_symbol, TSYMBOL, "cdr");
+  cell_symbol_not_a_number = init_symbol (g_symbol, TSYMBOL, "not-a-number");
+  cell_symbol_not_a_pair = init_symbol (g_symbol, TSYMBOL, "not-a-pair");
+  cell_symbol_system_error = init_symbol (g_symbol, TSYMBOL, "system-error");
+  cell_symbol_throw = init_symbol (g_symbol, TSYMBOL, "throw");
+  cell_symbol_unbound_variable = init_symbol (g_symbol, TSYMBOL, "unbound-variable");
+  cell_symbol_wrong_number_of_args = init_symbol (g_symbol, TSYMBOL, "wrong-number-of-args");
+  cell_symbol_wrong_type_arg = init_symbol (g_symbol, TSYMBOL, "wrong-type-arg");
+  cell_symbol_buckets = init_symbol (g_symbol, TSYMBOL, "buckets");
+  cell_symbol_builtin = init_symbol (g_symbol, TSYMBOL, "<builtin>");
+  cell_symbol_frame = init_symbol (g_symbol, TSYMBOL, "<frame>");
+  cell_symbol_hashq_table = init_symbol (g_symbol, TSYMBOL, "<hashq-table>");
+  cell_symbol_module = init_symbol (g_symbol, TSYMBOL, "<module>");
+  cell_symbol_procedure = init_symbol (g_symbol, TSYMBOL, "procedure");
+  cell_symbol_record_type = init_symbol (g_symbol, TSYMBOL, "<record-type>");
+  cell_symbol_size = init_symbol (g_symbol, TSYMBOL, "size");
+  cell_symbol_stack = init_symbol (g_symbol, TSYMBOL, "<stack>");
+  cell_symbol_argv = init_symbol (g_symbol, TSYMBOL, "%argv");
+  cell_symbol_mes_datadir = init_symbol (g_symbol, TSYMBOL, "%datadir");
+  cell_symbol_mes_version = init_symbol (g_symbol, TSYMBOL, "%version");
+  cell_symbol_internal_time_units_per_second = init_symbol (g_symbol, TSYMBOL, "internal-time-units-per-second");
+  cell_symbol_compiler = init_symbol (g_symbol, TSYMBOL, "%compiler");
+  cell_symbol_arch = init_symbol (g_symbol, TSYMBOL, "%arch");
+  cell_symbol_pmatch_car = init_symbol (g_symbol, TSYMBOL, "pmatch-car");
+  cell_symbol_pmatch_cdr = init_symbol (g_symbol, TSYMBOL, "pmatch-cdr");
+  cell_type_bytes = init_symbol (g_symbol, TSYMBOL, "<cell:bytes>");
+  cell_type_char = init_symbol (g_symbol, TSYMBOL, "<cell:char>");
+  cell_type_closure = init_symbol (g_symbol, TSYMBOL, "<cell:closure>");
+  cell_type_continuation = init_symbol (g_symbol, TSYMBOL, "<cell:continuation>");
+  cell_type_function = init_symbol (g_symbol, TSYMBOL, "<cell:function>");
+  cell_type_keyword = init_symbol (g_symbol, TSYMBOL, "<cell:keyword>");
+  cell_type_macro = init_symbol (g_symbol, TSYMBOL, "<cell:macro>");
+  cell_type_number = init_symbol (g_symbol, TSYMBOL, "<cell:number>");
+  cell_type_pair = init_symbol (g_symbol, TSYMBOL, "<cell:pair>");
+  cell_type_port = init_symbol (g_symbol, TSYMBOL, "<cell:port>");
+  cell_type_ref = init_symbol (g_symbol, TSYMBOL, "<cell:ref>");
+  cell_type_special = init_symbol (g_symbol, TSYMBOL, "<cell:special>");
+  cell_type_string = init_symbol (g_symbol, TSYMBOL, "<cell:string>");
+  cell_type_struct = init_symbol (g_symbol, TSYMBOL, "<cell:struct>");
+  cell_type_symbol = init_symbol (g_symbol, TSYMBOL, "<cell:symbol>");
+  cell_type_values = init_symbol (g_symbol, TSYMBOL, "<cell:values>");
+  cell_type_variable = init_symbol (g_symbol, TSYMBOL, "<cell:variable>");
+  cell_type_vector = init_symbol (g_symbol, TSYMBOL, "<cell:vector>");
+  cell_type_broken_heart = init_symbol (g_symbol, TSYMBOL, "<cell:broken-heart>");
+  cell_symbol_test = init_symbol (g_symbol, TSYMBOL, "%%test");
 
-  init_symbol (cell_vm_apply, TSPECIAL, "core:apply");
-  init_symbol (cell_vm_apply2, TSPECIAL, "*vm-apply2*");
-  init_symbol (cell_vm_begin, TSPECIAL, "*vm-begin*");
-  init_symbol (cell_vm_begin_eval, TSPECIAL, "*vm:begin-eval*");
-  init_symbol (cell_vm_begin_expand, TSPECIAL, "core:eval");
-  init_symbol (cell_vm_begin_expand_eval, TSPECIAL, "*vm:begin-expand-eval*");
-  init_symbol (cell_vm_begin_expand_macro, TSPECIAL, "*vm:begin-expand-macro*");
-  init_symbol (cell_vm_begin_expand_primitive_load, TSPECIAL, "*vm:core:begin-expand-primitive-load*");
-  init_symbol (cell_vm_begin_primitive_load, TSPECIAL, "*vm:core:begin-primitive-load*");
-  init_symbol (cell_vm_begin_read_input_file, TSPECIAL, "*vm-begin-read-input-file*");
-  init_symbol (cell_vm_call_with_current_continuation2, TSPECIAL, "*vm-call-with-current-continuation2*");
-  init_symbol (cell_vm_call_with_values2, TSPECIAL, "*vm-call-with-values2*");
-  init_symbol (cell_vm_eval, TSPECIAL, "core:eval-expanded");
-  init_symbol (cell_vm_eval2, TSPECIAL, "*vm-eval2*");
-  init_symbol (cell_vm_eval_check_func, TSPECIAL, "*vm-eval-check-func*");
-  init_symbol (cell_vm_eval_define, TSPECIAL, "*vm-eval-define*");
-  init_symbol (cell_vm_eval_macro_expand_eval, TSPECIAL, "*vm:eval-macro-expand-eval*");
-  init_symbol (cell_vm_eval_macro_expand_expand, TSPECIAL, "*vm:eval-macro-expand-expand*");
-  init_symbol (cell_vm_eval_pmatch_car, TSPECIAL, "*vm-eval-pmatch-car*");
-  init_symbol (cell_vm_eval_pmatch_cdr, TSPECIAL, "*vm-eval-pmatch-cdr*");
-  init_symbol (cell_vm_eval_set_x, TSPECIAL, "*vm-eval-set!*");
-  init_symbol (cell_vm_evlis, TSPECIAL, "*vm-evlis*");
-  init_symbol (cell_vm_evlis2, TSPECIAL, "*vm-evlis2*");
-  init_symbol (cell_vm_evlis3, TSPECIAL, "*vm-evlis3*");
-  init_symbol (cell_vm_if, TSPECIAL, "*vm-if*");
-  init_symbol (cell_vm_if_expr, TSPECIAL, "*vm-if-expr*");
-  init_symbol (cell_vm_macro_expand, TSPECIAL, "core:macro-expand");
-  init_symbol (cell_vm_macro_expand_car, TSPECIAL, "*vm:core:macro-expand-car*");
-  init_symbol (cell_vm_macro_expand_cdr, TSPECIAL, "*vm:macro-expand-cdr*");
-  init_symbol (cell_vm_macro_expand_define, TSPECIAL, "*vm:core:macro-expand-define*");
-  init_symbol (cell_vm_macro_expand_define_macro, TSPECIAL, "*vm:core:macro-expand-define-macro*");
-  init_symbol (cell_vm_macro_expand_lambda, TSPECIAL, "*vm:core:macro-expand-lambda*");
-  init_symbol (cell_vm_macro_expand_set_x, TSPECIAL, "*vm:core:macro-expand-set!*");
-  init_symbol (cell_vm_return, TSPECIAL, "*vm-return*");
-
-  init_symbol (cell_symbol_dot, TSYMBOL, "*dot*");
-  init_symbol (cell_symbol_lambda, TSYMBOL, "lambda");
-  init_symbol (cell_symbol_begin, TSYMBOL, "begin");
-  init_symbol (cell_symbol_if, TSYMBOL, "if");
-  init_symbol (cell_symbol_quote, TSYMBOL, "quote");
-  init_symbol (cell_symbol_define, TSYMBOL, "define");
-  init_symbol (cell_symbol_define_macro, TSYMBOL, "define-macro");
-
-  init_symbol (cell_symbol_quasiquote, TSYMBOL, "quasiquote");
-  init_symbol (cell_symbol_unquote, TSYMBOL, "unquote");
-  init_symbol (cell_symbol_unquote_splicing, TSYMBOL, "unquote-splicing");
-  init_symbol (cell_symbol_syntax, TSYMBOL, "syntax");
-  init_symbol (cell_symbol_quasisyntax, TSYMBOL, "quasisyntax");
-  init_symbol (cell_symbol_unsyntax, TSYMBOL, "unsyntax");
-  init_symbol (cell_symbol_unsyntax_splicing, TSYMBOL, "unsyntax-splicing");
-
-  init_symbol (cell_symbol_set_x, TSYMBOL, "set!");
-
-  init_symbol (cell_symbol_sc_expand, TSYMBOL, "sc-expand");
-  init_symbol (cell_symbol_macro_expand, TSYMBOL, "macro-expand");
-  init_symbol (cell_symbol_portable_macro_expand, TSYMBOL, "portable-macro-expand");
-  init_symbol (cell_symbol_sc_expander_alist, TSYMBOL, "*sc-expander-alist*");
-
-  init_symbol (cell_symbol_call_with_values, TSYMBOL, "call-with-values");
-  init_symbol (cell_symbol_call_with_current_continuation, TSYMBOL, "call-with-current-continuation");
-  init_symbol (cell_symbol_boot_module, TSYMBOL, "boot-module");
-  init_symbol (cell_symbol_current_module, TSYMBOL, "current-module");
-  init_symbol (cell_symbol_primitive_load, TSYMBOL, "primitive-load");
-  init_symbol (cell_symbol_read_input_file, TSYMBOL, "read-input-file");
-  init_symbol (cell_symbol_write, TSYMBOL, "write");
-  init_symbol (cell_symbol_display, TSYMBOL, "display");
-
-  init_symbol (cell_symbol_car, TSYMBOL, "car");
-  init_symbol (cell_symbol_cdr, TSYMBOL, "cdr");
-  init_symbol (cell_symbol_not_a_number, TSYMBOL, "not-a-number");
-  init_symbol (cell_symbol_not_a_pair, TSYMBOL, "not-a-pair");
-  init_symbol (cell_symbol_system_error, TSYMBOL, "system-error");
-  init_symbol (cell_symbol_throw, TSYMBOL, "throw");
-  init_symbol (cell_symbol_unbound_variable, TSYMBOL, "unbound-variable");
-  init_symbol (cell_symbol_wrong_number_of_args, TSYMBOL, "wrong-number-of-args");
-  init_symbol (cell_symbol_wrong_type_arg, TSYMBOL, "wrong-type-arg");
-
-  init_symbol (cell_symbol_buckets, TSYMBOL, "buckets");
-  init_symbol (cell_symbol_builtin, TSYMBOL, "<builtin>");
-  init_symbol (cell_symbol_frame, TSYMBOL, "<frame>");
-  init_symbol (cell_symbol_hashq_table, TSYMBOL, "<hashq-table>");
-  init_symbol (cell_symbol_module, TSYMBOL, "<module>");
-  init_symbol (cell_symbol_procedure, TSYMBOL, "procedure");
-  init_symbol (cell_symbol_record_type, TSYMBOL, "<record-type>");
-  init_symbol (cell_symbol_size, TSYMBOL, "size");
-  init_symbol (cell_symbol_stack, TSYMBOL, "<stack>");
-
-  init_symbol (cell_symbol_argv, TSYMBOL, "%argv");
-  init_symbol (cell_symbol_mes_datadir, TSYMBOL, "%datadir");
-  init_symbol (cell_symbol_mes_version, TSYMBOL, "%version");
-
-  init_symbol (cell_symbol_internal_time_units_per_second, TSYMBOL, "internal-time-units-per-second");
-  init_symbol (cell_symbol_compiler, TSYMBOL, "%compiler");
-  init_symbol (cell_symbol_arch, TSYMBOL, "%arch");
-
-  init_symbol (cell_symbol_pmatch_car, TSYMBOL, "pmatch-car");
-  init_symbol (cell_symbol_pmatch_cdr, TSYMBOL, "pmatch-cdr");
-
-  init_symbol (cell_type_bytes, TSYMBOL, "<cell:bytes>");
-  init_symbol (cell_type_char, TSYMBOL, "<cell:char>");
-  init_symbol (cell_type_closure, TSYMBOL, "<cell:closure>");
-  init_symbol (cell_type_continuation, TSYMBOL, "<cell:continuation>");
-  init_symbol (cell_type_function, TSYMBOL, "<cell:function>");
-  init_symbol (cell_type_keyword, TSYMBOL, "<cell:keyword>");
-  init_symbol (cell_type_macro, TSYMBOL, "<cell:macro>");
-  init_symbol (cell_type_number, TSYMBOL, "<cell:number>");
-  init_symbol (cell_type_pair, TSYMBOL, "<cell:pair>");
-  init_symbol (cell_type_port, TSYMBOL, "<cell:port>");
-  init_symbol (cell_type_ref, TSYMBOL, "<cell:ref>");
-  init_symbol (cell_type_special, TSYMBOL, "<cell:special>");
-  init_symbol (cell_type_string, TSYMBOL, "<cell:string>");
-  init_symbol (cell_type_struct, TSYMBOL, "<cell:struct>");
-  init_symbol (cell_type_symbol, TSYMBOL, "<cell:symbol>");
-  init_symbol (cell_type_values, TSYMBOL, "<cell:values>");
-  init_symbol (cell_type_variable, TSYMBOL, "<cell:variable>");
-  init_symbol (cell_type_vector, TSYMBOL, "<cell:vector>");
-  init_symbol (cell_type_broken_heart, TSYMBOL, "<cell:broken-heart>");
-
-  init_symbol (cell_symbol_test, TSYMBOL, "%%test");
+  assert_msg (g_symbol == SYMBOL_MAX, "i == SYMBOL_MAX");
 
   SCM a = cell_nil;
   a = acons (cell_symbol_call_with_values, cell_symbol_call_with_values, a);
