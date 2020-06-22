@@ -81,7 +81,6 @@ SCM builtin_name (SCM builtin);
 SCM cstring_to_list (char const *s);
 SCM cstring_to_symbol (char const *s);
 SCM fdisplay_ (SCM, int, int);
-SCM gc_init ();
 SCM gc_peek_frame ();
 SCM gc_pop_frame ();
 SCM gc_push_frame ();
@@ -118,6 +117,8 @@ long length__ (SCM x);
 size_t bytes_cells (size_t length);
 void assert_max_string (size_t i, char const *msg, char *string);
 void assert_msg (int check, char *msg);
+void gc_ ();
+void gc_init ();
 
 #include "mes/builtins.h"
 #include "mes/constants.h"
