@@ -25,10 +25,25 @@
 #include <string.h>
 #include <stdlib.h>
 
+#if __M2_PLANET__
+#define M2_CELL_SIZE 12
+// CONSTANT M2_CELL_SIZE 12
+#else
+#define M2_CELL_SIZE 1
+// CONSTANT M2_CELL_SIZE 12
+#endif
+
 char *
 cell_bytes (SCM x)
 {
+#if POINTER_CELLS
+  char *p = x;
+  return p + (2 * sizeof (long));
+#elif __M2_PLANET__
+  CELL (x) + 8;
+#else
   return &CDR (x);
+#endif
 }
 
 char *
@@ -48,7 +63,11 @@ gc_init ()
   MAX_ARENA_SIZE = 100000000;
   STACK_SIZE = 20000;
 
+#if POINTER_CELLS
+  JAM_SIZE = 1000;
+#else
   JAM_SIZE = 20000;
+#endif
   GC_SAFETY = 2000;
   MAX_STRING = 524288;
 
@@ -69,32 +88,60 @@ gc_init ()
     MAX_STRING = atoi (p);
 
   long arena_bytes = (ARENA_SIZE + JAM_SIZE) * sizeof (struct scm);
+#if POINTER_CELLS
+  void *a = malloc (arena_bytes + STACK_SIZE * sizeof (SCM) * 2);
+#else
   void *a = malloc (arena_bytes + STACK_SIZE * sizeof (SCM));
+#endif
   g_cells = a;
   g_stack_array = a + arena_bytes;
 
-  TYPE (0) = TVECTOR;
-  LENGTH (0) = 1000;
-  VECTOR (0) = 0;
+#if POINTER_CELLS
+  /* The vector that holds the arenea. */
+  cell_arena = g_cells;
+#else
+  /* The vector that holds the arenea. */
+  cell_arena = 0;
+#endif
+  TYPE (cell_arena) = TVECTOR;
+  LENGTH (cell_arena) = 1000;
+  VECTOR (cell_arena) = 0;
   g_cells = g_cells + 1;
-  TYPE (0) = TCHAR;
-  VALUE (0) = 'c';
+  TYPE (cell_arena) = TCHAR;
+  VALUE (cell_arena) = 'c';
+
+#if !POINTER_CELLS
+  g_free = 1;
+#else
+  g_free = g_cells + M2_CELL_SIZE;
+#endif
 
   /* FIXME: remove MES_MAX_STRING, grow dynamically */
   g_buf = malloc (MAX_STRING);
 }
 
-SCM
-gc_init_news ()                 /*:((internal)) */
+long
+gc_free ()
 {
-  g_news = g_cells + g_free;
-  NTYPE (0) = TVECTOR;
-  NLENGTH (0) = 1000;
-  NVECTOR (0) = 0;
-  g_news = g_news + 1;
-  NTYPE (0) = TCHAR;
-  NVALUE (0) = 'n';
-  return 0;
+#if POINTER_CELLS
+  return g_free - g_cells;
+#else
+  return g_free;
+#endif
+}
+
+void
+gc_stats_ (char const* where)
+{
+#if POINTER_CELLS
+  long i = g_free - g_cells;
+#else
+  long i = g_free;
+#endif
+  eputs (where);
+  eputs (": [");
+  eputs (ntoab (i, 10, 0));
+  eputs ("]\n");
 }
 
 SCM
@@ -102,7 +149,12 @@ alloc (long n)
 {
   SCM x = g_free;
   g_free = g_free + n;
-  if (g_free > ARENA_SIZE)
+#if POINTER_CELLS
+  long i = g_free - g_cells;
+#else
+  long i = g_free;
+#endif
+  if (i > ARENA_SIZE)
     assert_msg (0, "alloc: out of memory");
   return x;
 }
@@ -112,12 +164,45 @@ make_cell (long type, SCM car, SCM cdr)
 {
   SCM x = g_free;
   g_free = g_free + 1;
-  if (g_free > ARENA_SIZE)
+#if POINTER_CELLS
+  long i = g_free - g_cells;
+#else
+  long i = g_free;
+#endif
+  if (i > ARENA_SIZE)
     assert_msg (0, "alloc: out of memory");
   TYPE (x) = type;
   CAR (x) = car;
   CDR (x) = cdr;
   return x;
+}
+
+void
+copy_cell (SCM to, SCM from)
+{
+  TYPE (to) = TYPE (from);
+  CAR (to) = CAR (from);
+  CDR (to) = CDR (from);
+}
+
+void
+copy_news (SCM to, SCM from)
+{
+  NTYPE (to) = TYPE (from);
+  NCAR (to) = CAR (from);
+  NCDR (to) = CDR (from);
+}
+
+void
+copy_stack (long index, SCM from)
+{
+  g_stack_array[index] = from;
+}
+
+SCM
+cell_ref (SCM cell, long index)
+{
+  return cell + index;
 }
 
 SCM
@@ -139,12 +224,7 @@ make_bytes (char const *s, size_t length)
   SCM x = alloc (size);
   TYPE (x) = TBYTES;
   LENGTH (x) = length;
-#if __M2_PLANET__
-  char *p = &g_cells[x];
-  p = p + 2 * sizeof (SCM);
-#else
-  char *p = &CDR (x);
-#endif
+  char *p = cell_bytes (x);
   if (length == 0)
     p[0] = 0;
   else
@@ -207,6 +287,22 @@ make_string_port (SCM x)        /*:((internal)) */
 }
 
 void
+gc_init_news ()
+{
+#if POINTER_CELLS
+  g_news = g_free;
+#else
+  g_news = g_cells + g_free;
+  NTYPE (cell_arena) = TVECTOR;
+  NLENGTH (cell_arena) = 1000;
+  NVECTOR (cell_arena) = 0;
+  g_news = g_news + 1;
+  NTYPE (cell_arena) = TCHAR;
+  NVALUE (cell_arena) = 'n';
+#endif
+}
+
+void
 gc_up_arena ()
 {
   long old_arena_bytes = (ARENA_SIZE + JAM_SIZE) * sizeof (struct scm);
@@ -225,7 +321,12 @@ gc_up_arena ()
       eputs ("realloc failed, g_free=");
       eputs (itoa (g_free));
       eputs (":");
-      eputs (itoa (ARENA_SIZE - g_free));
+#if POINTER_CELLS
+      long i = g_free - g_cells;
+#else
+      long i = g_free;
+#endif
+      eputs (itoa (ARENA_SIZE - i));
       eputs ("\n");
       assert_msg (0, "0");
       exit (1);
@@ -238,15 +339,20 @@ gc_up_arena ()
 void
 gc_flip ()
 {
+#if POINTER_CELLS
+  //with pointers, nevva gonna wok
+  //memcpy (g_cells - 1, g_news - 1, (g_free - g_cells + 2) * sizeof (struct scm));
+  g_cells = g_news;
+#endif
   if (g_debug > 2)
-    {
-      eputs (";;;   => jam[");
-      eputs (itoa (g_free));
-      eputs ("]\n");
-    }
+    gc_stats_ (";;; => jam");
+#if POINTER_CELLS
+  // nothing
+#else
   if (g_free > JAM_SIZE)
     JAM_SIZE = g_free + g_free / 2;
   memcpy (g_cells - 1, g_news - 1, (g_free + 2) * sizeof (struct scm));
+#endif
 }
 
 SCM
@@ -256,14 +362,14 @@ gc_copy (SCM old)               /*:((internal)) */
     return CAR (old);
   SCM new = g_free;
   g_free = g_free + 1;
-  g_news[new] = g_cells[old];
+  copy_news (new, old);
   if (NTYPE (new) == TSTRUCT || NTYPE (new) == TVECTOR)
     {
       NVECTOR (new) = g_free;
       long i;
       for (i = 0; i < LENGTH (old); i = i + 1)
         {
-          g_news[g_free] = g_cells[VECTOR (old) + i];
+          copy_news (g_free, cell_ref (VECTOR (old), i));
           g_free = g_free + 1;
         }
     }
@@ -271,7 +377,7 @@ gc_copy (SCM old)               /*:((internal)) */
     {
       char const *src = cell_bytes (old);
       char *dest = news_bytes (new);
-      size_t length = NLENGTH (new);
+      size_t length = NLENGTH (old);
       memcpy (dest, src, length);
       g_free = g_free + bytes_cells (length) - 1;
 
@@ -311,7 +417,7 @@ gc_relocate_cdr (SCM new, SCM cdr)      /*:((internal)) */
 }
 
 void
-gc_loop (SCM scan)              /*:((internal)) */
+gc_loop (SCM scan)
 {
   SCM car;
   SCM cdr;
@@ -351,9 +457,9 @@ gc_loop (SCM scan)              /*:((internal)) */
           gc_relocate_cdr (scan, cdr);
         }
       if (t == TBYTES)
-        scan = scan + bytes_cells (NLENGTH (scan));
+        scan = scan + (bytes_cells (NLENGTH (scan)) * M2_CELL_SIZE);
       else
-        scan = scan + 1;
+        scan = scan + M2_CELL_SIZE;
     }
   gc_flip ();
 }
@@ -361,7 +467,11 @@ gc_loop (SCM scan)              /*:((internal)) */
 SCM
 gc_check ()
 {
+#if POINTER_CELLS
+  if ((g_free - g_cells) + GC_SAFETY > ARENA_SIZE)
+#else
   if (g_free + GC_SAFETY > ARENA_SIZE)
+#endif
     gc ();
   return cell_unspecified;
 }
@@ -374,13 +484,20 @@ gc_ ()
     eputs (".");
   if (g_debug > 2)
     {
-      eputs (";;; gc[");
-      eputs (itoa (g_free));
-      eputs (":");
+      gc_stats_ (";;; gc");
+      eputs (";;; free: [");
+#if POINTER_CELLS
+      eputs (itoa (ARENA_SIZE - (g_free - g_cells)));
+#else
       eputs (itoa (ARENA_SIZE - g_free));
+#endif
       eputs ("]...");
     }
+#if POINTER_CELLS
+  g_free = g_news;
+#else
   g_free = 1;
+#endif
 
   if (ARENA_SIZE < MAX_ARENA_SIZE && g_news > 0)
     {
@@ -401,16 +518,28 @@ gc_ ()
       gc_up_arena ();
     }
 
-  long i;
-  for (i = g_free; i < g_symbol_max; i = i + 1)
-    gc_copy (i);
+  SCM s;
+  for (s = cell_nil; s < g_symbol_max; s = s + 1)
+    gc_copy (s);
   g_symbols = gc_copy (g_symbols);
   g_macros = gc_copy (g_macros);
   g_ports = gc_copy (g_ports);
   M0 = gc_copy (M0);
+  long i;
   for (i = g_stack; i < STACK_SIZE; i = i + 1)
-    g_stack_array[i] = gc_copy (g_stack_array[i]);
-  gc_loop (1);
+    copy_stack (i, gc_copy (g_stack_array[i]));
+#if POINTER_CELLS
+  long save_gfree = g_free;
+  long save_gsymbols =g_symbols;
+  g_symbols = 0;
+  ///g_free = g_news + 1;
+  cell_nil = g_news; // hmm?
+  init_symbols_ ();
+  g_symbol_max = g_symbol;
+  g_free = save_gfree;
+  g_symbols = save_gsymbols;
+#endif
+  gc_loop (cell_nil);
 }
 
 SCM

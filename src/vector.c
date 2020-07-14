@@ -28,7 +28,8 @@ make_vector__ (long k)
   SCM x = make_cell (TVECTOR, k, v);
   long i;
   for (i = 0; i < k; i = i + 1)
-    g_cells[v + i] = g_cells[vector_entry (cell_unspecified)];
+    copy_cell (cell_ref (v, i), vector_entry (cell_unspecified));
+
   return x;
 }
 
@@ -50,7 +51,7 @@ vector_ref_ (SCM x, long i)
 {
   assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
   assert_msg (i < LENGTH (x), "i < LENGTH (x)");
-  SCM e = VECTOR (x) + i;
+  SCM e = cell_ref (VECTOR (x), i);
   if (TYPE (e) == TREF)
     e = REF (e);
   if (TYPE (e) == TCHAR)
@@ -79,7 +80,7 @@ vector_set_x_ (SCM x, long i, SCM e)
 {
   assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
   assert_msg (i < LENGTH (x), "i < LENGTH (x)");
-  g_cells[VECTOR (x) + i] = g_cells[vector_entry (e)];
+  copy_cell (cell_ref (VECTOR (x), i), vector_entry (e));
   return cell_unspecified;
 }
 
@@ -92,12 +93,11 @@ vector_set_x (SCM x, SCM i, SCM e)
 SCM
 list_to_vector (SCM x)
 {
-
   SCM v = make_vector__ (length__ (x));
   SCM p = VECTOR (v);
   while (x != cell_nil)
     {
-      g_cells[p] = g_cells[vector_entry (car (x))];
+      copy_cell (p, vector_entry (car (x)));
       p = p + 1;
       x = cdr (x);
     }
@@ -111,7 +111,7 @@ vector_to_list (SCM v)
   long i;
   for (i = LENGTH (v); i; i = i - 1)
     {
-      SCM e = VECTOR (v) + i - 1;
+      SCM e = cell_ref (VECTOR (v), i - 1);
       if (TYPE (e) == TREF)
         e = REF (e);
       x = cons (e, x);

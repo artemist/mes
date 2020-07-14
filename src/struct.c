@@ -27,14 +27,8 @@ make_struct (SCM type, SCM fields, SCM printer)
   long size = 2 + length__ (fields);
   SCM v = alloc (size);
   SCM x = make_cell (TSTRUCT, size, v);
-  SCM vt = vector_entry (type);
-  TYPE (v) = TYPE (vt);
-  CAR (v) = CAR (vt);
-  CDR (v) = CDR (vt);
-  SCM vp = vector_entry (printer);
-  TYPE (v + 1) = TYPE (vp);
-  CAR (v + 1) = CAR (vp);
-  CDR (v + 1) = CDR (vp);
+  copy_cell (v, vector_entry (type));
+  copy_cell (cell_ref (v, 1), vector_entry (printer));
   long i;
   for (i = 2; i < size; i = i + 1)
     {
@@ -44,10 +38,7 @@ make_struct (SCM type, SCM fields, SCM printer)
           e = CAR (fields);
           fields = CDR (fields);
         }
-      SCM ve = vector_entry (e);
-      TYPE (v + i) = TYPE (ve);
-      CAR (v + i) = CAR (ve);
-      CDR (v + i) = CDR (ve);
+      copy_cell (cell_ref (v, i), vector_entry (e));
     }
   return x;
 }
@@ -64,7 +55,7 @@ struct_ref_ (SCM x, long i)
 {
   assert_msg (TYPE (x) == TSTRUCT, "TYPE (x) == TSTRUCT");
   assert_msg (i < LENGTH (x), "i < LENGTH (x)");
-  SCM e = STRUCT (x) + i;
+  SCM e = cell_ref (STRUCT (x), i);
   if (TYPE (e) == TREF)
     e = REF (e);
   if (TYPE (e) == TCHAR)
@@ -79,7 +70,7 @@ struct_set_x_ (SCM x, long i, SCM e)
 {
   assert_msg (TYPE (x) == TSTRUCT, "TYPE (x) == TSTRUCT");
   assert_msg (i < LENGTH (x), "i < LENGTH (x)");
-  g_cells[STRUCT (x) + i] = g_cells[vector_entry (e)];
+  copy_cell (cell_ref (STRUCT (x), i), vector_entry (e));
   return cell_unspecified;
 }
 

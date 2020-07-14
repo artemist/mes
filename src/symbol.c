@@ -23,32 +23,42 @@
 
 #include <string.h>
 
+#if __M2_PLANET__
+#define M2_CELL_SIZE 12
+// CONSTANT M2_CELL_SIZE 12
+#else
+#define M2_CELL_SIZE 1
+// CONSTANT M2_CELL_SIZE 12
+#endif
+
+#if POINTER_CELLS
+SCM g_symbol;
+#else
 long g_symbol;
+#endif
 
 SCM
 init_symbol (SCM x, long type, char const *name)
 {
   TYPE (x) = type;
-  int length = strlen (name);
-  SCM string = make_string (name, length);
-  CAR (x) = length;
-  CDR (x) = STRING (string);
-  hash_set_x (g_symbols, string, x);
-  g_symbol = g_symbol + 1;
+  if (!g_symbols)
+    g_free = g_free + M2_CELL_SIZE;
+  else
+    {
+      int length = strlen (name);
+      SCM string = make_string (name, length);
+      CAR (x) = length;
+      CDR (x) = STRING (string);
+      hash_set_x (g_symbols, string, x);
+    }
+  g_symbol = g_symbol + M2_CELL_SIZE;
   return x;
 }
 
-SCM
-init_symbols ()                  /*:((internal)) */
+void
+init_symbols_ ()                  /*:((internal)) */
 {
-  g_free = SYMBOL_MAX + 1;
-  g_symbol_max = g_free;
-  g_symbols = make_hash_table_ (500);
-
-  int size = VALUE (struct_ref_ (g_symbols, 3));
-
-  g_symbol = 1;
-  cell_nil = 1;
+  g_symbol = cell_nil;
   cell_nil = init_symbol (g_symbol, TSPECIAL, "()");
   cell_f = init_symbol (g_symbol, TSPECIAL, "#f");
   cell_t = init_symbol (g_symbol, TSPECIAL, "#t");
@@ -167,8 +177,34 @@ init_symbols ()                  /*:((internal)) */
   cell_type_vector = init_symbol (g_symbol, TSYMBOL, "<cell:vector>");
   cell_type_broken_heart = init_symbol (g_symbol, TSYMBOL, "<cell:broken-heart>");
   cell_symbol_test = init_symbol (g_symbol, TSYMBOL, "%%test");
+}
 
-  assert_msg (g_symbol == SYMBOL_MAX, "i == SYMBOL_MAX");
+SCM
+init_symbols ()                  /*:((internal)) */
+{
+#if POINTER_CELLS
+  g_free = g_cells + M2_CELL_SIZE;
+#else
+  g_free = 1;
+#endif
+
+  g_symbols = 0;
+  cell_nil = g_free;
+  init_symbols_ ();
+
+#if POINTER_CELLS
+  assert_msg ("UNSPEC", cell_unspecified - g_cells == CELL_UNSPECIFIED);
+  assert_msg ("RECORD-TYPE", cell_symbol_record_type - g_cells == CELL_SYMBOL_RECORD_TYPE);
+  g_symbol_max = g_symbol;
+#else
+  assert_msg ("UNSPEC", cell_unspecified == CELL_UNSPECIFIED);
+  assert_msg ("RECORD-TYPE", cell_symbol_record_type == CELL_SYMBOL_RECORD_TYPE);
+  g_symbol_max = g_symbol;
+#endif
+
+  g_symbols = make_hash_table_ (500);
+  init_symbols_ ();
+  g_ports = cell_nil;
 
   SCM a = cell_nil;
   a = acons (cell_symbol_call_with_values, cell_symbol_call_with_values, a);

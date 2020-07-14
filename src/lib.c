@@ -131,7 +131,7 @@ memq (SCM x, SCM a)
   int t = TYPE (x);
   if (t == TCHAR || t == TNUMBER)
     {
-      SCM v = VALUE (x);
+      long v = VALUE (x);
       while (a != cell_nil && v != VALUE (CAR (a)))
         a = CDR (a);
     }

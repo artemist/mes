@@ -53,7 +53,15 @@ struct timeval
 */
 
 #define struct_size 12
+
+#if POINTER_CELLS
+
+#define CELL(x) (x)
+
+#else
+
 #define CELL(x) ((x*struct_size)+g_cells)
+
 #define TYPE(x) ((x*struct_size)+g_cells)->type
 #define CAR(x) ((x*struct_size)+g_cells)->car
 #define CDR(x) ((x*struct_size)+g_cells)->cdr
@@ -94,5 +102,7 @@ struct timeval
 #define CADAR(x) CAR (CDR (CAR (x)))
 #define CADDR(x) CAR (CDR (CDR (x)))
 #define CDADAR(x) CAR (CDR (CAR (CDR (x))))
+
+#endif
 
 #endif /* __MES_M2_H */

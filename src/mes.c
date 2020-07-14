@@ -224,7 +224,7 @@ assq (SCM x, SCM a)
       a = CDR (a);
   else if (t == TCHAR || t == TNUMBER)
     {
-      SCM v = VALUE (x);
+      long v = VALUE (x);
       while (a != cell_nil && v != VALUE (CAAR (a)))
         a = CDR (a);
     }
@@ -399,7 +399,6 @@ init (char **envp)
     g_debug = atoi (p);
   open_boot ();
   gc_init ();
-  g_ports = 1;
 }
 
 int
@@ -420,11 +419,7 @@ main (int argc, char **argv, char **envp)
   push_cc (R2, cell_unspecified, R0, cell_unspecified);
 
   if (g_debug > 2)
-    {
-      eputs ("\ngc stats: [");
-      eputs (itoa (g_free));
-      eputs ("]\n");
-    }
+    gc_stats_ ("\n gc boot");
   if (g_debug > 3)
     {
       eputs ("program: ");
@@ -443,25 +438,22 @@ main (int argc, char **argv, char **envp)
       if (g_debug > 5)
         module_printer (M0);
 
-      eputs ("\ngc stats: [");
-      eputs (itoa (g_free));
+      if (g_debug < 3)
+        gc_stats_ ("\ngc run");
       MAX_ARENA_SIZE = 0;
 
       gc (g_stack);
-      eputs (" => ");
-      eputs (itoa (g_free));
-      eputs ("]\n");
-      eputs ("\n");
+      if (g_debug < 3)
+        gc_stats_ (" => ");
 
       if (g_debug > 5)
         {
-          eputs ("ports:");
+          eputs ("\nports:");
           write_error_ (g_ports);
           eputs ("\n");
         }
       eputs ("\n");
-
-
     }
+
   return 0;
 }

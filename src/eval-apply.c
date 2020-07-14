@@ -352,7 +352,7 @@ eval_apply ()
   int global_p;
   int macro_p;
   int t;
-  long c;
+  SCM c;
 
 eval_apply:
   if (R3 == cell_vm_evlis2)
