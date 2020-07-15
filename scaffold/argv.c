@@ -22,18 +22,7 @@
 #include <string.h>
 
 int
-strcmp (char const *a, char const *b)
-{
-  while (*a && *b && *a == *b)
-    {
-      a++;
-      b++;
-    }
-  return *a - *b;
-}
-
-int
-main (int argc, char *argv[])
+main (int argc, char **argv)
 {
   eputs ("Hi Mes!\n");
 #if __MESC_MES__
@@ -41,10 +30,11 @@ main (int argc, char *argv[])
 #else
   eputs ("MESC.GUILE\n");
 #endif
-  if (argc > 1 && !strcmp (argv[1], "--help"))
-    {
-      eputs ("argc > 1 && --help\n");
-      return argc;
-    }
+  if (argc > 1)
+    if (strcmp (argv[1], "--help") == 0)
+      {
+        eputs ("argc > 1 && --help\n");
+        return argc;
+      }
   return 42;
 }

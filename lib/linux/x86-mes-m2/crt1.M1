@@ -33,14 +33,21 @@
 	shl____$i8,%eax !0x02
 	add____%ebp,%eax
 	mov____%eax,0x32 &GLOBAL_environ
-	push___%eax
-	mov____%ebp,%eax
-	add____$i8,%eax !8
-	push___%eax
-	mov____%ebp,%eax
+
+	mov____%esp,%edi  	; M2-Planet calling convention pushes forward
+	mov____%ebp,%eax 	; argc
 	add____$i8,%eax !4
 	mov____(%eax),%eax
 	push___%eax
+
+	mov____%ebp,%eax 	; argv
+	add____$i8,%eax !8
+	push___%eax
+
+	mov____0x32,%eax &GLOBAL_environ
+	push___%eax
+
+	mov____%edi,%ebp    	; M2-Planet calling convention
 	call32 %FUNCTION_main
 	add____$i8,%esp !0x0
 	test___%eax,%eax
