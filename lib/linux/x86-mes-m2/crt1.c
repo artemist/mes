@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018,2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,11 +18,17 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
+#include "mes/lib-mini.h"
 
-int
-main (int argc, char **argv)
-{
-  eputs ("Hello, Mescc!\n");
-  return 42;
-}
+int __stdin;
+int __stdout;
+int __stderr;
+char **environ;
+int main (int argc, char **argv, char **envp);
+
+/* FIXME: this is going to be called `FUNCTION__start' */
+//#int
+//#_start ()
+//#{
+//# ..
+//#}

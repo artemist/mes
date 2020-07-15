@@ -51,17 +51,20 @@
 !/lib/tests/*/*.exit
 !/lib/tests/*/*.stdout
 
+/scaffold/*.M1
+/scaffold/*.m2
+/scaffold/*.hex2
 /scaffold/argv
 /scaffold/hello
 /scaffold/main
 /scaffold/micro-mes
 /scaffold/tiny-mes
 
-/scaffold/tests/[0-9a][0-9a-z]-*
-/scaffold/tests/t.*
-!/scaffold/tests/*.c
-!/scaffold/tests/*.exit
-!/scaffold/tests/*.stdout
+/scaffold/argv-m2
+/scaffold/hello-m2
+/scaffold/main-m2
+/scaffold/micro-mes-m2
+/scaffold/tiny-mes-m2
 
 /.config.make
 /.store

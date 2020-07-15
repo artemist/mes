@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,11 +18,10 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
-
-int
-main (int argc, char **argv)
+void
+_exit ()
 {
-  eputs ("Hello, Mescc!\n");
-  return 42;
+  asm ("mov____$i32,%eax SYS_exit");
+  asm ("mov____0x8(%ebp),%ebx !-4");
+  asm ("int____$0x80");
 }

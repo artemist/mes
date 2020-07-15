@@ -1,0 +1,53 @@
+#! /bin/sh
+# Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+#
+# This file is part of GNU Mes.
+#
+# GNU Mes is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or (at
+# your option) any later version.
+#
+# GNU Mes is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
+
+# Usage:
+# kaem --verbose --strict --file scaffold/main.kaem
+# scaffold/main-m2
+
+mes_cpu=${mes_cpu:-x86}
+stage0_cpu=${stage0_cpu:-x86}
+
+M2-Planet                                       \
+    --debug                                     \
+    --architecture ${stage0_cpu}                \
+    -f lib/linux/${mes_cpu}-mes-m2/crt1.c       \
+    -f scaffold/main.c                          \
+    -o scaffold/main.M1
+
+blood-elf -f scaffold/main.M1 -o scaffold/main.blood-elf-M1
+
+M1                                              \
+    --architecture ${stage0_cpu}                \
+    --little-endian                             \
+    -f lib/m2/${mes_cpu}/${mes_cpu}_defs.M1     \
+    -f lib/${mes_cpu}-mes/${mes_cpu}.M1         \
+    -f lib/linux/${mes_cpu}-mes-m2/crt1.M1      \
+    -f scaffold/main.M1                         \
+    -f scaffold/main.blood-elf-M1               \
+    -o scaffold/main.hex2
+
+hex2                                            \
+    --architecture ${stage0_cpu}                \
+    --little-endian                             \
+    --base-address 0x1000000                    \
+    -f lib/m2/${mes_cpu}/ELF-${mes_cpu}.hex2    \
+    -f scaffold/main.hex2                       \
+    -o scaffold/main-m2
+
+echo Now run: scaffold/main-m2
