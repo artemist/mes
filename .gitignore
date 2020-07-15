@@ -58,12 +58,14 @@
 /scaffold/hello
 /scaffold/main
 /scaffold/micro-mes
+/scaffold/read
 /scaffold/tiny-mes
 
 /scaffold/argv-m2
 /scaffold/hello-m2
 /scaffold/main-m2
 /scaffold/micro-mes-m2
+/scaffold/read-m2
 /scaffold/tiny-mes-m2
 
 /.config.make

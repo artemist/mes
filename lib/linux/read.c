@@ -26,21 +26,22 @@
 ssize_t
 read (int filedes, void *buffer, size_t size)
 {
-  ssize_t bytes = _sys_call3 (SYS_read, (int) filedes, (long) buffer, (long) size);
+  ssize_t bytes = _sys_call3 (SYS_read, filedes, buffer, size);
   if (__mes_debug () > 4)
     {
       if (bytes == 1)
         {
           eputs ("read fd=");
-          eputs (itoa ((int) filedes));
+          eputs (itoa (filedes));
           eputs (" c=");
-          eputc (*(char *) buffer);
+          char *s = buffer;
+          eputc (s[0]);
           eputs ("\n");
         }
       else
         {
           eputs ("read fd=");
-          eputs (itoa ((int) filedes));
+          eputs (itoa (filedes));
           eputs (" bytes=");
           eputs (itoa (bytes));
           eputs ("\n");

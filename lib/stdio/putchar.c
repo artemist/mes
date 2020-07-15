@@ -23,6 +23,7 @@
 int
 putchar (int c)
 {
-  write (STDOUT, (char *) &c, 1);
+  char *p = &c;
+  write (__stdout, p, 1);
   return 0;
 }

@@ -24,5 +24,5 @@
 long
 brk (void *addr)
 {
-  return _sys_call1 (SYS_brk, (long) addr);
+  return _sys_call1 (SYS_brk, addr);
 }

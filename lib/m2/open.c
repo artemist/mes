@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,23 +18,16 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <string.h>
+#include <mes/lib.h>
+#include <fcntl.h>
+#include <stdarg.h>
 
-char *
-_memset (char *s, int c, size_t n)
+int
+open (char *file_name, int flags, int mask)
 {
-  char *p = s;
-  while (n != 0)
-    {
-      n = n - 1;
-      s[0] = c;
-      s = s + 1;
-    }
-  return p;
-}
-
-void *
-memset (void *s, int c, size_t n)
-{
-  return _memset (s, c, n);
+  int r = _sys_call3 (SYS_open, file_name, flags, mask);
+  __ungetc_init ();
+  if (r > 2)
+    __ungetc_clear (r);
+  return r;
 }

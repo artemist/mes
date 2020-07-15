@@ -27,4 +27,7 @@ int __stdout;
 int __stderr;
 int errno;
 
+// CONSTANT EOF 0xffffffff
+// CONSTANT __FILEDES_MAX 512
+
 #endif /* __M2_LIB_H */
