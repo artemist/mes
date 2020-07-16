@@ -23,6 +23,8 @@
 
 #include <string.h>
 
+// char const *MES_VERSION = "0.23";
+
 #if __M2_PLANET__
 #define M2_CELL_SIZE 12
 // CONSTANT M2_CELL_SIZE 12
@@ -31,10 +33,10 @@
 // CONSTANT M2_CELL_SIZE 12
 #endif
 
-#if POINTER_CELLS
-SCM g_symbol;
-#else
+#if !POINTER_CELLS
 long g_symbol;
+#else
+SCM g_symbol;
 #endif
 
 SCM
@@ -182,26 +184,16 @@ init_symbols_ ()                  /*:((internal)) */
 SCM
 init_symbols ()                  /*:((internal)) */
 {
-#if POINTER_CELLS
-  g_free = g_cells + M2_CELL_SIZE;
-#else
+#if !POINTER_CELLS
   g_free = 1;
+#else
+  g_free = g_cells + M2_CELL_SIZE;
 #endif
 
   g_symbols = 0;
   cell_nil = g_free;
   init_symbols_ ();
-
-#if POINTER_CELLS
-  assert_msg ("UNSPEC", cell_unspecified - g_cells == CELL_UNSPECIFIED);
-  assert_msg ("RECORD-TYPE", cell_symbol_record_type - g_cells == CELL_SYMBOL_RECORD_TYPE);
   g_symbol_max = g_symbol;
-#else
-  assert_msg ("UNSPEC", cell_unspecified == CELL_UNSPECIFIED);
-  assert_msg ("RECORD-TYPE", cell_symbol_record_type == CELL_SYMBOL_RECORD_TYPE);
-  g_symbol_max = g_symbol;
-#endif
-
   g_symbols = make_hash_table_ (500);
   init_symbols_ ();
   g_ports = cell_nil;

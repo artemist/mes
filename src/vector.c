@@ -21,6 +21,14 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
+#if __M2_PLANET__
+#define M2_CELL_SIZE 12
+// CONSTANT M2_CELL_SIZE 12
+#else
+#define M2_CELL_SIZE 1
+// CONSTANT M2_CELL_SIZE 12
+#endif
+
 SCM
 make_vector__ (long k)
 {
@@ -98,7 +106,7 @@ list_to_vector (SCM x)
   while (x != cell_nil)
     {
       copy_cell (p, vector_entry (car (x)));
-      p = p + 1;
+      p = p + M2_CELL_SIZE;
       x = cdr (x);
     }
   return v;
