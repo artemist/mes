@@ -32,8 +32,15 @@
 SCM
 assoc_string (SCM x, SCM a)     /*:((internal)) */
 {
-  while (a != cell_nil && (TYPE (CAAR (a)) != TSTRING || string_equal_p (x, CAAR (a)) == cell_f))
-    a = CDR (a);
+  SCM b;
+  while (a != cell_nil)
+    {
+      b = CAR (a);
+      if (TYPE (CAR (b)) == TSTRING)
+        if (string_equal_p (x, CAR (b)) == cell_t)
+          return b;
+      a = CDR (a);
+    }
   if (a != cell_nil)
     return CAR (a);
   return cell_f;
