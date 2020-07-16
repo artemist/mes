@@ -213,8 +213,12 @@ formal_p (SCM x, SCM formals)   /*:((internal)) */
       else
         return 0;
     }
-  while (TYPE (formals) == TPAIR && CAR (formals) != x)
-    formals = CDR (formals);
+  while (TYPE (formals) == TPAIR)
+    {
+      if (CAR (formals) == x)
+        break;
+      formals = CDR (formals);
+    }
   if (TYPE (formals) == TSYMBOL)
     return formals == x;
   return TYPE (formals) == TPAIR;
