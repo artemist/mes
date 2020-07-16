@@ -113,13 +113,31 @@ null_p (SCM x)
 SCM
 eq_p (SCM x, SCM y)
 {
-  if (x == y
-      || ((TYPE (x) == TKEYWORD && TYPE (y) == TKEYWORD
-           && string_equal_p (x, y) == cell_t))
-      || (TYPE (x) == TCHAR && TYPE (y) == TCHAR
-          && VALUE (x) == VALUE (y))
-      || (TYPE (x) == TNUMBER && TYPE (y) == TNUMBER && VALUE (x) == VALUE (y)))
+  if (x == y)
     return cell_t;
+  int t = TYPE (x);
+  if (t == TKEYWORD)
+    {
+      if (TYPE (y) == TKEYWORD)
+        return string_equal_p (x, y);
+      return cell_f;
+    }
+  if (t == TCHAR)
+    {
+      if (TYPE (y) != TCHAR)
+        return cell_f;
+      if (VALUE (x) == VALUE (y))
+        return cell_t;
+      return cell_f;
+    }
+  if (t == TNUMBER)
+    {
+      if (TYPE (y) != TNUMBER)
+        return cell_f;
+      if (VALUE (x) == VALUE (y))
+        return cell_t;
+      return cell_f;
+    }
   return cell_f;
 }
 
