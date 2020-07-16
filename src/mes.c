@@ -244,26 +244,41 @@ assq (SCM x, SCM a)
   if (TYPE (a) != TPAIR)
     return cell_f;
   int t = TYPE (x);
+
   if (t == TSYMBOL || t == TSPECIAL)
-    while (a != cell_nil && x != CAAR (a))
-      a = CDR (a);
+    while (a != cell_nil)
+      {
+        if (x == CAAR (a))
+          return CAR (a);
+        a = CDR (a);
+      }
   else if (t == TCHAR || t == TNUMBER)
     {
       long v = VALUE (x);
-      while (a != cell_nil && v != VALUE (CAAR (a)))
-        a = CDR (a);
+      while (a != cell_nil)
+        {
+          if (v == VALUE (CAAR (a)))
+            return CAR (a);
+          a = CDR (a);
+        }
     }
   else if (t == TKEYWORD)
     {
-      while (a != cell_nil && string_equal_p (x, CAAR (a)) == cell_f)
-        a = CDR (a);
+      while (a != cell_nil)
+        {
+          if (string_equal_p (x, CAAR (a)) == cell_t)
+            return CAR (a);
+          a = CDR (a);
+        }
     }
   else
     /* pointer equality, e.g. on strings. */
-    while (a != cell_nil && x != CAAR (a))
-      a = CDR (a);
-  if (a != cell_nil)
-    return CAR (a);
+    while (a != cell_nil)
+      {
+        if (x == CAAR (a))
+          return CAR (a);
+        a = CDR (a);
+      }
   return cell_f;
 }
 
