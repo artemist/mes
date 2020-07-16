@@ -118,10 +118,12 @@ stack_ref (SCM stack, SCM index)
 SCM
 xassq (SCM x, SCM a)            /* For speed in core. */
 {
-  while (a != cell_nil && x != CDAR (a))
-    a = CDR (a);
-  if (a != cell_nil)
-    return CAR (a);
+  while (a != cell_nil)
+    {
+      if (x == CDAR (a))
+        return CAR (a);
+      a = CDR (a);
+    }
   return cell_f;
 }
 
