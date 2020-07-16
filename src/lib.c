@@ -204,8 +204,12 @@ equal2:
 SCM
 last_pair (SCM x)
 {
-  while (x != cell_nil && CDR (x) != cell_nil)
-    x = CDR (x);
+  while (x != cell_nil)
+    {
+      if (CDR (x) == cell_nil)
+        return x;
+      x = CDR (x);
+    }
   return x;
 }
 
