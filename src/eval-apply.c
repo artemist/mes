@@ -288,9 +288,12 @@ SCM
 apply_builtin (SCM fn, SCM x)   /*:((internal)) */
 {
   int arity = VALUE (builtin_arity (fn));
-  if ((arity > 0 || arity == -1) && x != cell_nil && TYPE (CAR (x)) == TVALUES)
-    x = cons (CADAR (x), CDR (x));
-  if ((arity > 1 || arity == -1) && x != cell_nil && TYPE (CDR (x)) == TPAIR && TYPE (CADR (x)) == TVALUES)
+  if ((arity > 0 || arity == -1) && x != cell_nil)
+    if (TYPE (CAR (x)) == TVALUES)
+      x = cons (CADAR (x), CDR (x));
+  if ((arity > 1 || arity == -1) && x != cell_nil)
+    if (TYPE (CDR (x)) == TPAIR)
+      if (TYPE (CADR (x)) == TVALUES)
     x = cons (CAR (x), cons (CDADAR (x), CDR (x)));
 
 #if __M2_PLANET__
