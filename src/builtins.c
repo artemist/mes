@@ -66,8 +66,9 @@ builtin_function (SCM builtin)
 SCM
 builtin_p (SCM x)
 {
-  if (TYPE (x) == TSTRUCT && struct_ref_ (x, 2) == cell_symbol_builtin)
-    return cell_t;
+  if (TYPE (x) == TSTRUCT)
+    if (struct_ref_ (x, 2) == cell_symbol_builtin)
+      return cell_t;
   return cell_f;
 }
 
