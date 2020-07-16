@@ -612,73 +612,74 @@ eval:
         }
       else
         {
-          if (TYPE (R1) == TPAIR && (CAR (R1) == cell_symbol_define || CAR (R1) == cell_symbol_define_macro))
-            {
-              global_p = CAAR (R0) != cell_closure;
-              macro_p = CAR (R1) == cell_symbol_define_macro;
-              if (global_p != 0)
-                {
-                  name = CADR (R1);
-                  if (TYPE (CADR (R1)) == TPAIR)
-                    name = CAR (name);
-                  if (macro_p != 0)
-                    {
-                      entry = assq (name, g_macros);
-                      if (entry == cell_f)
-                        macro_set_x (name, cell_f);
-                    }
-                  else
-                    {
-                      entry = module_variable (R0, name);
-                      if (entry == cell_f)
-                        module_define_x (M0, name, cell_f);
-                    }
-                }
-              R2 = R1;
-              if (TYPE (CADR (R1)) != TPAIR)
-                {
-                  push_cc (CAR (CDDR (R1)), R2, cons (cons (CADR (R1), CADR (R1)), R0), cell_vm_eval_define);
-                  goto eval;
-                }
-              else
-                {
-                  p = pairlis (CADR (R1), CADR (R1), R0);
-                  formals = CDR (CADR (R1));
-                  body = CDDR (R1);
+          if (TYPE (R1) == TPAIR)
+            if (CAR (R1) == cell_symbol_define || CAR (R1) == cell_symbol_define_macro)
+              {
+                global_p = CAAR (R0) != cell_closure;
+                macro_p = CAR (R1) == cell_symbol_define_macro;
+                if (global_p != 0)
+                  {
+                    name = CADR (R1);
+                    if (TYPE (CADR (R1)) == TPAIR)
+                      name = CAR (name);
+                    if (macro_p != 0)
+                      {
+                        entry = assq (name, g_macros);
+                        if (entry == cell_f)
+                          macro_set_x (name, cell_f);
+                      }
+                    else
+                      {
+                        entry = module_variable (R0, name);
+                        if (entry == cell_f)
+                          module_define_x (M0, name, cell_f);
+                      }
+                  }
+                R2 = R1;
+                if (TYPE (CADR (R1)) != TPAIR)
+                  {
+                    push_cc (CAR (CDDR (R1)), R2, cons (cons (CADR (R1), CADR (R1)), R0), cell_vm_eval_define);
+                    goto eval;
+                  }
+                else
+                  {
+                    p = pairlis (CADR (R1), CADR (R1), R0);
+                    formals = CDR (CADR (R1));
+                    body = CDDR (R1);
 
-                  if (macro_p || global_p)
-                    expand_variable (body, formals);
-                  R1 = cons (cell_symbol_lambda, cons (formals, body));
-                  push_cc (R1, R2, p, cell_vm_eval_define);
-                  goto eval;
-                }
-            eval_define:
-              name = CADR (R2);
-              if (TYPE (CADR (R2)) == TPAIR)
-                name = CAR (name);
-              if (macro_p != 0)
-                {
-                  entry = macro_get_handle (name);
-                  R1 = make_macro (name, R1);
-                  set_cdr_x (entry, R1);
-                }
-              else if (global_p != 0)
-                {
-                  entry = module_variable (R0, name);
-                  set_cdr_x (entry, R1);
-                }
-              else
-                {
-                  entry = cons (name, R1);
-                  aa = cons (entry, cell_nil);
-                  set_cdr_x (aa, cdr (R0));
-                  set_cdr_x (R0, aa);
-                  cl = module_variable (R0, cell_closure);
-                  set_cdr_x (cl, aa);
-                }
-              R1 = cell_unspecified;
-              goto vm_return;
-            }
+                    if (macro_p || global_p)
+                      expand_variable (body, formals);
+                    R1 = cons (cell_symbol_lambda, cons (formals, body));
+                    push_cc (R1, R2, p, cell_vm_eval_define);
+                    goto eval;
+                  }
+              eval_define:
+                name = CADR (R2);
+                if (TYPE (CADR (R2)) == TPAIR)
+                  name = CAR (name);
+                if (macro_p != 0)
+                  {
+                    entry = macro_get_handle (name);
+                    R1 = make_macro (name, R1);
+                    set_cdr_x (entry, R1);
+                  }
+                else if (global_p != 0)
+                  {
+                    entry = module_variable (R0, name);
+                    set_cdr_x (entry, R1);
+                  }
+                else
+                  {
+                    entry = cons (name, R1);
+                    aa = cons (entry, cell_nil);
+                    set_cdr_x (aa, cdr (R0));
+                    set_cdr_x (R0, aa);
+                    cl = module_variable (R0, cell_closure);
+                    set_cdr_x (cl, aa);
+                  }
+                R1 = cell_unspecified;
+                goto vm_return;
+              }
           push_cc (CAR (R1), R1, R0, cell_vm_eval_check_func);
           gc_check ();
           goto eval;
@@ -728,11 +729,15 @@ macro_expand:
       goto vm_return;
     }
 
-  if (TYPE (R1) == TPAIR && (macro = get_macro (CAR (R1))) != cell_f)
+  if (TYPE (R1) == TPAIR)
     {
-      R1 = cons (macro, CDR (R1));
-      push_cc (R1, cell_nil, R0, cell_vm_macro_expand);
-      goto apply;
+      macro = get_macro (CAR (R1));
+      if (macro != cell_f)
+        {
+          R1 = cons (macro, CDR (R1));
+          push_cc (R1, cell_nil, R0, cell_vm_macro_expand);
+          goto apply;
+        }
     }
 
   if (CAR (R1) == cell_symbol_define || CAR (R1) == cell_symbol_define_macro)
@@ -762,19 +767,29 @@ macro_expand:
       goto vm_return;
     }
 
-  if (TYPE (R1) == TPAIR
-      && TYPE (CAR (R1)) == TSYMBOL
-      && CAR (R1) != cell_symbol_begin
-      && ((macro = macro_get_handle (cell_symbol_portable_macro_expand)) != cell_f)
-      && ((expanders = module_ref (R0, cell_symbol_sc_expander_alist)) != cell_undefined)
-      && ((macro = assq (CAR (R1), expanders)) != cell_f))
+  if (TYPE (R1) == TPAIR)
     {
-      sc_expand = module_ref (R0, cell_symbol_macro_expand);
-      R2 = R1;
-      if (sc_expand != cell_undefined && sc_expand != cell_f)
+      if (TYPE (CAR (R1)) == TSYMBOL && CAR (R1) != cell_symbol_begin)
         {
-          R1 = cons (sc_expand, cons (R1, cell_nil));
-          goto apply;
+          macro = macro_get_handle (cell_symbol_portable_macro_expand);
+          if (macro != cell_f)
+            {
+              expanders = module_ref (R0, cell_symbol_sc_expander_alist);
+              if (expanders != cell_undefined)
+                {
+                  macro = assq (CAR (R1), expanders);
+                  if (macro != cell_f)
+                    {
+                      sc_expand = module_ref (R0, cell_symbol_macro_expand);
+                      R2 = R1;
+                      if (sc_expand != cell_undefined && sc_expand != cell_f)
+                        {
+                          R1 = cons (sc_expand, cons (R1, cell_nil));
+                          goto apply;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -814,11 +829,12 @@ begin:
             }
         }
 
-      if (TYPE (R1) == TPAIR && TYPE (CAR (R1)) == TPAIR)
-        {
-          if (CAAR (R1) == cell_symbol_begin)
-            R1 = append2 (CDAR (R1), CDR (R1));
-        }
+      if (TYPE (R1) == TPAIR)
+        if (TYPE (CAR (R1)) == TPAIR)
+          {
+            if (CAAR (R1) == cell_symbol_begin)
+              R1 = append2 (CDAR (R1), CDR (R1));
+          }
       if (CDR (R1) == cell_nil)
         {
           R1 = CAR (R1);
@@ -842,14 +858,15 @@ begin_expand:
 
       if (TYPE (R1) == TPAIR)
         {
-          if (TYPE (CAR (R1)) == TPAIR && CAAR (R1) == cell_symbol_begin)
-            R1 = append2 (CDAR (R1), CDR (R1));
+          if (TYPE (CAR (R1)) == TPAIR)
+            if (CAAR (R1) == cell_symbol_begin)
+              R1 = append2 (CDAR (R1), CDR (R1));
           if (CAAR (R1) == cell_symbol_primitive_load)
             {
               push_cc (CADR (CAR (R1)), R1, R0, cell_vm_begin_expand_primitive_load);
               goto eval;
             begin_expand_primitive_load:
-              if (TYPE (R1) == TNUMBER && VALUE (R1) == 0)
+              if ((TYPE (R1) == TNUMBER) && VALUE (R1) == 0)
                 0;
               else if (TYPE (R1) == TSTRING)
                 input = set_current_input_port (open_input_file (R1));
