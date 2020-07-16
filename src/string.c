@@ -77,11 +77,15 @@ string_equal_p (SCM a, SCM b)   /*:((name . "string=?")) */
       eputs ("\n");
       assert_msg ((TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD), "(TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD)");
     }
-  if (a == b
-      || STRING (a) == STRING (b)
-      || (LENGTH (a) == 0 && LENGTH (b) == 0)
-      || (LENGTH (a) == LENGTH (b) && !memcmp (cell_bytes (STRING (a)), cell_bytes (STRING (b)), LENGTH (a))))
+  if (a == b)
     return cell_t;
+  if (STRING (a) == STRING (b))
+    return cell_t;
+  if (LENGTH (a) == 0 && LENGTH (b) == 0)
+    return cell_t;
+  if (LENGTH (a) == LENGTH (b))
+    if (memcmp (cell_bytes (STRING (a)), cell_bytes (STRING (b)), LENGTH (a)) == 0)
+      return cell_t;
 
   return cell_f;
 }
