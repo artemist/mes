@@ -198,8 +198,9 @@ read_env (SCM a)
 SCM
 reader_read_block_comment (int s, int c)
 {
-  if (c == s && peekchar () == '#')
-    return readchar ();
+  if (c == s)
+    if (peekchar () == '#')
+      return readchar ();
   return reader_read_block_comment (s, readchar ());
 }
 
