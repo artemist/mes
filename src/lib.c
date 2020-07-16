@@ -134,19 +134,31 @@ memq (SCM x, SCM a)
   if (t == TCHAR || t == TNUMBER)
     {
       long v = VALUE (x);
-      while (a != cell_nil && v != VALUE (CAR (a)))
-        a = CDR (a);
+      while (a != cell_nil)
+        {
+          if (v == VALUE (CAR (a)))
+            return a;
+          a = CDR (a);
+        }
+      return cell_f;
     }
-  else if (t == TKEYWORD)
+  if (t == TKEYWORD)
     {
-      while (a != cell_nil && (TYPE (CAR (a)) != TKEYWORD || string_equal_p (x, CAR (a)) == cell_f))
-        a = CDR (a);
+      while (a != cell_nil)
+        {
+          if (TYPE (CAR (a)) == TKEYWORD)
+            if (string_equal_p (x, CAR (a)) == cell_t)
+              return a;
+          a = CDR (a);
+        }
+      return cell_f;
     }
-  else
-    while (a != cell_nil && x != CAR (a))
+  while (a != cell_nil)
+    {
+      if (x == CAR (a))
+        return a;
       a = CDR (a);
-  if (a != cell_nil)
-    return a;
+    }
   return cell_f;
 }
 
