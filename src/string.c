@@ -169,8 +169,9 @@ SCM
 read_string (SCM port)          /*:((arity . n)) */
 {
   int fd = __stdin;
-  if (TYPE (port) == TPAIR && TYPE (car (port)) == TNUMBER)
-    __stdin = VALUE (CAR (port));
+  if (TYPE (port) == TPAIR)
+    if (TYPE (car (port)) == TNUMBER)
+      __stdin = VALUE (CAR (port));
   int c = readchar ();
   size_t i = 0;
   while (c != -1)
