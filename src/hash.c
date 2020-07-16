@@ -27,8 +27,9 @@ int
 hash_cstring (char const *s, long size)
 {
   int hash = s[0] * 37;
-  if (s[0] != 0 && s[1] != 0)
-    hash = hash + s[1] * 43;
+  if (s[0] != 0)
+    if (s[1] != 0)
+      hash = hash + s[1] * 43;
   assert_msg (size != 0, "size");
   hash = hash % size;
   return hash;
