@@ -162,11 +162,15 @@ reader_eat_whitespace (int c)
     c = readchar ();
   if (c == ';')
     return reader_eat_whitespace (reader_read_line_comment (c));
-  if (c == '#' && (peekchar () == '!' || peekchar () == '|'))
+  if (c == '#')
     {
-      c = readchar ();
-      reader_read_block_comment (c, readchar ());
-      return reader_eat_whitespace (readchar ());
+      int p = peekchar ();
+      if (p == '!' || p == '|')
+        {
+          c = readchar ();
+          reader_read_block_comment (c, readchar ());
+          return reader_eat_whitespace (readchar ());
+        }
     }
   return c;
 }
