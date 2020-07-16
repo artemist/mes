@@ -287,10 +287,12 @@ assoc (SCM x, SCM a)
 {
   if (TYPE (x) == TSTRING)
     return assoc_string (x, a);
-  while (a != cell_nil && equal2_p (x, CAAR (a)) == cell_f)
-    a = CDR (a);
-  if (a != cell_nil)
-    return CAR (a);
+  while (a != cell_nil)
+    {
+      if (equal2_p (x, CAAR (a)) == cell_t)
+        return CAR (a);
+      a = CDR (a);
+    }
   return cell_f;
 }
 
