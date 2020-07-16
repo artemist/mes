@@ -149,8 +149,9 @@ reset_reader:
     return cons (cell_symbol_quote, cons (reader_read_sexp_ (readchar (), a), cell_nil));
   if (c == '"')
     return reader_read_string ();
-  if (c == '.' && (reader_identifier_p (peekchar ()) == 0))
-    return cell_dot;
+  if (c == '.')
+    if (reader_identifier_p (peekchar ()) == 0)
+      return cell_dot;
   return reader_read_identifier_or_number (c);
 }
 
