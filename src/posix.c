@@ -144,10 +144,18 @@ write_byte (SCM x)              /*:((arity . n)) */
   SCM c = car (x);
   SCM p = cdr (x);
   int fd = __stdout;
-  if (TYPE (p) == TPAIR && TYPE (car (p)) == TNUMBER && VALUE (CAR (p)) != 1)
-    fd = VALUE (CAR (p));
-  if (TYPE (p) == TPAIR && TYPE (car (p)) == TNUMBER && VALUE (CAR (p)) == 2)
-    fd = __stderr;
+  if (TYPE (p) == TPAIR)
+    {
+      SCM f = CAR (p);
+      if (TYPE (f) == TNUMBER)
+        {
+          long v = VALUE (f);
+          if (v != 1)
+            fd = v;
+          if (v == 2)
+            fd = __stderr;
+        }
+    }
   char cc = VALUE (c);
   write (fd, &cc, 1);
 #if !__MESC__
