@@ -76,13 +76,15 @@ reader_read_identifier_or_number (int c)
   int i = 0;
   long n = 0;
   int negative_p = 0;
-  if (c == '+' && isdigit (peekchar ()) != 0)
-    c = readchar ();
-  else if (c == '-' && (isdigit (peekchar ()) != 0))
-    {
-      negative_p = 1;
+  if (c == '+')
+    if (isdigit (peekchar ()) != 0)
       c = readchar ();
-    }
+  if (c == '-')
+    if (isdigit (peekchar ()) != 0)
+      {
+        negative_p = 1;
+        c = readchar ();
+      }
   while (isdigit (c) != 0)
     {
       g_buf[i] = c;
