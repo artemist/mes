@@ -60,7 +60,8 @@ builtin_arity (SCM builtin)
 FUNCTION
 builtin_function (SCM builtin)
 {
-  return VALUE (struct_ref_ (builtin, 5));
+  SCM x = struct_ref_ (builtin, 5);
+  return VALUE (x);
 }
 
 SCM
@@ -78,7 +79,8 @@ builtin_printer (SCM builtin)
   fdputs ("#<procedure ", __stdout);
   display_ (builtin_name (builtin));
   fdputc (' ', __stdout);
-  int arity = VALUE (builtin_arity (builtin));
+  SCM x = builtin_arity (builtin);
+  int arity = VALUE (x);
   if (arity == -1)
     fdputc ('_', __stdout);
   else

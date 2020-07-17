@@ -48,7 +48,8 @@ list_to_cstring (SCM list, size_t *size)
     {
       if (i > MAX_STRING)
         assert_max_string (i, "list_to_string", g_buf);
-      g_buf[i] = VALUE (car (list));
+      SCM x = car (list);
+      g_buf[i] = VALUE (x);
       i = i + 1;
       list = cdr (list);
     }
@@ -170,8 +171,11 @@ read_string (SCM port)          /*:((arity . n)) */
 {
   int fd = __stdin;
   if (TYPE (port) == TPAIR)
-    if (TYPE (car (port)) == TNUMBER)
-      __stdin = VALUE (CAR (port));
+    {
+      SCM p = car (port);
+      if (TYPE (p) == TNUMBER)
+        __stdin = VALUE (p);
+    }
   int c = readchar ();
   size_t i = 0;
   while (c != -1)

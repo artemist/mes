@@ -72,7 +72,8 @@ hash (SCM x, SCM size)
 SCM
 hashq_get_handle (SCM table, SCM key, SCM dflt)
 {
-  long size = VALUE (struct_ref_ (table, 3));
+  SCM s = struct_ref_ (table, 3);
+  long size = VALUE (s);
   unsigned hash = hashq_ (key, size);
   SCM buckets = struct_ref_ (table, 4);
   SCM bucket = vector_ref_ (buckets, hash);
@@ -90,7 +91,8 @@ hashq_ref (SCM table, SCM key, SCM dflt)
 #if defined (INLINE)
   SCM x = hashq_get_handle (table, key, dflt);
 #else
-  long size = VALUE (struct_ref_ (table, 3));
+  SCM h = struct_ref_ (table, 3);
+  long size = VALUE (h);
   unsigned hash = hashq_ (key, size);
   SCM buckets = struct_ref_ (table, 4);
   SCM bucket = vector_ref_ (buckets, hash);
@@ -108,7 +110,8 @@ hashq_ref (SCM table, SCM key, SCM dflt)
 SCM
 hash_ref (SCM table, SCM key, SCM dflt)
 {
-  long size = VALUE (struct_ref_ (table, 3));
+  SCM s = struct_ref_ (table, 3);
+  long size = VALUE (s);
   unsigned hash = hash_ (key, size);
   SCM buckets = struct_ref_ (table, 4);
   SCM bucket = vector_ref_ (buckets, hash);
@@ -142,7 +145,8 @@ hash_set_x_ (SCM table, unsigned hash, SCM key, SCM value)
 SCM
 hashq_set_x (SCM table, SCM key, SCM value)
 {
-  long size = VALUE (struct_ref_ (table, 3));
+  SCM s = struct_ref_ (table, 3);
+  long size = VALUE (s);
   unsigned hash = hashq_ (key, size);
 #if defined (INLINE)
   return hash_set_x_ (table, hash, key, value);
@@ -160,7 +164,8 @@ hashq_set_x (SCM table, SCM key, SCM value)
 SCM
 hash_set_x (SCM table, SCM key, SCM value)
 {
-  long size = VALUE (struct_ref_ (table, 3));
+  SCM s = struct_ref_ (table, 3);
+  long size = VALUE (s);
   unsigned hash = hash_ (key, size);
 #if defined (INLINE)
   return hash_set_x_ (table, hash, key, value);

@@ -167,7 +167,10 @@ get_macro (SCM name)            /*:((internal)) */
 {
   SCM m = macro_get_handle (name);
   if (m != cell_f)
-    return MACRO (CDR (m));
+    {
+      SCM d = CDR (m);
+      return MACRO (d);
+    }
   return cell_f;
 }
 
@@ -229,30 +232,31 @@ expand_variable_ (SCM x, SCM formals, int top_p)        /*:((internal)) */
 {
   while (TYPE (x) == TPAIR)
     {
-      if (TYPE (CAR (x)) == TPAIR)
+      SCM a = CAR (x);
+      if (TYPE (a) == TPAIR)
         {
-          if (CAAR (x) == cell_symbol_lambda)
+          if (CAR (a) == cell_symbol_lambda)
             {
-              SCM f = CAR (CDAR (x));
+              SCM f = CADR (a);
               formals = add_formals (formals, f);
             }
-          else if (CAAR (x) == cell_symbol_define || CAAR (x) == cell_symbol_define_macro)
+          else if (CAR (a) == cell_symbol_define || CAR (a) == cell_symbol_define_macro)
             {
-              SCM f = CAR (CDAR (x));
+              SCM f = CADR (a);
               formals = add_formals (formals, f);
             }
-          if (CAAR (x) != cell_symbol_quote)
-            expand_variable_ (CAR (x), formals, 0);
+          if (CAR (a) != cell_symbol_quote)
+            expand_variable_ (a, formals, 0);
         }
       else
         {
-          if (CAR (x) == cell_symbol_lambda)
+          if (a == cell_symbol_lambda)
             {
               SCM f = CADR (x);
               formals = add_formals (formals, f);
               x = CDR (x);
             }
-          else if (CAR (x) == cell_symbol_define || CAR (x) == cell_symbol_define_macro)
+          else if (a == cell_symbol_define || a == cell_symbol_define_macro)
             {
               SCM f = CADR (x);
               if (top_p && TYPE (f) == TPAIR)
@@ -260,14 +264,15 @@ expand_variable_ (SCM x, SCM formals, int top_p)        /*:((internal)) */
               formals = add_formals (formals, f);
               x = CDR (x);
             }
-          else if (CAR (x) == cell_symbol_quote)
+          else if (a == cell_symbol_quote)
             return cell_unspecified;
-          else if (TYPE (CAR (x)) == TSYMBOL
-                   && CAR (x) != cell_symbol_boot_module
-                   && CAR (x) != cell_symbol_current_module
-                   && CAR (x) != cell_symbol_primitive_load && !formal_p (CAR (x), formals))
+          else if (TYPE (a) == TSYMBOL
+                   && a != cell_symbol_boot_module
+                   && a != cell_symbol_current_module
+                   && a != cell_symbol_primitive_load
+                   && formal_p (a, formals))
             {
-              SCM v = module_variable (R0, CAR (x));
+              SCM v = module_variable (R0, a);
               if (v != cell_f)
                 CAR (x) = make_variable_ (v);
             }
@@ -287,14 +292,22 @@ expand_variable (SCM x, SCM formals)    /*:((internal)) */
 SCM
 apply_builtin (SCM fn, SCM x)   /*:((internal)) */
 {
-  int arity = VALUE (builtin_arity (fn));
+  SCM a = builtin_arity (fn);
+  int arity = VALUE (a);
   if ((arity > 0 || arity == -1) && x != cell_nil)
-    if (TYPE (CAR (x)) == TVALUES)
-      x = cons (CADAR (x), CDR (x));
+    {
+      SCM a = CAR (x);
+      if (TYPE (a) == TVALUES)
+        x = cons (CADR (a), CDR (x));
+    }
   if ((arity > 1 || arity == -1) && x != cell_nil)
-    if (TYPE (CDR (x)) == TPAIR)
-      if (TYPE (CADR (x)) == TVALUES)
-    x = cons (CAR (x), cons (CDADAR (x), CDR (x)));
+    {
+      SCM a = CAR (x);
+      SCM d = CDR (x);
+      if (TYPE (d) == TPAIR)
+        if (TYPE (CAR (d)) == TVALUES)
+          x = cons (a, cons (CADAR (d), d));
+    }
 
 #if __M2_PLANET__
   FUNCTION fp = builtin_function (fn);
@@ -305,7 +318,7 @@ apply_builtin (SCM fn, SCM x)   /*:((internal)) */
   else if (arity == 2)
     return fp (CAR (x), CADR (x));
   else if (arity == 3)
-    return fp (CAR (x), CADR (x), CAR (CDDR (x)));
+    return fp (CAR (x), CADR (x), CADDR (x));
   else if (arity == -1)
     return fp (x);
 #else // !__M2_PLANET__
@@ -358,8 +371,11 @@ eval_apply ()
   SCM x;
   int global_p;
   int macro_p;
-  int t;
+  SCM a;
   SCM c;
+  SCM d;
+  int t;
+  long i;
 
 eval_apply:
   if (R3 == cell_vm_evlis2)
@@ -450,7 +466,8 @@ evlis3:
 
 apply:
   g_stack_array[g_stack + FRAME_PROCEDURE] = CAR (R1);
-  t = TYPE (CAR (R1));
+  a = CAR (R1);
+  t = TYPE (a);
   if (t == TSTRUCT && builtin_p (CAR (R1)) == cell_t)
     {
       check_formals (CAR (R1), builtin_arity (CAR (R1)), CDR (R1));
@@ -472,11 +489,12 @@ apply:
     }
   else if (t == TCONTINUATION)
     {
-      v = CONTINUATION (CAR (R1));
+      a = CAR (R1);
+      v = CONTINUATION (a);
       if (LENGTH (v) != 0)
         {
-          for (t = 0; t < LENGTH (v); t = t + 1)
-            g_stack_array[STACK_SIZE - LENGTH (v) + t] = vector_ref_ (v, t);
+          for (i = 0; i < LENGTH (v); i = i + 1)
+            g_stack_array[STACK_SIZE - LENGTH (v) + i] = vector_ref_ (v, i);
           g_stack = STACK_SIZE - LENGTH (v);
         }
       x = R1;
@@ -532,9 +550,9 @@ apply:
     {
       if (CAAR (R1) == cell_symbol_lambda)
         {
-          formals = CADR (CAR (R1));
+          formals = CADAR (R1);
           args = CDR (R1);
-          body = CDDR (CAR (R1));
+          body = CDDAR (R1);
           p = pairlis (formals, CDR (R1), R0);
           check_formals (R1, formals, args);
           call_lambda (body, p, p, R0);
@@ -594,7 +612,7 @@ eval:
         }
       else if (c == cell_symbol_set_x)
         {
-          push_cc (CAR (CDDR (R1)), R1, R0, cell_vm_eval_set_x);
+          push_cc (CADDR (R1), R1, R0, cell_vm_eval_set_x);
           goto eval;
         eval_set_x:
           R1 = set_env_x (CADR (R2), R1, R0);
@@ -615,12 +633,17 @@ eval:
           if (TYPE (R1) == TPAIR)
             if (CAR (R1) == cell_symbol_define || CAR (R1) == cell_symbol_define_macro)
               {
-                global_p = CAAR (R0) != cell_closure;
-                macro_p = CAR (R1) == cell_symbol_define_macro;
+                global_p = 0;
+                if (CAAR (R0) != cell_closure)
+                  global_p = 1;
+                macro_p = 0;
+                if (CAR (R1) == cell_symbol_define_macro)
+                  macro_p = 1;
                 if (global_p != 0)
                   {
                     name = CADR (R1);
-                    if (TYPE (CADR (R1)) == TPAIR)
+                    aa = CADR (R1);
+                    if (TYPE (aa) == TPAIR)
                       name = CAR (name);
                     if (macro_p != 0)
                       {
@@ -636,15 +659,16 @@ eval:
                       }
                   }
                 R2 = R1;
-                if (TYPE (CADR (R1)) != TPAIR)
+                aa = CADR (R1);
+                if (TYPE (aa) != TPAIR)
                   {
-                    push_cc (CAR (CDDR (R1)), R2, cons (cons (CADR (R1), CADR (R1)), R0), cell_vm_eval_define);
+                    push_cc (CADDR (R1), R2, cons (cons (CADR (R1), CADR (R1)), R0), cell_vm_eval_define);
                     goto eval;
                   }
                 else
                   {
                     p = pairlis (CADR (R1), CADR (R1), R0);
-                    formals = CDR (CADR (R1));
+                    formals = CDADR (R1);
                     body = CDDR (R1);
 
                     if (macro_p || global_p)
@@ -655,7 +679,8 @@ eval:
                   }
               eval_define:
                 name = CADR (R2);
-                if (TYPE (CADR (R2)) == TPAIR)
+                aa = CADR (R2);
+                if (TYPE (aa) == TPAIR)
                   name = CAR (name);
                 if (macro_p != 0)
                   {
@@ -707,7 +732,8 @@ eval:
     }
   else if (t == TVARIABLE)
     {
-      R1 = CDR (VARIABLE (R1));
+      x = VARIABLE (R1);
+      R1 = CDR (x);
       goto vm_return;
     }
   else if (t == TBROKEN_HEART)
@@ -769,7 +795,8 @@ macro_expand:
 
   if (TYPE (R1) == TPAIR)
     {
-      if (TYPE (CAR (R1)) == TSYMBOL && CAR (R1) != cell_symbol_begin)
+      a = CAR (R1);
+      if (TYPE (a) == TSYMBOL && a != cell_symbol_begin)
         {
           macro = macro_get_handle (cell_symbol_portable_macro_expand);
           if (macro != cell_f)
@@ -830,11 +857,14 @@ begin:
         }
 
       if (TYPE (R1) == TPAIR)
-        if (TYPE (CAR (R1)) == TPAIR)
-          {
-            if (CAAR (R1) == cell_symbol_begin)
-              R1 = append2 (CDAR (R1), CDR (R1));
-          }
+        {
+          a = CAR (R1);
+          if (TYPE (a) == TPAIR)
+            {
+              if (CAR (a) == cell_symbol_begin)
+                R1 = append2 (CDR (a), CDR (R1));
+            }
+        }
       if (CDR (R1) == cell_nil)
         {
           R1 = CAR (R1);
@@ -858,12 +888,13 @@ begin_expand:
 
       if (TYPE (R1) == TPAIR)
         {
-          if (TYPE (CAR (R1)) == TPAIR)
+          a = CAR (R1);
+          if (TYPE (a) == TPAIR)
             if (CAAR (R1) == cell_symbol_begin)
               R1 = append2 (CDAR (R1), CDR (R1));
           if (CAAR (R1) == cell_symbol_primitive_load)
             {
-              push_cc (CADR (CAR (R1)), R1, R0, cell_vm_begin_expand_primitive_load);
+              push_cc (CADAR (R1), R1, R0, cell_vm_begin_expand_primitive_load);
               goto eval;
             begin_expand_primitive_load:
               if ((TYPE (R1) == TNUMBER) && VALUE (R1) == 0)
@@ -938,16 +969,16 @@ call_with_current_continuation:
   x = make_continuation (g_continuations);
   g_continuations = g_continuations + 1;
   v = make_vector__ (STACK_SIZE - g_stack);
-  for (t = g_stack; t < STACK_SIZE; t = t + 1)
-    vector_set_x_ (v, t - g_stack, g_stack_array[t]);
+  for (i = g_stack; i < STACK_SIZE; i = i + 1)
+    vector_set_x_ (v, i - g_stack, g_stack_array[i]);
   CONTINUATION (x) = v;
   gc_pop_frame ();
   push_cc (cons (CAR (R1), cons (x, cell_nil)), x, R0, cell_vm_call_with_current_continuation2);
   goto apply;
 call_with_current_continuation2:
   v = make_vector__ (STACK_SIZE - g_stack);
-  for (t = g_stack; t < STACK_SIZE; t = t + 1)
-    vector_set_x_ (v, t - g_stack, g_stack_array[t]);
+  for (i = g_stack; i < STACK_SIZE; i = i + 1)
+    vector_set_x_ (v, i - g_stack, g_stack_array[i]);
   CONTINUATION (R2) = v;
   goto vm_return;
 

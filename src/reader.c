@@ -37,8 +37,6 @@ read_input_file_env_ (SCM e, SCM a)
 SCM
 read_input_file_env (SCM a)
 {
-  //R0 = a;
-  //return read_input_file_env_ (read_env (R0), R0);
   return read_input_file_env_ (read_env (cell_nil), cell_nil);
 }
 
@@ -185,7 +183,10 @@ reader_read_list (int c, SCM a)
     error (cell_symbol_not_a_pair, make_string0 ("EOF in list"));
   SCM s = reader_read_sexp_ (c, a);
   if (s == cell_dot)
-    return CAR (reader_read_list (readchar (), a));
+    {
+      s = reader_read_list (readchar (), a);
+      return CAR (s);
+    }
   return cons (s, reader_read_list (readchar (), a));
 }
 
@@ -285,7 +286,8 @@ reader_read_character ()
     }
   else if (c == 'x' && ((p >= '0' && p <= '9') || (p >= 'a' && p <= 'f') || (p >= 'F' && p <= 'F')))
     {
-      c = VALUE (reader_read_hex ());
+      SCM n = reader_read_hex ();
+      c = VALUE (n);
       eputs ("reading hex c=");
       eputs (itoa (c));
       eputs ("\n");
@@ -469,7 +471,10 @@ reader_read_string ()
                c = '\e'; */
             c = 27;
           else if (c == 'x')
-            c = VALUE (reader_read_hex ());
+            {
+              SCM n = reader_read_hex ();
+              c = VALUE (n);
+            }
         }
       g_buf[i] = c;
       i = i + 1;
