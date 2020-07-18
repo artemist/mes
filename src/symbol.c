@@ -43,7 +43,7 @@ SCM
 init_symbol (SCM x, long type, char const *name)
 {
   TYPE (x) = type;
-  if (!g_symbols)
+  if (g_symbols == 0)
     g_free = g_free + M2_CELL_SIZE;
   else
     {

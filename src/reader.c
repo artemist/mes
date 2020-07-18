@@ -91,7 +91,7 @@ reader_read_identifier_or_number (int c)
       n = n + c - '0';
       c = readchar ();
     }
-  if (reader_end_of_word_p (c))
+  if (reader_end_of_word_p (c) != 0)
     {
       unreadchar (c);
       if (negative_p != 0)

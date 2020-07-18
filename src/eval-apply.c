@@ -259,7 +259,7 @@ expand_variable_ (SCM x, SCM formals, int top_p)        /*:((internal)) */
           else if (a == cell_symbol_define || a == cell_symbol_define_macro)
             {
               SCM f = CADR (x);
-              if (top_p && TYPE (f) == TPAIR)
+              if (top_p != 0 && TYPE (f) == TPAIR)
                 f = CDR (f);
               formals = add_formals (formals, f);
               x = CDR (x);
@@ -270,7 +270,7 @@ expand_variable_ (SCM x, SCM formals, int top_p)        /*:((internal)) */
                    && a != cell_symbol_boot_module
                    && a != cell_symbol_current_module
                    && a != cell_symbol_primitive_load
-                   && formal_p (a, formals))
+                   && formal_p (CAR (x), formals) == 0)
             {
               SCM v = module_variable (R0, a);
               if (v != cell_f)
@@ -671,7 +671,7 @@ eval:
                     formals = CDADR (R1);
                     body = CDDR (R1);
 
-                    if (macro_p || global_p)
+                    if (macro_p != 0 || global_p != 0)
                       expand_variable (body, formals);
                     R1 = cons (cell_symbol_lambda, cons (formals, body));
                     push_cc (R1, R2, p, cell_vm_eval_define);

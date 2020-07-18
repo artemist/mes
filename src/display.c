@@ -115,7 +115,7 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
     {
       if (write_p == 0)
         fdputc (VALUE (x), fd);
-      else if (1)
+      else
         {
           fdputs ("#", fd);
           fdwrite_char (VALUE (x), fd);

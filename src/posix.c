@@ -197,7 +197,7 @@ current_input_port ()
   if (__stdin >= 0)
     return make_number (__stdin);
   SCM x = g_ports;
-  while (x)
+  while (x != 0)
     {
       SCM a = CAR (x);
       if (PORT (a) == __stdin)
