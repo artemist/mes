@@ -178,16 +178,16 @@ length (SCM x)
 SCM
 error (SCM key, SCM x)
 {
-#if !__MESC_MES__
-  SCM throw;
-  if ((throw = module_ref (R0, cell_symbol_throw)) != cell_undefined)
+#if !__MESC_MES__ && !__M2_PLANET__
+  SCM throw = module_ref (R0, cell_symbol_throw);
+  if (throw != cell_undefined)
     return apply (throw, cons (key, cons (x, cell_nil)), R0);
 #endif
   display_error_ (key);
   eputs (": ");
   write_error_ (x);
   eputs ("\n");
-  assert_msg (0, "0");
+  assert_msg (0, "ERROR");
   exit (1);
 }
 

@@ -432,7 +432,7 @@ eval_apply:
   else if (R3 == cell_unspecified)
     return R1;
   else
-    error (cell_symbol_system_error, make_string0 ("eval/apply unknown continuation"));
+    assert_msg (0, "eval/apply unknown continuation");
 
 evlis:
   if (R1 == cell_nil)
@@ -873,7 +873,11 @@ begin_expand:
               else if (TYPE (R1) == TPORT)
                 input = set_current_input_port (R1);
               else
-                assert_msg (0, "0");
+                {
+                  eputs ("begin_expand failed, R1=");
+                  display_error_ (R1);
+                  assert_msg (0, "begin-expand-boom 0");
+                }
 
               push_cc (input, R2, R0, cell_vm_return);
               x = read_input_file_env (R0);

@@ -46,24 +46,27 @@ hashq_ (SCM x, long size)
 int
 hash_ (SCM x, long size)
 {
-  if (TYPE (x) == TSTRING)
-    return hash_cstring (cell_bytes (STRING (x)), size);
-  assert_msg (0, "0");
-  return hashq_ (x, size);
+  if (TYPE (x) != TSTRING)
+    {
+      eputs ("hash_ failed, not a string:");
+      display_error_ (x);
+      assert_msg (0, "0");
+    }
+  return hash_cstring (cell_bytes (STRING (x)), size);
 }
 
 SCM
 hashq (SCM x, SCM size)
 {
+  eputs ("hashq not supporteed\n");
   assert_msg (0, "0");
-  return make_number (hashq_ (x, VALUE (size)));
 }
 
 SCM
 hash (SCM x, SCM size)
 {
+  eputs ("hash not supporteed\n");
   assert_msg (0, "0");
-  return make_number (hash_ (x, VALUE (size)));
 }
 
 SCM
