@@ -33,6 +33,13 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+SCM
+exit_ (SCM x)                   /*:((name . "exit")) */
+{
+  assert_msg (TYPE (x) == TNUMBER, "TYPE (x) == TNUMBER");
+  exit (VALUE (x));
+}
+
 int
 peekchar ()
 {

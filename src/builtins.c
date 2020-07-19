@@ -167,11 +167,6 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "core:type", 1, &type_, a);
   a = init_builtin (builtin_type, "core:car", 1, &car_, a);
   a = init_builtin (builtin_type, "core:cdr", 1, &cdr_, a);
-  a = init_builtin (builtin_type, "exit", 1, &exit_, a);
-  a = init_builtin (builtin_type, "frame-printer", 1, &frame_printer, a);
-  a = init_builtin (builtin_type, "make-stack", -1, &make_stack, a);
-  a = init_builtin (builtin_type, "stack-length", 1, &stack_length, a);
-  a = init_builtin (builtin_type, "stack-ref", 2, &stack_ref, a);
   a = init_builtin (builtin_type, "xassq", 2, &xassq, a);
   a = init_builtin (builtin_type, "memq", 2, &memq, a);
   a = init_builtin (builtin_type, "equal2?", 2, &equal2_p, a);
@@ -200,6 +195,7 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "module-ref", 2, &module_ref, a);
   a = init_builtin (builtin_type, "module-define!", 3, &module_define_x, a);
   /* src/posix.c */
+  a = init_builtin (builtin_type, "exit", 1, &exit_, a);
   a = init_builtin (builtin_type, "peek-byte", 0, &peek_byte, a);
   a = init_builtin (builtin_type, "read-byte", 0, &read_byte, a);
   a = init_builtin (builtin_type, "unread-byte", 1, &unread_byte, a);
@@ -242,6 +238,11 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "reader-read-octal", 0, &reader_read_octal, a);
   a = init_builtin (builtin_type, "reader-read-hex", 0, &reader_read_hex, a);
   a = init_builtin (builtin_type, "reader-read-string", 0, &reader_read_string, a);
+  /* src/stack.c */
+  a = init_builtin (builtin_type, "frame-printer", 1, &frame_printer, a);
+  a = init_builtin (builtin_type, "make-stack", -1, &make_stack, a);
+  a = init_builtin (builtin_type, "stack-length", 1, &stack_length, a);
+  a = init_builtin (builtin_type, "stack-ref", 2, &stack_ref, a);
   /* src/string.c */
   a = init_builtin (builtin_type, "string=?", 2, &string_equal_p, a);
   a = init_builtin (builtin_type, "symbol->string", 1, &symbol_to_string, a);

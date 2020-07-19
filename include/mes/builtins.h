@@ -74,11 +74,6 @@ SCM make_hash_table (SCM x);
 SCM type_ (SCM x);
 SCM car_ (SCM x);
 SCM cdr_ (SCM x);
-SCM exit_ (SCM x);
-SCM frame_printer (SCM frame);
-SCM make_stack (SCM stack);
-SCM stack_length (SCM stack);
-SCM stack_ref (SCM stack, SCM index);
 SCM xassq (SCM x, SCM a);
 SCM memq (SCM x, SCM a);
 SCM equal2_p (SCM a, SCM b);
@@ -107,6 +102,7 @@ SCM module_variable (SCM module, SCM name);
 SCM module_ref (SCM module, SCM name);
 SCM module_define_x (SCM module, SCM name, SCM value);
 /* src/posix.c */
+SCM exit_ (SCM x);
 SCM peek_byte ();
 SCM read_byte ();
 SCM unread_byte (SCM i);
@@ -149,6 +145,11 @@ SCM reader_read_binary ();
 SCM reader_read_octal ();
 SCM reader_read_hex ();
 SCM reader_read_string ();
+/* src/stack.c */
+SCM frame_printer (SCM frame);
+SCM make_stack (SCM stack);
+SCM stack_length (SCM stack);
+SCM stack_ref (SCM stack, SCM index);
 /* src/string.c */
 SCM string_equal_p (SCM a, SCM b);
 SCM symbol_to_string (SCM symbol);

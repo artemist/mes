@@ -60,6 +60,7 @@ MES_SOURCES =					\
  src/posix.c					\
  src/reader.c					\
  src/string.c					\
+ src/stack.c					\
  src/struct.c					\
  src/symbol.c					\
  src/vector.c
