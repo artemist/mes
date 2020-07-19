@@ -120,6 +120,21 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "builtin-arity", 1, &builtin_arity, a);
   a = init_builtin (builtin_type, "builtin?", 1, &builtin_p, a);
   a = init_builtin (builtin_type, "builtin-printer", 1, &builtin_printer, a);
+  /* src/core.c */
+  a = init_builtin (builtin_type, "car", 1, &car, a);
+  a = init_builtin (builtin_type, "cdr", 1, &cdr, a);
+  a = init_builtin (builtin_type, "list", -1, &list, a);
+  a = init_builtin (builtin_type, "null?", 1, &null_p, a);
+  a = init_builtin (builtin_type, "eq?", 2, &eq_p, a);
+  a = init_builtin (builtin_type, "values", -1, &values, a);
+  a = init_builtin (builtin_type, "acons", 3, &acons, a);
+  a = init_builtin (builtin_type, "length", 1, &length, a);
+  a = init_builtin (builtin_type, "error", 2, &error, a);
+  a = init_builtin (builtin_type, "append2", 2, &append2, a);
+  a = init_builtin (builtin_type, "append-reverse", 2, &append_reverse, a);
+  a = init_builtin (builtin_type, "core:reverse!", 2, &reverse_x_, a);
+  a = init_builtin (builtin_type, "assq", 2, &assq, a);
+  a = init_builtin (builtin_type, "assoc", 2, &assoc, a);
   /* src/display.c */
   a = init_builtin (builtin_type, "core:display", 1, &display_, a);
   a = init_builtin (builtin_type, "core:display-error", 1, &display_error_, a);
@@ -149,6 +164,9 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "hash-table-printer", 1, &hash_table_printer, a);
   a = init_builtin (builtin_type, "make-hash-table", 1, &make_hash_table, a);
   /* src/lib.c */
+  a = init_builtin (builtin_type, "core:type", 1, &type_, a);
+  a = init_builtin (builtin_type, "core:car", 1, &car_, a);
+  a = init_builtin (builtin_type, "core:cdr", 1, &cdr_, a);
   a = init_builtin (builtin_type, "exit", 1, &exit_, a);
   a = init_builtin (builtin_type, "frame-printer", 1, &frame_printer, a);
   a = init_builtin (builtin_type, "make-stack", -1, &make_stack, a);
@@ -175,24 +193,6 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "lognot", 1, &lognot, a);
   a = init_builtin (builtin_type, "logxor", -1, &logxor, a);
   a = init_builtin (builtin_type, "ash", 2, &ash, a);
-  /* src/mes.c */
-  a = init_builtin (builtin_type, "core:type", 1, &type_, a);
-  a = init_builtin (builtin_type, "core:car", 1, &car_, a);
-  a = init_builtin (builtin_type, "core:cdr", 1, &cdr_, a);
-  a = init_builtin (builtin_type, "car", 1, &car, a);
-  a = init_builtin (builtin_type, "cdr", 1, &cdr, a);
-  a = init_builtin (builtin_type, "list", -1, &list, a);
-  a = init_builtin (builtin_type, "null?", 1, &null_p, a);
-  a = init_builtin (builtin_type, "eq?", 2, &eq_p, a);
-  a = init_builtin (builtin_type, "values", -1, &values, a);
-  a = init_builtin (builtin_type, "acons", 3, &acons, a);
-  a = init_builtin (builtin_type, "length", 1, &length, a);
-  a = init_builtin (builtin_type, "error", 2, &error, a);
-  a = init_builtin (builtin_type, "append2", 2, &append2, a);
-  a = init_builtin (builtin_type, "append-reverse", 2, &append_reverse, a);
-  a = init_builtin (builtin_type, "core:reverse!", 2, &reverse_x_, a);
-  a = init_builtin (builtin_type, "assq", 2, &assq, a);
-  a = init_builtin (builtin_type, "assoc", 2, &assoc, a);
   /* src/module.c */
   a = init_builtin (builtin_type, "make-module-type", 0, &make_module_type, a);
   a = init_builtin (builtin_type, "module-printer", 1, &module_printer, a);

@@ -25,6 +25,7 @@ srcdest=${srcdest-./}
 . ${srcdest}build-aux/trace.sh
 
 trace "SNARF$snarf  builtins.c"   ${srcdest}build-aux/mes-snarf.scm src/builtins.c
+trace "SNARF$snarf  core.c"       ${srcdest}build-aux/mes-snarf.scm src/core.c
 trace "SNARF$snarf  display.c"    ${srcdest}build-aux/mes-snarf.scm src/display.c
 trace "SNARF$snarf  eval-apply.c" ${srcdest}build-aux/mes-snarf.scm src/eval-apply.c
 trace "SNARF$snarf  gc.c"         ${srcdest}build-aux/mes-snarf.scm src/gc.c

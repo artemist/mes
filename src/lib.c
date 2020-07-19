@@ -25,6 +25,30 @@
 #include <stdlib.h>
 
 SCM
+type_ (SCM x)
+{
+  return make_number (TYPE (x));
+}
+
+SCM
+car_ (SCM x)
+{
+  SCM a = CAR (x);
+  if (TYPE (x) == TPAIR)
+    return a;
+  return make_number (a);
+}
+
+SCM
+cdr_ (SCM x)
+{
+  SCM d = CDR (x);
+  if (TYPE (x) == TPAIR || TYPE (x) == TCLOSURE)
+    return d;
+  return make_number (d);
+}
+
+SCM
 exit_ (SCM x)                   /*:((name . "exit")) */
 {
   assert_msg (TYPE (x) == TNUMBER, "TYPE (x) == TNUMBER");

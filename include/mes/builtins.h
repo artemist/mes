@@ -27,67 +27,7 @@ SCM builtin_name (SCM builtin);
 SCM builtin_arity (SCM builtin);
 SCM builtin_p (SCM x);
 SCM builtin_printer (SCM builtin);
-/* src/display.c */
-SCM display_ (SCM x);
-SCM display_error_ (SCM x);
-SCM display_port_ (SCM x, SCM p);
-SCM write_ (SCM x);
-SCM write_error_ (SCM x);
-SCM write_port_ (SCM x, SCM p);
-/* src/eval-apply.c */
-SCM pairlis (SCM x, SCM y, SCM a);
-SCM set_car_x (SCM x, SCM e);
-SCM set_cdr_x (SCM x, SCM e);
-SCM set_env_x (SCM x, SCM e, SCM a);
-SCM macro_get_handle (SCM name);
-SCM add_formals (SCM formals, SCM x);
-SCM eval_apply ();
-/* src/gc.c */
-SCM gc_check ();
-SCM gc ();
-/* src/hash.c */
-SCM hashq (SCM x, SCM size);
-SCM hash (SCM x, SCM size);
-SCM hashq_get_handle (SCM table, SCM key, SCM dflt);
-SCM hashq_ref (SCM table, SCM key, SCM dflt);
-SCM hash_ref (SCM table, SCM key, SCM dflt);
-SCM hashq_set_x (SCM table, SCM key, SCM value);
-SCM hash_set_x (SCM table, SCM key, SCM value);
-SCM hash_table_printer (SCM table);
-SCM make_hash_table (SCM x);
-/* src/lib.c */
-SCM exit_ (SCM x);
-SCM frame_printer (SCM frame);
-SCM make_stack (SCM stack);
-SCM stack_length (SCM stack);
-SCM stack_ref (SCM stack, SCM index);
-SCM xassq (SCM x, SCM a);
-SCM memq (SCM x, SCM a);
-SCM equal2_p (SCM a, SCM b);
-SCM last_pair (SCM x);
-SCM pair_p (SCM x);
-SCM char_to_integer (SCM x);
-SCM integer_to_char (SCM x);
-/* src/math.mes */
-SCM greater_p (SCM x);
-SCM less_p (SCM x);
-SCM is_p (SCM x);
-SCM minus (SCM x);
-SCM plus (SCM x);
-SCM divide (SCM x);
-SCM modulo (SCM a, SCM b);
-SCM multiply (SCM x);
-SCM logand (SCM x);
-SCM logior (SCM x);
-SCM lognot (SCM x);
-SCM logxor (SCM x);
-SCM ash (SCM n, SCM count);
-/* src/mes.c */
-SCM make_cell_ (SCM type, SCM car, SCM cdr);
-SCM type_ (SCM x);
-SCM car_ (SCM x);
-SCM cdr_ (SCM x);
-SCM cons (SCM x, SCM y);
+/* src/core.c */
 SCM car (SCM x);
 SCM cdr (SCM x);
 SCM list (SCM x);
@@ -102,11 +42,64 @@ SCM append_reverse (SCM x, SCM y);
 SCM reverse_x_ (SCM x, SCM t);
 SCM assq (SCM x, SCM a);
 SCM assoc (SCM x, SCM a);
+/* src/display.c */
+SCM display_ (SCM x);
+SCM display_error_ (SCM x);
+SCM display_port_ (SCM x, SCM p);
+SCM write_ (SCM x);
+SCM write_error_ (SCM x);
+SCM write_port_ (SCM x, SCM p);
+/* src/eval-apply.c */
+SCM pairlis (SCM x, SCM y, SCM a);
 SCM set_car_x (SCM x, SCM e);
 SCM set_cdr_x (SCM x, SCM e);
 SCM set_env_x (SCM x, SCM e, SCM a);
 SCM add_formals (SCM formals, SCM x);
 SCM eval_apply ();
+/* src/gc.c */
+SCM cons (SCM x, SCM y);
+SCM gc_check ();
+SCM gc ();
+/* src/hash.c */
+SCM hashq (SCM x, SCM size);
+SCM hash (SCM x, SCM size);
+SCM hashq_get_handle (SCM table, SCM key, SCM dflt);
+SCM hashq_ref (SCM table, SCM key, SCM dflt);
+SCM hash_ref (SCM table, SCM key, SCM dflt);
+SCM hashq_set_x (SCM table, SCM key, SCM value);
+SCM hash_set_x (SCM table, SCM key, SCM value);
+SCM hash_table_printer (SCM table);
+SCM make_hash_table (SCM x);
+/* src/lib.c */
+SCM type_ (SCM x);
+SCM car_ (SCM x);
+SCM cdr_ (SCM x);
+SCM exit_ (SCM x);
+SCM frame_printer (SCM frame);
+SCM make_stack (SCM stack);
+SCM stack_length (SCM stack);
+SCM stack_ref (SCM stack, SCM index);
+SCM xassq (SCM x, SCM a);
+SCM memq (SCM x, SCM a);
+SCM equal2_p (SCM a, SCM b);
+SCM last_pair (SCM x);
+SCM pair_p (SCM x);
+SCM char_to_integer (SCM x);
+SCM integer_to_char (SCM x);
+/* src/math.c */
+SCM greater_p (SCM x);
+SCM less_p (SCM x);
+SCM is_p (SCM x);
+SCM minus (SCM x);
+SCM plus (SCM x);
+SCM divide (SCM x);
+SCM modulo (SCM a, SCM b);
+SCM multiply (SCM x);
+SCM logand (SCM x);
+SCM logior (SCM x);
+SCM lognot (SCM x);
+SCM logxor (SCM x);
+SCM ash (SCM n, SCM count);
 /* src/module.c */
 SCM make_module_type ();
 SCM module_printer (SCM module);
