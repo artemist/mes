@@ -23,6 +23,7 @@
 int
 fdputc (int c, int fd)
 {
-  write (fd, (char *) &c, 1);
+  char *p = &c;
+  write (fd, p, 1);
   return 0;
 }
