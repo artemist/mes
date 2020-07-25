@@ -25,7 +25,7 @@ void *
 realloc (void *ptr, size_t size)
 {
   void *new = malloc (size);
-  if (ptr && new)
+  if (ptr != 0 && new != 0)
     {
       memcpy (new, ptr, size);
       free (ptr);
