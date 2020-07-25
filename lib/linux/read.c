@@ -26,7 +26,8 @@
 ssize_t
 read (int filedes, void *buffer, size_t size)
 {
-  ssize_t bytes = _sys_call3 (SYS_read, filedes, buffer, size);
+  long long_filedes = filedes;
+  ssize_t bytes = _sys_call3 (SYS_read, long_filedes, buffer, size);
   if (__mes_debug () > 4)
     {
       if (bytes == 1)
