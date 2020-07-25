@@ -24,5 +24,7 @@
 int
 access (char const *file_name, int how)
 {
-  return _sys_call2 (SYS_access, (long) file_name, (int) how);
+  long long_file_name = file_name;
+  long long_how = how;
+  return _sys_call2 (SYS_access, long_file_name, long_how);
 }
