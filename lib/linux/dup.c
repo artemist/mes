@@ -24,5 +24,6 @@
 int
 dup (int old)
 {
-  return _sys_call1 (SYS_dup, (int) old);
+  long long_old = old;
+  return _sys_call1 (SYS_dup, long_old);
 }
