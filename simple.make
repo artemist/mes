@@ -28,13 +28,19 @@ MES = bin/mes-gcc
 #MES_CPU = x86
 
 M2_PLANET = M2-Planet
-M2_PLANET_FLAGS = --architecture amd64
+M2_PLANET_ARCH = x86
+M2_PLANET_FUBAR = i386
+
+#M2_PLANET_ARCH = amd64
+#M2_PLANET_FUBAR = amd64
+M2_PLANET_FLAGS = --debug --architecture $(M2_PLANET_ARCH)
 
 CFLAGS:=					\
   $(CFLAGS)					\
  -D _GNU_SOURCE					\
  -D const=					\
  -ggdb						\
+ -D POINTER_CELLS=0				\
  -D SYSTEM_LIBC=1				\
  -D 'MES_VERSION="git"'				\
  -D 'MES_PKGDATADIR="/usr/local/share/mes"'	\
@@ -65,12 +71,66 @@ MES_SOURCES =					\
  src/symbol.c					\
  src/vector.c
 
-LIB_SOURCES =					\
- lib/mes/eputs.c				\
- lib/mes/assert_msg.c				\
- lib/mes/itoa.c
-
 M2_SOURCES =					\
+ lib/linux/x86-mes-m2/crt1.c			\
+ lib/linux/x86-mes-m2/mini.c			\
+ lib/m2/exit.c					\
+ lib/mes/write.c				\
+ lib/linux/x86-mes-m2/syscall.c			\
+ lib/linux/brk.c				\
+ lib/stdlib/malloc.c				\
+ lib/string/memset.c				\
+						\
+ lib/m2/read.c					\
+ lib/mes/fdgetc.c				\
+ lib/stdio/getchar.c				\
+ lib/stdio/putchar.c				\
+ lib/m2/open.c					\
+ lib/m2/mes_open.c				\
+ lib/string/strlen.c				\
+ lib/mes/eputs.c				\
+ lib/mes/fdputc.c				\
+ lib/mes/eputc.c				\
+						\
+ lib/mes/__assert_fail.c			\
+ lib/mes/assert_msg.c				\
+						\
+ lib/mes/fdputc.c				\
+ lib/string/strncmp.c				\
+ lib/posix/getenv.c				\
+ lib/mes/fdputs.c				\
+ lib/m2/ntoab.c					\
+ lib/ctype/isdigit.c				\
+ lib/ctype/isxdigit.c				\
+ lib/ctype/isspace.c				\
+ lib/ctype/isnumber.c				\
+ lib/mes/abtol.c				\
+ lib/stdlib/atoi.c				\
+ lib/string/memcpy.c				\
+ lib/stdlib/free.c				\
+ lib/stdlib/realloc.c				\
+ lib/string/strcpy.c				\
+ lib/mes/itoa.c					\
+ lib/mes/fdungetc.c				\
+ lib/posix/setenv.c				\
+ lib/linux/access.c				\
+ lib/m2/chmod.c					\
+ lib/m2/ioctl.c  				\
+ lib/m2/isatty.c				\
+ lib/linux/fork.c				\
+ lib/m2/execve.c				\
+ lib/m2/execv.c					\
+ lib/m2/waitpid.c				\
+ lib/linux/gettimeofday.c			\
+ lib/m2/clock_gettime.c				\
+ lib/m2/time.c					\
+ lib/linux/_getcwd.c				\
+ lib/m2/getcwd.c				\
+ lib/linux/dup.c				\
+ lib/linux/dup2.c				\
+ lib/string/strcmp.c				\
+ lib/string/memcmp.c				\
+ lib/linux/unlink.c
 
 M2_TODO =					\
  lib/m2/file_print.c				\
@@ -78,7 +138,6 @@ M2_TODO =					\
  lib/mes/fdgetc.c				\
  lib/mes/fdungetc.c
 
-SOURCES = $(M2_SOURCES) $(LIB_SOURCES) $(MES_SOURCES)
 INCLUDES =					\
  include/mes/builtins.h				\
  include/mes/constants.h			\
@@ -95,83 +154,63 @@ MES_LIBC =					\
 GCC_SOURCES =					\
  lib/mes/__mes_debug.c				\
  lib/mes/eputc.c				\
+ lib/mes/eputs.c				\
  lib/mes/fdgetc.c				\
  lib/mes/fdputc.c				\
  lib/mes/fdputs.c				\
  lib/mes/fdungetc.c				\
  lib/mes/mes_open.c				\
  lib/mes/ntoab.c				\
- $(SOURCES)
+ lib/mes/itoa.c					\
+ lib/mes/assert_msg.c
 
 mes-gcc: bin/mes-gcc
 mes-m2: bin/mes-m2
 
-bin/mes-gcc: $(MAKEFILES) $(GCC_SOURCES) $(INCLUDES) | bin
-	$(CC) $(CFLAGS) $(GCC_SOURCES) -o $@
+bin/mes-gcc: simple.make $(GCC_SOURCES) $(MES_SOURCES) $(INCLUDES) | bin
+	$(CC) $(CFLAGS) $(GCC_SOURCES) $(MES_SOURCES) -o $@
 
 M2_PLANET_INCLUDES =				\
+ include/m2/lib.h				\
+ include/linux/x86/syscall.h			\
  include/mes/mes.h				\
  include/mes/m2.h				\
  include/mes/builtins.h				\
  include/mes/constants.h			\
- include/mes/symbols.h
+ include/mes/symbols.h				\
+ include/linux/$(M2_PLANET_ARCH)/syscall.h
 
-M2_PLANET_PREFIX = ../M2-Planet
-M2_PLANET_SOURCES =						\
- $(M2_PLANET_PREFIX)/test/common_amd64/functions/exit.c		\
- $(M2_PLANET_PREFIX)/test/common_amd64/functions/malloc.c	\
- $(M2_PLANET_PREFIX)/functions/calloc.c				\
- $(M2_PLANET_INCLUDES:%.h=%.h.m2)				\
- $(SOURCES:%.c=%.c.m2)
+M2_PLANET_SOURCES =				\
+ $(M2_PLANET_INCLUDES:%.h=%.h)			\
+ $(M2_SOURCES)
 
-%.h.m2: %.h $(MAKEFILES)
-	@sed -r					\
-	    -e 's,^//,@@,'			\
-	    -e 's@^(#include.*)@/* \1 */@'	\
-	    $<					\
-	| $(CC) -E -I include			\
-	    -D __M2_PLANET__=1			\
-	    -D FUNCTION0=FUNCTION		\
-	    -D FUNCTION1=FUNCTION		\
-	    -D FUNCTION2=FUNCTION		\
-	    -D FUNCTION3=FUNCTION		\
-	    -D FUNCTIONN=FUNCTION		\
-	    -D const=				\
-	    -D long=SCM				\
-	    -D size_t=SCM			\
-	    -D ssize_t=SCM			\
-	    -D unsigned=SCM			\
-            -include mes/m2.h			\
-	    -x c -				\
-	| sed -r				\
-	    -e 's,^@@,//,'			\
-	    > $@				\
+bin/mes-m2.M1: simple.make $(M2_PLANET_SOURCES) $(MES_SOURCES) $(M2_PLANET_INCLUDES) | bin
+	$(M2_PLANET) $(M2_PLANET_FLAGS) $(M2_PLANET_SOURCES:%=-f %)  $(MES_SOURCES:%.c=-f %.c) -o $@ || rm -f $@
 
-%.c.m2: %.c $(MAKEFILES)
-	@sed -r					\
-	    -e 's,^//,@@,'			\
-	    -e 's@^(#include.*)@/* \1 */@'	\
-	    $<					\
-	| $(CC) -E -I include			\
-	    -D __M2_PLANET__=1			\
-	    -D FUNCTION0=FUNCTION		\
-	    -D FUNCTION1=FUNCTION		\
-	    -D FUNCTION2=FUNCTION		\
-	    -D FUNCTION3=FUNCTION		\
-	    -D FUNCTIONN=FUNCTION		\
-	    -D const=				\
-	    -D long=SCM				\
-	    -D size_t=SCM			\
-	    -D ssize_t=SCM			\
-	    -D unsigned=SCM			\
-            -include mes/m2.h			\
-	    -x c -				\
-	| sed -r				\
-	    -e 's,^@@,//,'			\
-	    > $@
+bin/mes-m2.blood-elf.M1: bin/mes-m2.M1
+#	blood-elf --32 -f $< -o $@
+	blood-elf -f $< -o $@
 
-bin/mes-m2: $(MAKEFILES) $(M2_PLANET_SOURCES) $(M2_PLANET_INCLUDES) | bin
-	$(M2_PLANET) $(M2_PLANET_FLAGS) $(M2_PLANET_SOURCES:%=-f %) -o $@ || rm -f $@
+bin/mes-m2.hex2: bin/mes-m2.blood-elf.M1
+	M1					\
+	    --LittleEndian			\
+	    --architecture $(M2_PLANET_ARCH)	\
+	    -f lib/m2/x86/x86_defs.M1		\
+	    -f lib/x86-mes/x86.M1		\
+	    -f lib/linux/x86-mes-m2/crt1.M1	\
+	    -f bin/mes-m2.M1			\
+	    -f bin/mes-m2.blood-elf.M1		\
+	    -o $@
+
+bin/mes-m2: bin/mes-m2.hex2
+	hex2					\
+	    --LittleEndian			\
+	    --architecture $(M2_PLANET_ARCH)	\
+	    --BaseAddress 0x1000000		\
+	    --exec_enable			\
+	    -f lib/x86-mes/elf32-header.hex2	\
+	    -f bin/mes-m2.hex2			\
+	    -o $@
 
 # Clean up after ourselves
 .PHONY: clean

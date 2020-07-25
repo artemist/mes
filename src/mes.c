@@ -25,7 +25,8 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string.h>
+#include <sys/time.h>
+#include <time.h>
 
 // char const *MES_PKGDATADIR = "mes";
 
@@ -163,11 +164,15 @@ init (char **envp)
   environ = envp;
   __execl_c_argv = malloc (1024 * sizeof (char *));     /* POSIX minimum: 4096 */
   __getcwd_buf = malloc (PATH_MAX);
+  __gettimeofday_time = malloc (sizeof (struct timeval));
+  __get_internal_run_time_ts = malloc (sizeof (struct timespec));
   __open_boot_buf = malloc (PATH_MAX);
   __open_boot_file_name = malloc (PATH_MAX);
   __reader_read_char_buf = malloc (10);
   __setenv_buf = malloc (1024);
   g_datadir = malloc (1024);
+  g_start_time = malloc (sizeof (struct timespec));
+  memset (g_start_time, 0, sizeof (struct timespec));
 
   char *p;
   if (p = getenv ("MES_DEBUG"))

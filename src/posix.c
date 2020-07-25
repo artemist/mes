@@ -357,30 +357,18 @@ waitpid_ (SCM pid, SCM options)
 
 #if __x86_64__
 /* Nanoseconds on 64-bit systems with POSIX timers.  */
+// CONSTANT TIME_UNITS_PER_SECOND 1000000000
 #define TIME_UNITS_PER_SECOND 1000000000
 #else
 /* Milliseconds for everyone else.  */
+// CONSTANT TIME_UNITS_PER_SECOND 1000
 #define TIME_UNITS_PER_SECOND 1000
 #endif
 
-#if __M2_PLANET
-struct timespec
-{
-  long tv_sec;
-  long tv_nsec;
-};
-struct timeval
-{
-  long tv_sec;
-  long tv_usec;
-};
-#endif
-
-struct timespec g_start_time;
 SCM
 init_time (SCM a)               /*:((internal)) */
 {
-  clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &g_start_time);
+  clock_gettime (CLOCK_PROCESS_CPUTIME_ID, g_start_time);
   a = acons (cell_symbol_internal_time_units_per_second, make_number (TIME_UNITS_PER_SECOND), a);
 }
 
@@ -393,13 +381,9 @@ current_time ()
 SCM
 gettimeofday_ ()                /*:((name . "gettimeofday")) */
 {
-#if __M2_PLANET__
-  return make_number (0);
-#else
-  struct timeval time;
-  gettimeofday (&time, 0);
-  return cons (make_number (time.tv_sec), make_number (time.tv_usec));
-#endif
+  struct timeval *time = __gettimeofday_time;
+  gettimeofday (time, 0);
+  return cons (make_number (time->tv_sec), make_number (time->tv_usec));
 }
 
 long
@@ -411,15 +395,11 @@ seconds_and_nanoseconds_to_long (long s, long ns)
 SCM
 get_internal_run_time ()
 {
-#if __M2_PLANET__
-  return make_number (0);
-#else
-  struct timespec ts;
-  clock_gettime (CLOCK_PROCESS_CPUTIME_ID, &ts);
-  long time = seconds_and_nanoseconds_to_long (ts.tv_sec - g_start_time.tv_sec,
-                                               ts.tv_nsec - g_start_time.tv_nsec);
+  struct timespec *ts = __get_internal_run_time_ts;
+  clock_gettime (CLOCK_PROCESS_CPUTIME_ID, ts);
+  long time = seconds_and_nanoseconds_to_long (ts->tv_sec - g_start_time->tv_sec,
+                                               ts->tv_nsec - g_start_time->tv_nsec);
   return make_number (time);
-#endif
 }
 
 SCM

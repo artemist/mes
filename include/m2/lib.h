@@ -30,4 +30,33 @@ int errno;
 // CONSTANT EOF 0xffffffff
 // CONSTANT __FILEDES_MAX 512
 
+int __ungetc_p (int filedes);
+int eputs (char *s);
+int oputs (char *s);
+int puts (char *s);
+size_t strlen (char *s);
+ssize_t _write ();
+ssize_t write (int filedes, void *buffer, size_t size);
+void __ungetc_clear (int filedes);
+void __ungetc_init ();
+void __ungetc_set (int filedes, int c);
+
+struct timezone
+{
+  int tz_minuteswest;
+  int tz_dsttime;
+};
+
+struct timespec
+{
+  long tv_sec;
+  long tv_nsec;
+};
+
+struct timeval
+{
+  long tv_sec;
+  long tv_usec;
+};
+
 #endif /* __M2_LIB_H */

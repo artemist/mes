@@ -102,6 +102,9 @@ char *__open_boot_buf;
 char *__open_boot_file_name;
 char *__setenv_buf;
 char *__reader_read_char_buf;
+struct timespec *g_start_time;
+struct timeval *__gettimeofday_time;
+struct timespec *__get_internal_run_time_ts;
 
 SCM alloc (long n);
 SCM apply (SCM f, SCM x, SCM a);
