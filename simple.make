@@ -73,7 +73,8 @@ MES_SOURCES =					\
 
 M2_SOURCES =					\
  lib/linux/x86-mes-m2/crt1.c			\
- lib/linux/x86-mes-m2/mini.c			\
+ lib/linux/x86-mes-m2/_exit.c			\
+ lib/linux/x86-mes-m2/_write.c			\
  lib/m2/exit.c					\
  lib/mes/write.c				\
  lib/linux/x86-mes-m2/syscall.c			\
@@ -193,8 +194,8 @@ bin/mes-m2.blood-elf.M1: bin/mes-m2.M1
 
 bin/mes-m2.hex2: bin/mes-m2.blood-elf.M1
 	M1					\
-	    --LittleEndian			\
 	    --architecture $(M2_PLANET_ARCH)	\
+	    --little-endian			\
 	    -f lib/m2/x86/x86_defs.M1		\
 	    -f lib/x86-mes/x86.M1		\
 	    -f lib/linux/x86-mes-m2/crt1.M1	\
@@ -204,10 +205,9 @@ bin/mes-m2.hex2: bin/mes-m2.blood-elf.M1
 
 bin/mes-m2: bin/mes-m2.hex2
 	hex2					\
-	    --LittleEndian			\
 	    --architecture $(M2_PLANET_ARCH)	\
-	    --BaseAddress 0x1000000		\
-	    --exec_enable			\
+	    --little-endian			\
+	    --base-address 0x1000000		\
 	    -f lib/x86-mes/elf32-header.hex2	\
 	    -f bin/mes-m2.hex2			\
 	    -o $@
