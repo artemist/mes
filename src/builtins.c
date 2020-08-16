@@ -262,7 +262,7 @@ mes_builtins (SCM a)            /*:((internal)) */
   a = init_builtin (builtin_type, "struct-ref", 2, &struct_ref, a);
   a = init_builtin (builtin_type, "struct-set!", 3, &struct_set_x, a);
   /* src/vector.c */
-  a = init_builtin (builtin_type, "core:make-vector", 1, &make_vector_, a);
+  a = init_builtin (builtin_type, "make-vector", -1, &make_vector, a);
   a = init_builtin (builtin_type, "vector-length", 1, &vector_length, a);
   a = init_builtin (builtin_type, "vector-ref", 2, &vector_ref, a);
   a = init_builtin (builtin_type, "vector-entry", 1, &vector_entry, a);

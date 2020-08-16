@@ -79,7 +79,7 @@ make_stack (SCM stack)          /*:((arity . n)) */
 {
   SCM stack_type = make_stack_type ();
   long size = (STACK_SIZE - g_stack) / FRAME_SIZE;
-  SCM frames = make_vector__ (size);
+  SCM frames = make_vector_ (size, cell_unspecified);
   long i;
   for (i = 0; i < size; i = i + 1)
     {

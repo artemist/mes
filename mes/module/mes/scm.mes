@@ -193,9 +193,6 @@
 
 ;; Vector
 (define (vector . rest) (list->vector rest))
-(define (make-vector n . x)
-  (if (null? x) (core:make-vector n)
-      (list->vector (apply make-list (cons n x)))))
 
 (define (vector-copy x)
   (list->vector (vector->list x)))

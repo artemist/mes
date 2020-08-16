@@ -30,21 +30,31 @@
 #endif
 
 SCM
-make_vector__ (long k)
+make_vector_ (long k, SCM e)
 {
+  SCM x = alloc (1);
   SCM v = alloc (k);
-  SCM x = make_cell (TVECTOR, k, v);
+  TYPE (x) = TVECTOR;
+  LENGTH (x) = k;
+  VECTOR (x) = v;
   long i;
   for (i = 0; i < k; i = i + 1)
-    copy_cell (cell_ref (v, i), vector_entry (cell_unspecified));
+    copy_cell (cell_ref (v, i), vector_entry (e));
 
   return x;
 }
 
 SCM
-make_vector_ (SCM n)
+make_vector (SCM x)               /*:((arity . n)) */
 {
-  return make_vector__ (VALUE (n));
+  SCM k = CAR (x);
+  assert_number ("make-vector", k);
+  long n = VALUE (k);
+  SCM e = cell_unspecified;
+  if (CDR (x) != cell_nil)
+    e = CADR (x);
+
+  return make_vector_ (n, e);
 }
 
 SCM
@@ -101,7 +111,7 @@ vector_set_x (SCM x, SCM i, SCM e)
 SCM
 list_to_vector (SCM x)
 {
-  SCM v = make_vector__ (length__ (x));
+  SCM v = make_vector_ (length__ (x), cell_unspecified);
   SCM p = VECTOR (v);
   while (x != cell_nil)
     {

@@ -193,7 +193,7 @@ make_hash_table_ (long size)
     size = 100;
   SCM hashq_type = make_hashq_type ();
 
-  SCM buckets = make_vector__ (size);
+  SCM buckets = make_vector_ (size, cell_unspecified);
   SCM values = cell_nil;
   values = cons (buckets, values);
   values = cons (make_number (size), values);

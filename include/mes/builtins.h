@@ -169,7 +169,7 @@ SCM struct_length (SCM x);
 SCM struct_ref (SCM x, SCM i);
 SCM struct_set_x (SCM x, SCM i, SCM e);
 /* src/vector.c */
-SCM make_vector_ (SCM n);
+SCM make_vector (SCM x);
 SCM vector_length (SCM x);
 SCM vector_ref (SCM x, SCM i);
 SCM vector_entry (SCM x);

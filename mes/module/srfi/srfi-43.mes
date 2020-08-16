@@ -26,7 +26,7 @@
 
 (define (vector-map f v)
   (let* ((k (vector-length v))
-         (n (core:make-vector k)))
+         (n (make-vector k)))
     (let loop ((i 0))
       (if (= i k) n
           (begin
