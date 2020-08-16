@@ -22,25 +22,54 @@
 #include "mes/mes.h"
 
 #include <stdlib.h>
+#include <string.h>
+
+#if POINTER_CELLS
+#define M2_CELL_SIZE 1
+// CONSTANT M2_CELL_SIZE 12
+#else
+#define M2_CELL_SIZE 1
+// CONSTANT M2_CELL_SIZE 1
+#endif
 
 int g_debug;
+
+void
+test_empty ()
+{
+  g_free = g_symbol_max;
+
+  SCM v = cell_arena;
+  LENGTH (v) = gc_free () - 1;
+  eputs ("arena["); eputs (ntoab (g_cells, 16, 0)); eputs ("]: "); write_ (v); eputs ("\n");
+  gc_stats_ ("0");
+  gc_ ();
+  v = cell_arena;
+  eputs ("arena["); eputs (ntoab (g_cells, 16, 0)); eputs ("]: "); write_ (v); eputs ("\n");
+  gc_stats_ ("1");
+}
 
 int
 main (int argc, char **argv, char **envp)
 {
-  char *p;
-  if (p = getenv ("MES_DEBUG"))
-    g_debug = atoi (p);
+  setenv ("MES_ARENA", "100", 1);
+  setenv ("MES_MAX_ARENA", "100", 1);
   gc_init ();
+#if POINTER_CELLS
+  cell_zero = g_cells;
+#else
+  cell_zero = 0;
+#endif
+  cell_nil = cell_zero + M2_CELL_SIZE;
+  cell_f = cell_nil + M2_CELL_SIZE;
+  g_symbols = cell_zero;
+  g_symbol_max = cell_zero + (9 * M2_CELL_SIZE);
+  g_ports = cell_zero;
+  g_macros = cell_zero;
+  g_stack = STACK_SIZE;
+  M0 = cell_zero;
 
-  SCM v = -1;
-  LENGTH (v) = 10;
-  eputs ("arena: "); write_ (v); eputs ("\n");
-  gc_stats_ ("0");
-  gc_ ();
-  v = -1;
-  eputs ("arena: "); write_ (v); eputs ("\n");
-  gc_stats_ ("1");
+  test_empty ();
 
   return 0;
 }
