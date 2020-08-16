@@ -95,6 +95,18 @@ test_number ()
   test_gc ("number");
 }
 
+void
+test_cons ()
+{
+  test_setup ();
+  SCM a = make_number (42);
+  SCM d = make_number (101);
+  cons (a, d);
+
+  g_free = g_symbol_max + M2_CELL_SIZE;
+  test_gc ("cons");
+}
+
 int
 main (int argc, char **argv, char **envp)
 {
@@ -117,6 +129,7 @@ main (int argc, char **argv, char **envp)
 
   test_empty ();
   test_number ();
+  test_cons ();
 
   return 0;
 }
