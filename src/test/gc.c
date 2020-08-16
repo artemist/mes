@@ -149,6 +149,19 @@ test_vector ()
   test_gc ("vector");
 }
 
+void
+test_struct ()
+{
+  test_setup ();
+  SCM type = make_char ('t');
+  SCM printer = make_char ('p');
+  SCM fields = cons (make_char ('f'), cell_nil);
+  make_struct (type, fields, printer);
+
+  g_free = g_symbol_max + M2_CELL_SIZE;
+  test_gc ("struct");
+}
+
 int
 main (int argc, char **argv, char **envp)
 {
@@ -175,6 +188,7 @@ main (int argc, char **argv, char **envp)
   test_list ();
   test_string ();
   test_vector ();
+  test_struct ();
 
   return 0;
 }
