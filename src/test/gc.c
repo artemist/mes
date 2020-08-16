@@ -107,6 +107,19 @@ test_cons ()
   test_gc ("cons");
 }
 
+void
+test_list ()
+{
+  test_setup ();
+  SCM a = make_number (42);
+  SCM d = make_number (101);
+  SCM lst = cons (d, cell_nil);
+  cons (a, lst);
+
+  g_free = g_symbol_max + M2_CELL_SIZE;
+  test_gc ("cons");
+}
+
 int
 main (int argc, char **argv, char **envp)
 {
@@ -130,6 +143,7 @@ main (int argc, char **argv, char **envp)
   test_empty ();
   test_number ();
   test_cons ();
+  test_list ();
 
   return 0;
 }
