@@ -120,6 +120,16 @@ test_list ()
   test_gc ("cons");
 }
 
+void
+test_string ()
+{
+  test_setup ();
+  SCM s = make_string0 ("hello");
+
+  g_free = g_symbol_max + M2_CELL_SIZE;
+  test_gc ("string");
+}
+
 int
 main (int argc, char **argv, char **envp)
 {
@@ -144,6 +154,7 @@ main (int argc, char **argv, char **envp)
   test_number ();
   test_cons ();
   test_list ();
+  test_string ();
 
   return 0;
 }
