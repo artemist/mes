@@ -138,10 +138,11 @@ SCM cell_type_values;
 SCM cell_type_variable;
 SCM cell_type_vector;
 SCM cell_type_broken_heart;
+SCM cell_symbol_program;
 SCM cell_symbol_test;
 
-// CONSTANT SYMBOL_MAX 119
-#define SYMBOL_MAX 119
+// CONSTANT SYMBOL_MAX 120
+#define SYMBOL_MAX 120
 
 // CONSTANT CELL_UNSPECIFIED 7
 #define CELL_UNSPECIFIED 7

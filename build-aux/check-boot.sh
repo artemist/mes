@@ -110,6 +110,7 @@ scaffold/boot/50-primitive-load.scm
 scaffold/boot/53-closure-display.scm
 scaffold/boot/60-let-syntax.scm
 scaffold/boot/call-cc.scm
+scaffold/boot/gc.scm
 scaffold/boot/memory.scm
 scaffold/boot/numbers.scm
 "

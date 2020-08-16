@@ -178,6 +178,7 @@ init_symbols_ ()                  /*:((internal)) */
   cell_type_variable = init_symbol (g_symbol, TSYMBOL, "<cell:variable>");
   cell_type_vector = init_symbol (g_symbol, TSYMBOL, "<cell:vector>");
   cell_type_broken_heart = init_symbol (g_symbol, TSYMBOL, "<cell:broken-heart>");
+  cell_symbol_program = init_symbol (g_symbol, TSYMBOL, "%program");
   cell_symbol_test = init_symbol (g_symbol, TSYMBOL, "%%test");
 }
 

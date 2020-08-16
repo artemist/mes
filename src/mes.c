@@ -196,6 +196,7 @@ main (int argc, char **argv, char **envp)
     module_printer (M0);
 
   SCM program = read_boot ();
+  R0 = acons (cell_symbol_program, program, R0);
   push_cc (R2, cell_unspecified, R0, cell_unspecified);
 
   if (g_debug > 2)
