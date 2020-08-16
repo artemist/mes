@@ -52,7 +52,7 @@ CFLAGS:=					\
  -Wno-incompatible-pointer-types		\
  -Wno-int-conversion
 
-MES_SOURCES =					\
+LIBMES_SOURCES =				\
  src/builtins.c					\
  src/core.c					\
  src/display.c					\
@@ -61,7 +61,6 @@ MES_SOURCES =					\
  src/hash.c					\
  src/lib.c					\
  src/math.c					\
- src/mes.c					\
  src/module.c					\
  src/posix.c					\
  src/reader.c					\
@@ -70,6 +69,14 @@ MES_SOURCES =					\
  src/struct.c					\
  src/symbol.c					\
  src/vector.c
+
+MES_SOURCES =					\
+ $(LIBMES_SOURCES)				\
+ src/mes.c
+
+TEST_GC_SOURCES =				\
+ $(LIBMES_SOURCES)				\
+ src/test/gc.c
 
 M2_SOURCES =					\
  lib/linux/x86-mes-m2/crt1.c			\
@@ -168,8 +175,14 @@ GCC_SOURCES =					\
 mes-gcc: bin/mes-gcc
 mes-m2: bin/mes-m2
 
+gc-gcc: bin/gc-gcc
+gc-m2: bin/gc-m2
+
 bin/mes-gcc: simple.make $(GCC_SOURCES) $(MES_SOURCES) $(INCLUDES) | bin
 	$(CC) $(CFLAGS) $(GCC_SOURCES) $(MES_SOURCES) -o $@
+
+bin/gc-gcc: simple.make $(GCC_SOURCES) $(TEST_GC_SOURCES) $(INCLUDES) | bin
+	$(CC) $(CFLAGS) -D GC_TEST=1 $(GCC_SOURCES) $(TEST_GC_SOURCES) -o $@
 
 M2_PLANET_INCLUDES =				\
  include/m2/lib.h				\

@@ -294,7 +294,7 @@ gc_init_news ()
 #else
   g_news = g_cells + g_free;
   NTYPE (cell_arena) = TVECTOR;
-  NLENGTH (cell_arena) = 1000;
+  NLENGTH (cell_arena) = LENGTH (cell_arena - 1);
   NVECTOR (cell_arena) = 0;
   g_news = g_news + 1;
   NTYPE (cell_arena) = TCHAR;
