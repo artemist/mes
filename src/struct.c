@@ -25,8 +25,11 @@ SCM
 make_struct (SCM type, SCM fields, SCM printer)
 {
   long size = 2 + length__ (fields);
+  SCM x = alloc (1);
   SCM v = alloc (size);
-  SCM x = make_cell (TSTRUCT, size, v);
+  TYPE (x) = TSTRUCT;
+  LENGTH (x) = size;
+  STRUCT (x) = v;
   copy_cell (v, vector_entry (type));
   copy_cell (cell_ref (v, 1), vector_entry (printer));
   long i;
