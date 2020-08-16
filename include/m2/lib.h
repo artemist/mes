@@ -30,6 +30,8 @@ int errno;
 // CONSTANT EOF 0xffffffff
 // CONSTANT __FILEDES_MAX 512
 
+char *itoa (int number);
+char *ltoa (long number);
 int __ungetc_p (int filedes);
 int eputs (char *s);
 int oputs (char *s);

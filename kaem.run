@@ -79,6 +79,7 @@ M2-Planet                                       \
     -f lib/stdlib/realloc.c                     \
     -f lib/string/strcpy.c                      \
     -f lib/mes/itoa.c                           \
+    -f lib/mes/ltoa.c                           \
     -f lib/mes/fdungetc.c                       \
     -f lib/posix/setenv.c                       \
     -f lib/linux/access.c                       \

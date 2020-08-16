@@ -23,10 +23,11 @@
 
 /* Cell types */
 
-// CONSTANT TBYTES         0
-#define TBYTES             0
-// CONSTANT TCHAR          1
-#define TCHAR              1
+// CONSTANT TCHAR          0
+#define TCHAR              0
+
+// CONSTANT TBYTES         1
+#define TBYTES             1
 // CONSTANT TCLOSURE       2
 #define TCLOSURE           2
 // CONSTANT TCONTINUATION  3
