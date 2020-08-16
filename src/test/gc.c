@@ -35,11 +35,37 @@
 int g_debug;
 
 void
-test_empty ()
+test_setup ()
 {
-  g_free = g_symbol_max;
+#if POINTER_CELLS
+  cell_arena = g_arena;
+  g_cells = cell_arena + M2_CELL_SIZE;
+  cell_zero = g_cells;
+#else
+  cell_zero = 0;
+#endif
 
+  cell_nil = cell_zero + M2_CELL_SIZE;
+  cell_f = cell_nil + M2_CELL_SIZE;
+  g_symbols = cell_zero;
+  g_symbol_max = cell_zero + (9 * M2_CELL_SIZE);
+  g_ports = cell_zero;
+  g_macros = cell_zero;
+  g_stack = STACK_SIZE;
+  M0 = cell_zero;
+
+  memset (g_arena + sizeof (struct scm), 0, ARENA_SIZE * sizeof (struct scm));
+  TYPE (cell_zero) = TCHAR;
+  VALUE (cell_zero) = 'c';
+  g_free = cell_f;
+}
+
+void
+test_gc (char const *name)
+{
+  eputs ("TEST: "); eputs (name); eputs ("\n");
   SCM v = cell_arena;
+  TYPE (v) = TVECTOR;
   LENGTH (v) = gc_free () - 1;
   eputs ("arena["); eputs (ntoab (g_cells, 16, 0)); eputs ("]: "); write_ (v); eputs ("\n");
   gc_stats_ ("0");
@@ -47,6 +73,26 @@ test_empty ()
   v = cell_arena;
   eputs ("arena["); eputs (ntoab (g_cells, 16, 0)); eputs ("]: "); write_ (v); eputs ("\n");
   gc_stats_ ("1");
+  eputs ("\n");
+}
+
+void
+test_empty ()
+{
+  test_setup ();
+
+  g_free = g_symbol_max;
+  test_gc ("empty");
+}
+
+void
+test_number ()
+{
+  test_setup ();
+  make_number (42);
+
+  g_free = g_symbol_max + M2_CELL_SIZE;
+  test_gc ("number");
 }
 
 int
@@ -70,6 +116,7 @@ main (int argc, char **argv, char **envp)
   M0 = cell_zero;
 
   test_empty ();
+  test_number ();
 
   return 0;
 }
