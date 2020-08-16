@@ -61,17 +61,22 @@ test_setup ()
 }
 
 void
+print_arena (long length)
+{
+  SCM v = cell_arena;
+  TYPE (v) = TVECTOR;
+  LENGTH (v) = length;
+  eputs ("arena["); eputs (ntoab (g_cells, 16, 0)); eputs ("]: "); write_ (v); eputs ("\n");
+}
+
+void
 test_gc (char const *name)
 {
   eputs ("TEST: "); eputs (name); eputs ("\n");
-  SCM v = cell_arena;
-  TYPE (v) = TVECTOR;
-  LENGTH (v) = gc_free () - 1;
-  eputs ("arena["); eputs (ntoab (g_cells, 16, 0)); eputs ("]: "); write_ (v); eputs ("\n");
+  print_arena (gc_free () - 1);
   gc_stats_ ("0");
   gc_ ();
-  v = cell_arena;
-  eputs ("arena["); eputs (ntoab (g_cells, 16, 0)); eputs ("]: "); write_ (v); eputs ("\n");
+  print_arena (gc_free () - 1);
   gc_stats_ ("1");
   eputs ("\n");
 }
@@ -130,6 +135,20 @@ test_string ()
   test_gc ("string");
 }
 
+void
+test_vector ()
+{
+  test_setup ();
+  SCM v = make_vector_ (4, cell_zero);
+  SCM one = make_number (1);
+  SCM two = make_number (2);
+  vector_set_x_ (v, 1, one);
+  vector_set_x_ (v, 2, two);
+
+  g_free = g_symbol_max + M2_CELL_SIZE;
+  test_gc ("vector");
+}
+
 int
 main (int argc, char **argv, char **envp)
 {
@@ -155,6 +174,7 @@ main (int argc, char **argv, char **envp)
   test_cons ();
   test_list ();
   test_string ();
+  test_vector ();
 
   return 0;
 }
