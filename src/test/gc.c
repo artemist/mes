@@ -79,6 +79,24 @@ test_gc (char const *name)
   print_arena (gc_free () - 1);
   gc_stats_ ("1");
   eputs ("\n");
+
+  gc_ ();
+  VALUE (cell_zero) = 'd';
+  print_arena (gc_free () - 1);
+  gc_stats_ ("2");
+  eputs ("\n");
+
+  gc_ ();
+  VALUE (cell_zero) = 'e';
+  print_arena (gc_free () - 1);
+  gc_stats_ ("3");
+  eputs ("\n");
+
+  gc_ ();
+  VALUE (cell_zero) = 'f';
+  print_arena (gc_free () - 1);
+  gc_stats_ ("3");
+  eputs ("\n");
 }
 
 void
