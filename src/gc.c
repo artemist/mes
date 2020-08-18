@@ -62,6 +62,7 @@ gc_init ()
   ARENA_SIZE = 100000000;       /* 2.3GiB */
 #elif ! __M2_PLANET__
   ARENA_SIZE = 300000;          /* 32b: 3MiB, 64b: 6 MiB */
+  ARENA_SIZE = 600000;          /* 32b: 6MiB, 64b: 12 MiB */
 #else
   ARENA_SIZE = 20000000;
 #endif
@@ -573,25 +574,26 @@ gc_ ()
       gc_up_arena ();
     }
 
-#if POINTER_CELLS
-  SCM save_gfree = g_free;
-#endif
+  SCM new_cell_nil = g_free;
   SCM s;
   for (s = cell_nil; s < g_symbol_max; s = s + M2_CELL_SIZE)
     gc_copy (s);
 
 #if POINTER_CELLS
+  cell_nil = new_cell_nil;
+
 #if GC_TEST
-  cell_nil = save_gfree;
+  cell_zero = cell_nil - M2_CELL_SIZE;
+  g_symbol_max = g_free;
 #else
   long save_gsymbols = g_symbols;
-  cell_nil = save_gfree;
   g_symbols = 0;
-  g_free = save_gfree;
+  g_free = new_cell_nil;
   init_symbols_ ();
   g_symbol_max = g_symbol;
   g_symbols = save_gsymbols;
 #endif
+
 #endif
 
   g_symbols = gc_copy (g_symbols);
@@ -602,7 +604,7 @@ gc_ ()
   for (i = g_stack; i < STACK_SIZE; i = i + 1)
     copy_stack (i, gc_copy (g_stack_array[i]));
 
-  gc_loop (cell_nil);
+  gc_loop (new_cell_nil);
 }
 
 SCM

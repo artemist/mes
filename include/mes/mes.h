@@ -86,17 +86,18 @@ char *g_arena;
 SCM cell_arena;
 SCM cell_zero;
 
-#if POINTER_CELLS
-SCM g_free;
-long g_stack;
-#else
+#if !POINTER_CELLS
 long g_free;
-SCM g_stack;
+long g_symbol;
+#else
+SCM g_free;
+SCM g_symbol;
 #endif
 
 SCM *g_stack_array;
 struct scm *g_cells;
 struct scm *g_news;
+long g_stack;
 
 char **__execl_c_argv;
 char *__getcwd_buf;

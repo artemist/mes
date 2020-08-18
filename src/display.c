@@ -42,8 +42,9 @@ fdwrite_char (char v, int fd)
     fdputs ("\\vtab", fd);
   else if (v == '\f')
     fdputs ("\\page", fd);
-  //Nyacc bug
-  // else if (v == '\r') fdputs ("return", fd);
+  /* Nyacc bug
+     else if (v == '\r') fdputs ("return", fd);
+  */
   else if (v == 13)
     fdputs ("\\return", fd);
   else if (v == ' ')
@@ -73,17 +74,14 @@ fdwrite_string_char (char v, int fd)
     fdputs ("\\n", fd);
   else if (v == '\f')
     fdputs ("\\f", fd);
-#if 1                           //__MESC__
-  //Nyacc bug
+  /* Nyacc bug
+     else if (v == '\r') fdputs ("\\r", fd);
+     else if (v == '\e') fdputs ("\\e", fd);
+  */
   else if (v == 13)
     fdputs ("\\r", fd);
   else if (v == 27)
     fdputs ("\\e", fd);
-#else
-  //else if (v == '\r') fdputs ("\\r", fd);
-  //Nyacc crash
-  //else if (v == '\e') fdputs ("\\e", fd);
-#endif
   else if (v == '\\')
     fdputs ("\\\\", fd);
   else if (v == '"')
@@ -168,11 +166,11 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
         }
       else
         {
-          if (x && x != cell_nil)
+          if (x != 0 && x != cell_nil)
             fdisplay_ (CAR (x), fd, write_p);
-          if (CDR (x) && TYPE (CDR (x)) == TPAIR)
+          if (CDR (x) != 0 && TYPE (CDR (x)) == TPAIR)
             display_helper (CDR (x), 1, " ", fd, write_p);
-          else if (CDR (x) && CDR (x) != cell_nil)
+          else if (CDR (x) != 0 && CDR (x) != cell_nil)
             {
               if (TYPE (CDR (x)) != TPAIR)
                 fdputs (" . ", fd);
@@ -215,7 +213,6 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
     fdisplay_ (REF (x), fd, write_p);
   else if (t == TSTRUCT)
     {
-      //SCM printer = STRUCT (x) + 1;
       SCM printer = struct_ref_ (x, STRUCT_PRINTER);
       if (TYPE (printer) == TREF)
         printer = REF (printer);
@@ -231,7 +228,7 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
           for (i = 2; i < size; i = i + 1)
             {
               fdputc (' ', fd);
-              fdisplay_ (STRUCT (x) + i, fd, write_p);
+              fdisplay_ (cell_ref (STRUCT (x), i), fd, write_p);
             }
           fdputc ('>', fd);
         }
@@ -245,7 +242,7 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
         {
           if (i != 0)
             fdputc (' ', fd);
-          fdisplay_ (VECTOR (x) + i, fd, write_p);
+          fdisplay_ (cell_ref (VECTOR (x), i), fd, write_p);
         }
       fdputc (')', fd);
     }
@@ -257,7 +254,7 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
       fdputs (itoa (x), fd);
       fdputs (">", fd);
     }
-  return 0;
+  return cell_unspecified;
 }
 
 SCM
