@@ -39,20 +39,26 @@ sed -ri                                                         \
     -e 's,CDDR \(([^()]*)\),\1->cdr->cdr,'                      \
     -e 's,CADAR \(([^()]*)\),\1->car->cdr->car,'                \
     -e 's,CADDR \(([^()]*)\),\1->cdr->cdr->car,'                \
+    -e 's,CDADR \(([^()]*)\),\1->cdr->car->cdr,'                \
     -e 's,CDDDR \(([^()]*)\),\1->cdr->cdr->cdr,'                \
+    -e 's,CDDAR \(([^()]*)\),\1->car->cdr->cdr,'                \
     -e 's,CDADAR \(([^()]*)\),\1->cdr->car->cdr->car,'          \
                                                                 \
     include/mes/builtins.h                                      \
     include/mes/mes.h                                           \
     include/mes/symbols.h                                       \
     include/mes/builtins.h                                      \
+    include/m2/lib.h                                            \
+    include/mes/m2.h                                            \
     src/builtins.c                                              \
+    src/cc.c                                                    \
     src/core.c                                                  \
     src/display.c                                               \
     src/eval-apply.c                                            \
     src/gc.c                                                    \
     src/hash.c                                                  \
     src/lib.c                                                   \
+    src/m2.c                                                    \
     src/math.c                                                  \
     src/mes.c                                                   \
     src/module.c                                                \

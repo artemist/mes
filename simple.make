@@ -139,7 +139,8 @@ M2_SOURCES =					\
  lib/linux/dup2.c				\
  lib/string/strcmp.c				\
  lib/string/memcmp.c				\
- lib/linux/unlink.c
+ lib/linux/unlink.c				\
+ src/m2.c
 
 M2_TODO =					\
  lib/m2/file_print.c				\
@@ -172,7 +173,8 @@ GCC_SOURCES =					\
  lib/mes/ntoab.c				\
  lib/mes/itoa.c					\
  lib/mes/ltoa.c					\
- lib/mes/assert_msg.c
+ lib/mes/assert_msg.c				\
+ src/cc.c
 
 mes-gcc: bin/mes-gcc
 mes-m2: bin/mes-m2

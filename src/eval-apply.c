@@ -309,45 +309,17 @@ apply_builtin (SCM fn, SCM x)   /*:((internal)) */
           x = cons (a, cons (CADAR (d), d));
     }
 
-#if __M2_PLANET__
-  FUNCTION fp = builtin_function (fn);
   if (arity == 0)
-    return fp ();
-  else if (arity == 1)
-    return fp (CAR (x));
+    return apply_builtin0 (fn);
+  if (arity == 1)
+    return apply_builtin1 (fn, CAR (x));
   else if (arity == 2)
-    return fp (CAR (x), CADR (x));
+    return apply_builtin2 (fn, CAR (x), CADR (x));
   else if (arity == 3)
-    return fp (CAR (x), CADR (x), CADDR (x));
+    return apply_builtin3 (fn, CAR (x), CADR (x), CAR (CDDR (x)));
   else if (arity == -1)
-    return fp (x);
-#else // !__M2_PLANET__
-  if (arity == 0)
-    {
-      SCM (*fp) (void) = (function0_t) builtin_function (fn);
-      return fp ();
-    }
-  else if (arity == 1)
-    {
-      SCM (*fp) (SCM) = (function1_t) builtin_function (fn);
-      return fp (CAR (x));
-    }
-  else if (arity == 2)
-    {
-      SCM (*fp) (SCM, SCM) = (function2_t) builtin_function (fn);
-      return fp (CAR (x), CADR (x));
-    }
-  else if (arity == 3)
-    {
-      SCM (*fp) (SCM, SCM, SCM) = (function3_t) builtin_function (fn);
-      return fp (CAR (x), CADR (x), CAR (CDDR (x)));
-    }
-  else if (arity == -1)
-    {
-      SCM (*fp) (SCM) = (function1_t) builtin_function (fn);
-      return fp (x);
-    }
-#endif //! __M2_PLANET__
+    return apply_builtin1 (fn, x);
+
   return cell_unspecified;
 }
 

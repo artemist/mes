@@ -107,6 +107,7 @@ M2-Planet                                       \
     -f src/gc.c                                 \
     -f src/hash.c                               \
     -f src/lib.c                                \
+    -f src/m2.c                                 \
     -f src/math.c                               \
     -f src/mes.c                                \
     -f src/module.c                             \

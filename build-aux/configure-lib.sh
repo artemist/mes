@@ -431,6 +431,7 @@ fi
 
 mes_SOURCES="
 src/builtins.c
+src/cc.c
 src/core.c
 src/display.c
 src/eval-apply.c
