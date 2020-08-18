@@ -66,7 +66,7 @@ SCM cell_vm_macro_expand_define_macro;
 SCM cell_vm_macro_expand_lambda;
 SCM cell_vm_macro_expand_set_x;
 SCM cell_vm_return;
-SCM cell_symbol_dot;
+
 SCM cell_symbol_lambda;
 SCM cell_symbol_begin;
 SCM cell_symbol_if;
@@ -90,9 +90,6 @@ SCM cell_symbol_call_with_current_continuation;
 SCM cell_symbol_boot_module;
 SCM cell_symbol_current_module;
 SCM cell_symbol_primitive_load;
-SCM cell_symbol_read_input_file;
-SCM cell_symbol_write;
-SCM cell_symbol_display;
 SCM cell_symbol_car;
 SCM cell_symbol_cdr;
 SCM cell_symbol_not_a_number;
@@ -141,14 +138,14 @@ SCM cell_type_broken_heart;
 SCM cell_symbol_program;
 SCM cell_symbol_test;
 
-// CONSTANT SYMBOL_MAX 120
-#define SYMBOL_MAX 120
+// CONSTANT SYMBOL_MAX 116
+#define SYMBOL_MAX 116
 
 // CONSTANT CELL_UNSPECIFIED 7
 #define CELL_UNSPECIFIED 7
 
-// CONSTANT CELL_SYMBOL_RECORD_TYPE 88
-#define CELL_SYMBOL_RECORD_TYPE 88
+// CONSTANT CELL_SYMBOL_RECORD_TYPE 84
+#define CELL_SYMBOL_RECORD_TYPE 84
 
 
 #endif /* __MES_SYMBOLS_H */
