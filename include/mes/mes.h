@@ -59,6 +59,7 @@ char *g_buf;
 SCM g_continuations;
 SCM g_symbols;
 SCM g_symbol_max;
+int g_mini;
 
 /* a/env */
 SCM R0;

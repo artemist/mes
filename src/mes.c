@@ -177,6 +177,7 @@ init (char **envp)
   char *p;
   if (p = getenv ("MES_DEBUG"))
     g_debug = atoi (p);
+  g_mini = getenv ("MES_MINI");
   open_boot ();
   gc_init ();
 }

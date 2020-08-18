@@ -109,10 +109,26 @@ init_builtin (SCM builtin_type, char const *name, int arity, FUNCTION function, 
 SCM
 mes_builtins (SCM a)            /*:((internal)) */
 {
-  // TODO minimal: cons, car, cdr, list, null_p, eq_p minus, plus
-  // display_, display_error_, getenv
-
   SCM builtin_type = make_builtin_type ();
+
+  if (g_mini != 0)
+    {
+      a = init_builtin (builtin_type, "cons", 2, &cons, a);
+      a = init_builtin (builtin_type, "car", 1, &car, a);
+      a = init_builtin (builtin_type, "list", -1, &list, a);
+      a = init_builtin (builtin_type, "eq?", 2, &eq_p, a);
+      a = init_builtin (builtin_type, "-", -1, &minus, a);
+      a = init_builtin (builtin_type, "+", -1, &plus, a);
+      a = init_builtin (builtin_type, "core:display", 1, &display_, a);
+      a = init_builtin (builtin_type, "core:write", 1, &write_, a);
+      a = init_builtin (builtin_type, "core:display-error", 1, &display_error_, a);
+      a = init_builtin (builtin_type, "getenv", 1, &getenv_, a);
+      a = init_builtin (builtin_type, "gc", 0, &gc, a);
+      a = init_builtin (builtin_type, ">", -1, &greater_p, a);
+      a = init_builtin (builtin_type, "<", -1, &less_p, a);
+      a = init_builtin (builtin_type, "make-vector", -1, &make_vector, a);
+      return a;
+    }
 
   /* src/builtins.c */
   a = init_builtin (builtin_type, "make-builtin", 4, &make_builtin, a);
