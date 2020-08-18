@@ -70,7 +70,6 @@ init_symbols_ ()                  /*:((internal)) */
   cell_unspecified = init_symbol (g_symbol, TSPECIAL, "*unspecified*");
   cell_closure = init_symbol (g_symbol, TSPECIAL, "*closure*");
   cell_circular = init_symbol (g_symbol, TSPECIAL, "*circular*");
-  cell_call_with_current_continuation = init_symbol (g_symbol, TSPECIAL, "*call/cc*");
 
   cell_vm_apply = init_symbol (g_symbol, TSPECIAL, "core:apply");
   cell_vm_apply2 = init_symbol (g_symbol, TSPECIAL, "*vm-apply2*");
@@ -203,7 +202,6 @@ init_symbols ()                  /*:((internal)) */
   a = acons (cell_symbol_call_with_values, cell_symbol_call_with_values, a);
   a = acons (cell_symbol_boot_module, cell_symbol_boot_module, a);
   a = acons (cell_symbol_current_module, cell_symbol_current_module, a);
-  a = acons (cell_symbol_call_with_current_continuation, cell_call_with_current_continuation, a);
 
   a = acons (cell_symbol_mes_version, make_string0 (MES_VERSION), a);
   a = acons (cell_symbol_mes_datadir, make_string0 (g_datadir), a);

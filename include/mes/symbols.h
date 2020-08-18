@@ -30,7 +30,7 @@ SCM cell_undefined;
 SCM cell_unspecified;
 SCM cell_closure;
 SCM cell_circular;
-SCM cell_call_with_current_continuation;
+
 SCM cell_vm_apply;
 SCM cell_vm_apply2;
 SCM cell_vm_begin;
@@ -42,7 +42,6 @@ SCM cell_vm_begin_expand_primitive_load;
 SCM cell_vm_begin_primitive_load;
 SCM cell_vm_begin_read_input_file;
 SCM cell_vm_call_with_current_continuation2;
-
 SCM cell_vm_call_with_values2;
 SCM cell_vm_eval;
 SCM cell_vm_eval2;
@@ -138,14 +137,14 @@ SCM cell_type_broken_heart;
 SCM cell_symbol_program;
 SCM cell_symbol_test;
 
-// CONSTANT SYMBOL_MAX 115
-#define SYMBOL_MAX 115
+// CONSTANT SYMBOL_MAX 114
+#define SYMBOL_MAX 114
 
 // CONSTANT CELL_UNSPECIFIED 7
 #define CELL_UNSPECIFIED 7
 
-// CONSTANT CELL_SYMBOL_RECORD_TYPE 83
-#define CELL_SYMBOL_RECORD_TYPE 83
+// CONSTANT CELL_SYMBOL_RECORD_TYPE 82
+#define CELL_SYMBOL_RECORD_TYPE 82
 
 
 #endif /* __MES_SYMBOLS_H */

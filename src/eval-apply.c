@@ -520,27 +520,28 @@ apply:
           push_cc (cons (CADR (R1), cell_nil), R1, CADDR (R1), cell_vm_return);
           goto begin_expand;
         }
-      else if (c == cell_call_with_current_continuation)
-        {
-          R1 = CDR (R1);
-          goto call_with_current_continuation;
-        }
       else
         check_apply (cell_f, CAR (R1));
     }
   else if (t == TSYMBOL)
     {
-      if (CAR (R1) == cell_symbol_call_with_values)
+      c = CAR (R1);
+      if (c == cell_symbol_call_with_current_continuation)
+        {
+          R1 = CDR (R1);
+          goto call_with_current_continuation;
+        }
+      if (c == cell_symbol_call_with_values)
         {
           R1 = CDR (R1);
           goto call_with_values;
         }
-      if (CAR (R1) == cell_symbol_current_module)
+      if (c == cell_symbol_current_module)
         {
           R1 = R0;
           goto vm_return;
         }
-      if (CAR (R1) == cell_symbol_boot_module)
+      if (c == cell_symbol_boot_module)
         {
           R1 = M0;
           goto vm_return;
@@ -723,6 +724,8 @@ eval:
       if (R1 == cell_symbol_current_module)
         goto vm_return;
       if (R1 == cell_symbol_begin)
+        goto vm_return;
+      if (R1 == cell_symbol_call_with_current_continuation)
         goto vm_return;
       R1 = assert_defined (R1, module_ref (R0, R1));
       goto vm_return;
