@@ -723,10 +723,7 @@ eval:
       if (R1 == cell_symbol_current_module)
         goto vm_return;
       if (R1 == cell_symbol_begin)
-        {
-          R1 = cell_begin;
-          goto vm_return;
-        }
+        goto vm_return;
       R1 = assert_defined (R1, module_ref (R0, R1));
       goto vm_return;
     }
