@@ -193,7 +193,8 @@ setenv_ (SCM s, SCM v)          /*:((name . "setenv")) */
 SCM
 access_p (SCM file_name, SCM mode)
 {
-  if (access (cell_bytes (STRING (file_name)), VALUE (mode)) == 0)
+  int result = access (cell_bytes (STRING (file_name)), VALUE (mode));
+  if (result == 0)
     return cell_t;
   return cell_f;
 }
