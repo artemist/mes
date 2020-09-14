@@ -22,8 +22,11 @@
 #include "mes/mes.h"
 
 #include <errno.h>
+#include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
+
+int g_dump_filedes;
 
 #if __M2_PLANET__
 #define M2_CELL_SIZE 12
@@ -791,4 +794,172 @@ gc_pop_frame ()
 {
   gc_peek_frame ();
   g_stack = g_stack + FRAME_SIZE;
+}
+
+void
+dumpc (char c)
+{
+  fdputc (c, g_dump_filedes);
+}
+
+void
+dumps (char const *s)
+{
+  fdputs (s, g_dump_filedes);
+}
+
+void
+gc_dump_register (char const* n, SCM r)
+{
+  dumps (n); dumps (": ");
+#if !POINTER_CELLS
+  long i = r;
+#else
+  long i = r;
+  long a = g_arena;
+  i = i - a;
+  i = i / M2_CELL_SIZE;
+#endif
+  dumps (ltoa (i));
+  dumps ("\n");
+}
+
+void
+gc_dump_state ()
+{
+  gc_dump_register ("R0", R0);
+  gc_dump_register ("R1", R1);
+  gc_dump_register ("R2", R2);
+  gc_dump_register ("R3", R3);
+  gc_dump_register ("M0", M0);
+  gc_dump_register ("g_symbols", g_symbols);
+  gc_dump_register ("g_symbol_max", g_symbol_max);
+  gc_dump_register ("g_macros", g_macros);
+  gc_dump_register ("g_ports", g_ports);
+  gc_dump_register ("cell_zero", cell_zero);
+  gc_dump_register ("cell_nil", cell_nil);
+}
+
+void
+gc_dump_stack ()
+{
+  long i = g_stack;
+  while (i < STACK_SIZE)
+    {
+      gc_dump_register (itoa (i), g_stack_array[i]);
+      i = i + 1;
+    }
+}
+
+void
+gc_dump_arena (struct scm *cells, long size)
+{
+#if !POINTER_CELLS
+  SCM end = size;
+  struct scm *dist = 0;
+#else
+  SCM end = g_cells + (size * M2_CELL_SIZE);
+  struct scm *dist = cells;
+#endif
+  if (g_dump_filedes == 0)
+    g_dump_filedes = mes_open ("dump.mo", O_CREAT|O_WRONLY, 0644);
+  dumps ("stack="); dumps (ltoa (g_stack)); dumpc ('\n');
+  dumps ("size="); dumps (ltoa (size)); dumpc ('\n');
+  gc_dump_state ();
+  gc_dump_stack ();
+  while (TYPE (end) == 0 && CAR (end) == 0 && CDR (end) == 0)
+    {
+      end = end - M2_CELL_SIZE;
+      size = size - 1;
+    }
+  while (size > 0)
+    {
+      int i;
+      for (i=0; i < 16; i = i + 1)
+        {
+          long t = cells->type;
+          long a = cells->car;
+          long d = cells->cdr;
+          if (size == 0)
+            dumps ("0 0 0");
+          else
+            {
+              dumps (ltoa (t));
+              dumpc (' ');
+#if POINTER_CELLS
+              if (t == TMACRO
+                  || t == TPAIR
+                  || t == TREF
+                  || t == TVARIABLE)
+                {
+                  dumps (ltoa ((cells->car - dist) / M2_CELL_SIZE));
+                  /* dumps ("["); dumps (ltoa (a)); dumps ("]"); */
+                }
+              else
+#endif
+                dumps (ltoa (a));
+              dumpc (' ');
+              if (t != TBYTES)
+                {
+#if POINTER_CELLS
+                  if (t == TCLOSURE
+                      || t == TCONTINUATION
+                      || t == TKEYWORD
+                      || t == TMACRO
+                      || t == TPAIR
+                      || t == TPORT
+                      || t == TSPECIAL
+                      || t == TSTRING
+                      || t == TSTRUCT
+                      || t == TSYMBOL
+                      || t == TVALUES
+                      || t == TVECTOR)
+                    {
+                      dumps (ltoa ((cells->cdr - dist) / M2_CELL_SIZE));
+                      /* dumps ("["); dumps (ltoa (d)); dumps ("]"); */
+                    }
+                  else
+#endif
+                    if (t == TNUMBER && d > 1000)
+                      dumps (ltoa (1001));
+                    else
+                      dumps (ltoa (d));
+                }
+              if (t == TBYTES)
+                {
+                  int c = bytes_cells (a);
+                  char *p = cell_bytes (cells);
+                  size = size - c;
+                  dumpc ('"');
+                  while (a > 0)
+                    {
+                      if (p[0] != 0)
+                        dumpc (p[0]);
+                      p = p + 1;
+                      a = a - 1;
+                    }
+                  dumpc ('"');
+                  cells = cells + c * M2_CELL_SIZE;
+                  size = size - c;
+                }
+#if 0
+              else if (t == TSTRUCT)
+                {
+                  cells = cells + (a + 1) * M2_CELL_SIZE;
+                  size = size - a - 1;
+                }
+#endif
+              else
+                {
+                  cells = cells + M2_CELL_SIZE;
+                  size = size - 1;
+                }
+            }
+          if (i != 15)
+            dumps ("  ");
+          else
+            dumpc ('\n');
+        }
+      dumpc ('\n');
+    }
 }

@@ -158,6 +158,7 @@ void assert_msg (int check, char *msg);
 void assert_number (char const *name, SCM x);
 void copy_cell (SCM to, SCM from);
 void gc_ ();
+void gc_dump_arena (struct scm *cells, long size);
 void gc_init ();
 void gc_peek_frame ();
 void gc_pop_frame ();
