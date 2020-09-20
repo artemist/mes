@@ -424,14 +424,7 @@ gc_cellcpy (struct scm *dest, struct scm *src, size_t n)
       long d = src->cdr;
       dest->type = t;
       if (t == TBROKEN_HEART)
-        {
-          dest->type = 0;
-          a = 0;
-          d = 0;
-#if 0
-          assert_msg (0, "gc_cellcpy: broken heart");
-#endif
-        }
+        assert_msg (0, "gc_cellcpy: broken heart");
       if (t == TMACRO
           || t == TPAIR
           || t == TREF
@@ -606,14 +599,7 @@ gc_loop (SCM scan)
     {
       long t = NTYPE (scan);
       if (t == TBROKEN_HEART)
-        {
-          NTYPE (scan) = 0;
-          NCAR (scan) = 0;
-          NCDR (scan) = 0;
-#if 0
-          assert_msg (0, "gc_loop: broken heart");
-#endif
-        }
+        assert_msg (0, "gc_loop: broken heart");
       /* *INDENT-OFF* */
       if (t == TMACRO
           || t == TPAIR
