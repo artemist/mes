@@ -21,8 +21,6 @@
 #ifndef __MES_MACROS_H
 #define __MES_MACROS_H
 
-#if POINTER_CELLS
-
 #define TYPE(x) g_cells[x - g_cells].type
 #define CAR(x) g_cells[x - g_cells].car
 #define CDR(x) g_cells[x - g_cells].cdr
@@ -55,43 +53,6 @@
 #define NVALUE(x) g_news[x - g_news].value
 #define NSTRING(x) g_news[x - g_news].string
 #define NVECTOR(x) g_news[x - g_news].vector
-
-#else
-
-#define TYPE(x) g_cells[x].type
-#define CAR(x) g_cells[x].car
-#define CDR(x) g_cells[x].cdr
-
-#define NTYPE(x) g_news[x].type
-#define NCAR(x) g_news[x].car
-#define NCDR(x) g_news[x].cdr
-
-#define STYPE(x) TYPE (g_stack_array[x])
-#define SCAR(x) CAR (g_stack_array[x])
-#define SCDR(x) CDR (g_stack_array[x])
-
-#define BYTES(x) g_cells[x].car
-#define LENGTH(x) g_cells[x].car
-#define REF(x) g_cells[x].car
-#define VARIABLE(x) g_cells[x].car
-
-#define CLOSURE(x) g_cells[x].cdr
-#define CONTINUATION(x) g_cells[x].cdr
-
-#define MACRO(x) g_cells[x].car
-#define NAME(x) g_cells[x].cdr
-#define PORT(x) g_cells[x].car
-#define STRING(x) g_cells[x].cdr
-#define STRUCT(x) g_cells[x].cdr
-#define VALUE(x) g_cells[x].cdr
-#define VECTOR(x) g_cells[x].cdr
-
-#define NLENGTH(x) g_news[x].car
-#define NVALUE(x) g_news[x].cdr
-#define NSTRING(x) g_news[x].cdr
-#define NVECTOR(x) g_news[x].cdr
-
-#endif
 
 #define CAAR(x) CAR (CAR (x))
 #define CADR(x) CAR (CDR (x))

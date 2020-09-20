@@ -24,26 +24,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if POINTER_CELLS
 #define M2_CELL_SIZE 1
 // CONSTANT M2_CELL_SIZE 12
-#else
-#define M2_CELL_SIZE 1
-// CONSTANT M2_CELL_SIZE 1
-#endif
 
 int g_debug;
 
 void
 test_setup ()
 {
-#if POINTER_CELLS
   cell_arena = g_arena;
   g_cells = cell_arena + M2_CELL_SIZE;
   cell_zero = g_cells;
-#else
-  cell_zero = 0;
-#endif
 
   cell_nil = cell_zero + M2_CELL_SIZE;
   cell_f = cell_nil + M2_CELL_SIZE;
@@ -186,11 +177,7 @@ main (int argc, char **argv, char **envp)
   setenv ("MES_ARENA", "100", 1);
   setenv ("MES_MAX_ARENA", "100", 1);
   gc_init ();
-#if POINTER_CELLS
   cell_zero = g_cells;
-#else
-  cell_zero = 0;
-#endif
   cell_nil = cell_zero + M2_CELL_SIZE;
   cell_f = cell_nil + M2_CELL_SIZE;
   g_symbols = cell_zero;

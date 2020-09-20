@@ -21,11 +21,7 @@
 #ifndef __MES_CC_H
 #define __MES_CC_H
 
-#if POINTER_CELLS
 typedef struct scm* SCM;
-#else
-typedef long SCM;
-#endif
 
 #if __MESC__
 typedef long FUNCTION;

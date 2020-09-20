@@ -33,11 +33,7 @@
 // CONSTANT M2_CELL_SIZE 12
 #endif
 
-#if !POINTER_CELLS
-long g_symbol;
-#else
 SCM g_symbol;
-#endif
 
 SCM
 init_symbol (SCM x, long type, char const *name)
@@ -184,11 +180,7 @@ init_symbols_ ()                  /*:((internal)) */
 SCM
 init_symbols ()                  /*:((internal)) */
 {
-#if !POINTER_CELLS
-  g_free = 1;
-#else
   g_free = g_cells + M2_CELL_SIZE;
-#endif
 
   g_symbols = 0;
   cell_nil = g_free;

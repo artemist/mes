@@ -21,8 +21,6 @@
 #ifndef __MES_MES_H
 #define __MES_MES_H
 
-#define POINTER_CELLS 0
-
 #include <sys/types.h>
 #include "mes/cc.h"
 
@@ -86,13 +84,8 @@ char *g_arena;
 SCM cell_arena;
 SCM cell_zero;
 
-#if !POINTER_CELLS
-long g_free;
-long g_symbol;
-#else
 SCM g_free;
 SCM g_symbol;
-#endif
 
 SCM *g_stack_array;
 struct scm *g_cells;
