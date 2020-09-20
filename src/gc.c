@@ -65,7 +65,6 @@ gc_init ()
   ARENA_SIZE = 100000000;       /* 2.3GiB */
 #elif ! __M2_PLANET__
   ARENA_SIZE = 300000;          /* 32b: 3MiB, 64b: 6 MiB */
-  ARENA_SIZE = 600000;          /* 32b: 6MiB, 64b: 12 MiB */
 #else
   ARENA_SIZE = 20000000;
 #endif
@@ -107,20 +106,11 @@ gc_init ()
     MAX_STRING = atoi (p);
 
   long arena_bytes = (ARENA_SIZE + JAM_SIZE) * sizeof (struct scm);
-#if !POINTER_CELLS || GC_NOFLIP
   long alloc_bytes = arena_bytes + (STACK_SIZE * sizeof (struct scm));
-#else
-  long alloc_bytes = (arena_bytes * 2) + (STACK_SIZE * sizeof (struct scm*));
-#endif
 
   g_arena = malloc (alloc_bytes);
   g_cells = g_arena;
-
-#if !POINTER_CELLS || GC_NOFLIP
   g_stack_array = g_arena + arena_bytes;
-#else
-  g_stack_array = g_arena + (arena_bytes * 2);
-#endif
 
 #if !POINTER_CELLS
   /* The vector that holds the arenea. */
@@ -328,17 +318,7 @@ gc_init_news ()
   g_news = g_cells + g_free;
   SCM ncell_arena = cell_arena;
 #else
-
-#if GC_NOFLIP
   g_news = g_free;
-#else
-  char* p = g_cells - M2_CELL_SIZE;
-  if (p == g_arena)
-    g_news = g_free;
-  else
-    g_news = g_arena;
-#endif
-
   SCM ncell_arena = g_news;
 #endif
 
@@ -492,8 +472,7 @@ gc_flip ()
   if (g_free - g_news > JAM_SIZE)
     JAM_SIZE = (g_free - g_news) + ((g_free - g_news) / 2);
 
-#if GC_NOFLIP
-  cell_arena = g_cells - M2_CELL_SIZE; /* FIXME? */
+  cell_arena = g_cells - M2_CELL_SIZE; /* For debugging. */
   gc_cellcpy (g_cells, g_news, (g_free - g_news) / M2_CELL_SIZE);
 
   long dist = g_news - g_cells;
@@ -513,7 +492,6 @@ gc_flip ()
   cell_arena = g_news - M2_CELL_SIZE;
   cell_zero = cell_arena + M2_CELL_SIZE;
   cell_nil = cell_zero + M2_CELL_SIZE;
-#endif
 #endif
 
   if (g_debug > 2)
@@ -693,25 +671,6 @@ gc_ ()
   for (s = cell_nil; s < g_symbol_max; s = s + M2_CELL_SIZE)
     gc_copy (s);
 
-#if POINTER_CELLS && !GC_NOFLIP
-  cell_nil = new_cell_nil;
-  cell_arena = g_news - M2_CELL_SIZE; /* for debugging */
-
-#if GC_TEST
-  cell_zero = cell_nil - M2_CELL_SIZE;
-  g_symbol_max = g_free;
-#else
-  long save_gsymbols = g_symbols;
-  g_symbols = 0;
-  g_free = new_cell_nil;
-  init_symbols_ ();
-  g_symbol_max = g_symbol;
-  g_symbols = save_gsymbols;
-#endif
-
-#endif
-
-#if !GC_TEST
   g_symbols = gc_copy (g_symbols);
   g_macros = gc_copy (g_macros);
   g_ports = gc_copy (g_ports);
@@ -720,7 +679,6 @@ gc_ ()
   long i;
   for (i = g_stack; i < STACK_SIZE; i = i + 1)
     copy_stack (i, gc_copy (g_stack_array[i]));
-#endif
 
   gc_loop (new_cell_nil);
 }
@@ -741,9 +699,6 @@ gc ()
     }
   gc_push_frame ();
   gc_ ();
-#if POINTER_CELLS && !GC_NOFLIP
-  gc_ ();
-#endif
   gc_pop_frame ();
   if (g_debug > 5)
     {
