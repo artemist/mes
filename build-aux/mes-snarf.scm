@@ -104,12 +104,19 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
    (format #f "// CONSTANT ~a ~a\n" s i)
    (format #f "#define ~a ~a\n" s i)))
 
+(define (symbol->header s i)
+  (let ((c (string-upcase s)))
+    (string-append
+     (format #f "\n// CONSTANT ~a ~a\n" c i)
+     (format #f "#define ~a ~a\n" c i)
+     (format #f "struct scm *~a; /* ~a */\n" s i))))
+
 (define (function->header f i)
   (let* ((arity (or (assoc-ref (function.annotation f) 'arity)
                     (if (string-null? (function.formals f)) 0
                         (length (string-split (function.formals f) #\,)))))
          (n (if (eq? arity 'n) -1 arity)))
-    (format #f "SCM ~a (~a);\n" (function.name f) (function.formals f))))
+    (format #f "struct scm *~a (~a);\n" (function.name f) (function.formals f))))
 
 (define (function->source f i)
   (let* ((arity (or (assoc-ref (function.annotation f) 'arity)
@@ -143,7 +150,8 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
        (receive (function rest)
            (apply values (string-split-string line " "))
          (and function
-              (equal? (string-trim previous) "SCM")
+              (or (equal? (string-trim previous) "struct scm*")
+                  (equal? (string-trim previous) "struct scm *"))
               (not (string-null? function))
               (not (string-prefix? "#" function))
               (not (string-prefix? "/" function))
@@ -163,7 +171,7 @@ exec ${GUILE-guile} --no-auto-compile -L $(dirname $0) -C $(dirname $0) -e '(mes
                                     (string-split parameters #\,)))
                        (formals (map string-trim formals)))
                   (and parameters
-                       (let* ((non-SCM (filter (negate (cut string-prefix? "SCM" <>)) formals)))
+                       (let* ((non-SCM (filter (negate (cut string-prefix? "struct scm" <>)) formals)))
                          (and (null? non-SCM)
                               (let ((annotation (and annotation (with-input-from-string annotation read))))
                                 (make-function function parameters annotation))))))))))
