@@ -89,6 +89,38 @@ get_machine.")
     (home-page "https://savannah.nongnu.org/projects/mescc-tools")
     (license gpl3+)))
 
+(define-public m2-planet
+  (let ((commit "c2cbc518f9c073436845cae2bdecf01ffdb1afbd")
+        (revision "0"))
+    (package
+      (name "m2-planet")
+      (version (string-append "1.4.0-" revision "." (string-take commit 7)))
+      (source (origin
+                (method git-fetch)
+                (uri (git-reference
+                      (url "https://github.com/oriansj/m2-planet.git")
+                      (commit commit)))
+                (file-name (git-file-name name version))
+                (sha256
+                 (base32
+                  "0v8vcd5i4z904n5n2mxgd6jpz0gmgbfxmvwzg8ax6gy1js4jyixf"))))
+      (native-inputs
+       `(("mescc-tools" ,mescc-tools)))
+      (build-system gnu-build-system)
+      (arguments
+       `(#:make-flags (list (string-append "PREFIX=" (assoc-ref %outputs "out")))
+         #:tests? #f
+         #:phases (modify-phases %standard-phases
+                    (delete 'bootstrap)
+                    (delete 'configure))))
+      (synopsis "The PLAtform NEutral Transpiler")
+      (description
+       "M2-Planet, The PLAtform NEutral Transpiler, when combined with
+mescc-tools compiles a subset of the C language into working binaries
+with introspective steps inbetween.")
+      (home-page "https://savannah.nongnu.org/projects/mescc-tools")
+      (license gpl3+))))
+
 (define-public nyacc-0.99
   (package
     (name "nyacc")
@@ -192,6 +224,7 @@ extensive examples, including parsers for the Javascript and C99 languages.")
                 '()))
        ("graphviz" ,graphviz)
        ("help2man" ,help2man)
+       ("m2-planet" ,m2-planet)
        ("perl" ,perl)                   ; build-aux/gitlog-to-changelog
        ("texinfo" ,texinfo)))
     (arguments
