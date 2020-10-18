@@ -90,7 +90,7 @@ get_machine.")
     (license gpl3+)))
 
 (define-public m2-planet
-  (let ((commit "c2cbc518f9c073436845cae2bdecf01ffdb1afbd")
+  (let ((commit "1fc2aeab483208bd2ba117b21df3894c182470ec")
         (revision "0"))
     (package
       (name "m2-planet")
@@ -103,9 +103,10 @@ get_machine.")
                 (file-name (git-file-name name version))
                 (sha256
                  (base32
-                  "0v8vcd5i4z904n5n2mxgd6jpz0gmgbfxmvwzg8ax6gy1js4jyixf"))))
+                  "1fj3xiqcibdfi78b43nn6w8hs3vkz32yb06n8r5mna8pnjdmn00l"))))
       (native-inputs
-       `(("mescc-tools" ,mescc-tools)))
+       `(("gcc-toolchain" ,gcc-toolchain-7)
+         ("mescc-tools" ,mescc-tools)))
       (build-system gnu-build-system)
       (arguments
        `(#:make-flags (list (string-append "PREFIX=" (assoc-ref %outputs "out")))
