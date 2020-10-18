@@ -61,7 +61,7 @@ FUNCTION
 builtin_function (struct scm *builtin)
 {
   struct scm *x = struct_ref_ (builtin, 5);
-  return x->value;
+  return x->function;
 }
 
 struct scm *
@@ -98,12 +98,13 @@ builtin_printer (struct scm *builtin)
 }
 
 struct scm *
-init_builtin (struct scm *builtin_type, char const *name, int arity, FUNCTION function, struct scm *a)
+init_builtin (struct scm *builtin_type, char const *name, int arity, void* function, struct scm *a)
 {
   struct scm *s = cstring_to_symbol (name);
+  long n = cast_voidp_to_long (function);
   return acons (s,
                 make_builtin (builtin_type, symbol_to_string (s), make_number (arity),
-                              make_number (function)), a);
+                              make_number (n)), a);
 }
 
 struct scm *

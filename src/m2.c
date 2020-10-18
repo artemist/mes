@@ -48,3 +48,39 @@ apply_builtin3 (struct scm *fn, struct scm *x, struct scm *y, struct scm *z)
   FUNCTION fp = builtin_function (fn);
   return fp (x, y, z);
 }
+
+#undef cast_charp_to_scmp
+#undef cast_charp_to_scmpp
+#undef cast_voidp_to_charp
+#undef cast_scmp_to_long
+#undef cast_scmp_to_charp
+
+struct scm *
+cast_charp_to_scmp (char const *i)
+{
+  return i;
+}
+
+struct scm **
+cast_charp_to_scmpp (char const *i)
+{
+  return i;
+}
+
+char*
+cast_voidp_to_charp (void const *i)
+{
+  return i;
+}
+
+long
+cast_scmp_to_long (struct scm *i)
+{
+  return i;
+}
+
+char*
+cast_scmp_to_charp (struct scm *i)
+{
+  return i;
+}

@@ -251,7 +251,7 @@ display_helper (struct scm *x, int cont, char *sep, int fd, int write_p)
       fdputs ("<", fd);
       fdputs (itoa (t), fd);
       fdputs (":", fd);
-      fdputs (itoa (x), fd);
+      fdputs (ltoa (cast_voidp_to_long (x)), fd);
       fdputs (">", fd);
     }
   return cell_unspecified;

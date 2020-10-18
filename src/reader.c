@@ -201,7 +201,10 @@ reader_read_block_comment (int s, int c)
 {
   if (c == s)
     if (peekchar () == '#')
-      return readchar ();
+      {
+        readchar ();
+        return cell_unspecified;
+      }
   return reader_read_block_comment (s, readchar ());
 }
 

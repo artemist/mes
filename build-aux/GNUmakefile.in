@@ -135,7 +135,7 @@ maintainer-clean: distclean
 	rm -f doc/version.texi
 
 TAGS:
-	etags ${srcdest}lib/*.c ${srcdest}lib/*/*.c ${srcdest}src/*.c ${srcdest}include/*.h ${srcdest}include/sys/*.h
+	etags ${srcdest}lib/*.c ${srcdest}lib/*/*.c ${srcdest}src/*.c ${srcdest}include/*.h ${srcdest}include/*/*.h ${srcdest}include/sys/*.h
 
 all-go:
 	${srcdest}build-aux/build-guile.sh

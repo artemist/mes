@@ -45,7 +45,7 @@ init_symbol (struct scm *x, long type, char const *name)
     {
       int length = strlen (name);
       struct scm *string = make_string (name, length);
-      x->car = length;
+      x->car_value = length;
       x->cdr = string->string;
       hash_set_x (g_symbols, string, x);
     }

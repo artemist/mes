@@ -25,7 +25,7 @@
 #include <string.h>
 
 void
-assert_max_string (size_t i, char const *msg, char *string)
+assert_max_string (size_t i, char const *msg, char const *string)
 {
   if (i > MAX_STRING)
     {
@@ -33,8 +33,9 @@ assert_max_string (size_t i, char const *msg, char *string)
       eputs (":string too long[");
       eputs (itoa (i));
       eputs ("]:");
-      string[MAX_STRING - 1] = 0;
-      eputs (string);
+      char *p = cast_voidp_to_charp (string);
+      p[MAX_STRING - 1] = 0;
+      eputs (p);
       error (cell_symbol_system_error, cell_f);
     }
 }
@@ -121,7 +122,7 @@ string_to_symbol (struct scm *string)
 struct scm *
 make_symbol (struct scm *string)
 {
-  struct scm *x = make_cell (TSYMBOL, string->length, string->string);
+  struct scm *x = make_pointer_cell (TSYMBOL, string->length, string->string);
   hash_set_x (g_symbols, string, x);
   return x;
 }

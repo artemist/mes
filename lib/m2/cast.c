@@ -20,12 +20,6 @@
 
 #include <mes/lib.h>
 
-#undef cast_intp_to_charp
-#undef cast_long_to_charp
-#undef cast_charp_to_long
-#undef cast_int_to_long
-#undef cast_voidp_to_long
-
 char*
 cast_intp_to_charp (int const *i)
 {

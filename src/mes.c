@@ -172,10 +172,10 @@ init (char **envp)
   g_start_time = malloc (sizeof (struct timespec));
   memset (g_start_time, 0, sizeof (struct timespec));
 
-  char *p;
-  if (p = getenv ("MES_DEBUG"))
+  char *p = getenv ("MES_DEBUG");
+  if (p != 0)
     g_debug = atoi (p);
-  g_mini = getenv ("MES_MINI");
+  g_mini = cast_charp_to_long (getenv ("MES_MINI"));
   open_boot ();
   gc_init ();
 }

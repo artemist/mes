@@ -34,14 +34,14 @@ int g_dump_filedes;
 char *
 cell_bytes (struct scm *x)
 {
-  char *p = x;
+  char *p = cast_voidp_to_charp (x);
   return p + (2 * sizeof (long));
 }
 
 char *
 news_bytes (struct scm *x)
 {
-  char *p = x;
+  char *p = cast_voidp_to_charp (x);
   return p + (2 * sizeof (long));
 }
 
@@ -88,8 +88,8 @@ gc_init ()
   long alloc_bytes = arena_bytes + (STACK_SIZE * sizeof (struct scm));
 
   g_arena = malloc (alloc_bytes);
-  g_cells = g_arena;
-  g_stack_array = g_arena + arena_bytes;
+  g_cells = cast_charp_to_scmp (g_arena);
+  g_stack_array = cast_charp_to_scmpp (g_arena + arena_bytes);
 
   /* The vector that holds the arenea. */
   cell_arena = g_cells;
@@ -149,10 +149,40 @@ make_cell (long type, struct scm *car, struct scm *cdr)
   long i = g_free - g_cells;
   i = i / M2_CELL_SIZE;
   if (i > ARENA_SIZE)
-    assert_msg (0, "alloc: out of memory");
+    assert_msg (0, "make_cell: out of memory");
   x->type = type;
   x->car = car;
   x->cdr = cdr;
+  return x;
+}
+
+struct scm *
+make_pointer_cell (long type, long car, void *cdr)
+{
+  struct scm *x = g_free;
+  g_free = g_free + M2_CELL_SIZE;
+  long i = g_free - g_cells;
+  i = i / M2_CELL_SIZE;
+  if (i > ARENA_SIZE)
+    assert_msg (0, "make_pointer_cell: out of memory");
+  x->type = type;
+  x->length = car;
+  x->cdr = cdr;
+  return x;
+}
+
+struct scm *
+make_value_cell (long type, long car, long cdr)
+{
+  struct scm *x = g_free;
+  g_free = g_free + M2_CELL_SIZE;
+  long i = g_free - g_cells;
+  i = i / M2_CELL_SIZE;
+  if (i > ARENA_SIZE)
+    assert_msg (0, "make_value_cell: out of memory");
+  x->type = type;
+  x->length = car;
+  x->value = cdr;
   return x;
 }
 
@@ -215,13 +245,13 @@ make_bytes (char const *s, size_t length)
 struct scm *
 make_char (int n)
 {
-  return make_cell (TCHAR, 0, n);
+  return make_value_cell (TCHAR, 0, n);
 }
 
 struct scm *
 make_continuation (long n)
 {
-  return make_cell (TCONTINUATION, n, g_stack);
+  return make_value_cell (TCONTINUATION, n, g_stack);
 }
 
 struct scm *
@@ -233,7 +263,7 @@ make_macro (struct scm *name, struct scm *x)    /*:((internal)) */
 struct scm *
 make_number (long n)
 {
-  return make_cell (TNUMBER, 0, n);
+  return make_value_cell (TNUMBER, 0, n);
 }
 
 struct scm *
@@ -247,7 +277,7 @@ make_string (char const *s, size_t length)
 {
   if (length > MAX_STRING)
     assert_max_string (length, "make_string", s);
-  struct scm *x = make_cell (TSTRING, length, 0);
+  struct scm *x = make_pointer_cell (TSTRING, length, 0);
   struct scm *v = make_bytes (s, length + 1);
   x->cdr = v;
   return x;
@@ -262,7 +292,7 @@ make_string0 (char const *s)
 struct scm *
 make_string_port (struct scm *x)        /*:((internal)) */
 {
-  return make_cell (TPORT, -length__ (g_ports) - 2, x);
+  return make_pointer_cell (TPORT, -length__ (g_ports) - 2, x);
 }
 
 void
@@ -301,7 +331,7 @@ gc_up_arena ()
   if (p == 0)
     {
       eputs ("realloc failed, g_free=");
-      eputs (ltoa (g_free));
+      eputs (ltoa (cast_voidp_to_long (g_free)));
       eputs (":");
       long i = g_free - g_cells;
       i = i / M2_CELL_SIZE;
@@ -334,8 +364,8 @@ gc_cellcpy (struct scm *dest, struct scm *src, size_t n)
   while (n != 0)
     {
       long t = src->type;
-      long a = src->car;
-      long d = src->cdr;
+      long a = src->car_value;
+      long d = src->cdr_value;
       dest->type = t;
       if (t == TBROKEN_HEART)
         assert_msg (0, "gc_cellcpy: broken heart");
@@ -343,9 +373,9 @@ gc_cellcpy (struct scm *dest, struct scm *src, size_t n)
           || t == TPAIR
           || t == TREF
           || t == TVARIABLE)
-        dest->car = a - dist;
+        dest->car_value = a - dist;
       else
-        dest->car = a;
+        dest->car_value = a;
       if (t == TBYTES
           || t == TCLOSURE
           || t == TCONTINUATION
@@ -359,21 +389,21 @@ gc_cellcpy (struct scm *dest, struct scm *src, size_t n)
           || t == TSYMBOL
           || t == TVALUES
           || t == TVECTOR)
-        dest->cdr = d - dist;
+        dest->cdr_value = d - dist;
       else
-        dest->cdr = d;
+        dest->cdr_value = d;
       if (t == TBYTES)
         {
           if (g_debug > 5)
             {
               eputs ("copying bytes[");
-              eputs (ntoab (cell_bytes (src), 16, 0));
+              eputs (ntoab (cast_voidp_to_long (cell_bytes (src)), 16, 0));
               eputs (", ");
               eputs (ntoab (a, 10, 0));
               eputs ("]: ");
               eputs (cell_bytes (src));
               eputs ("\n to [");
-              eputs (ntoab (cell_bytes (dest), 16, 0));
+              eputs (ntoab (cast_voidp_to_long (cell_bytes (dest)), 16, 0));
             }
           memcpy (cell_bytes (dest), cell_bytes (src), a);
           if (g_debug > 5)
@@ -555,16 +585,17 @@ gc_ ()
     }
   g_free = g_news + M2_CELL_SIZE;
 
-  if (ARENA_SIZE < MAX_ARENA_SIZE && g_cells == g_arena + M2_CELL_SIZE)
+  if (ARENA_SIZE < MAX_ARENA_SIZE
+      && cast_voidp_to_charp (g_cells) == g_arena + M2_CELL_SIZE)
     {
       if (g_debug == 2)
         eputs ("+");
       if (g_debug > 2)
         {
           eputs (" up[");
-          eputs (ltoa (g_cells));
+          eputs (ltoa (cast_voidp_to_long (g_cells)));
           eputs (",");
-          eputs (ltoa (g_news));
+          eputs (ltoa (cast_voidp_to_long (g_news)));
           eputs (":");
           eputs (ltoa (ARENA_SIZE));
           eputs (",");
@@ -668,8 +699,8 @@ void
 gc_dump_register (char const* n, struct scm *r)
 {
   dumps (n); dumps (": ");
-  long i = r;
-  long a = g_arena;
+  long i = cast_scmp_to_long (r);
+  long a = cast_charp_to_long (g_arena);
   i = i - a;
   i = i / M2_CELL_SIZE;
   dumps (ltoa (i));
@@ -725,8 +756,8 @@ gc_dump_arena (struct scm *cells, long size)
       for (i=0; i < 16; i = i + 1)
         {
           long t = cells->type;
-          long a = cells->car;
-          long d = cells->cdr;
+          long a = cells->car_value;
+          long d = cells->cdr_value;
           if (size == 0)
             dumps ("0 0 0");
           else

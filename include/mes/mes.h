@@ -30,6 +30,7 @@ struct scm
   union
   {
     struct scm *car;
+    long car_value;
     char *bytes;
     long length;
     struct scm *ref;
@@ -40,12 +41,14 @@ struct scm
   union
   {
     struct scm *cdr;
+    long cdr_value;
     struct scm *closure;
     struct scm *continuation;
     char *name;
     struct scm *string;
     struct scm *structure;
     long value;
+    FUNCTION function;
     struct scm *vector;
   };
 };
@@ -54,7 +57,7 @@ struct scm
 char *g_datadir;
 int g_debug;
 char *g_buf;
-struct scm *g_continuations;
+int g_continuations;
 struct scm *g_symbols;
 struct scm *g_symbol_max;
 int g_mini;
@@ -102,6 +105,12 @@ struct timespec *g_start_time;
 struct timeval *__gettimeofday_time;
 struct timespec *__get_internal_run_time_ts;
 
+struct scm *cast_charp_to_scmp (char const *i);
+struct scm **cast_charp_to_scmpp (char const *i);
+char *cast_voidp_to_charp (void const *i);
+long cast_scmp_to_long (struct scm *i);
+char *cast_scmp_to_charp (struct scm *i);
+
 struct scm *alloc (long n);
 struct scm *apply (struct scm *f, struct scm *x, struct scm *a);
 struct scm *apply_builtin (struct scm *fn, struct scm *x);
@@ -119,6 +128,8 @@ struct scm *init_time (struct scm *a);
 struct scm *make_builtin_type ();
 struct scm *make_bytes (char const *s, size_t length);
 struct scm *make_cell (long type, struct scm *car, struct scm *cdr);
+struct scm *make_pointer_cell (long type, long car, void *cdr);
+struct scm *make_value_cell (long type, long car, long cdr);
 struct scm *make_char (int n);
 struct scm *make_continuation (long n);
 struct scm *make_hash_table_ (long size);
@@ -146,7 +157,7 @@ int unreadchar ();
 long gc_free ();
 long length__ (struct scm *x);
 size_t bytes_cells (size_t length);
-void assert_max_string (size_t i, char const *msg, char *string);
+void assert_max_string (size_t i, char const *msg, char const *string);
 void assert_msg (int check, char *msg);
 void assert_number (char const *name, struct scm *x);
 void copy_cell (struct scm *to, struct scm *from);
