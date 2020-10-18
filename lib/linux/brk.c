@@ -18,11 +18,13 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mes/lib.h>
 #include <linux/syscall.h>
 #include <syscall.h>
 
 long
 brk (void *addr)
 {
-  return _sys_call1 (SYS_brk, addr);
+  long long_addr = cast_voidp_to_long (addr);
+  return _sys_call1 (SYS_brk, long_addr);
 }

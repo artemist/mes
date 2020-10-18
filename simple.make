@@ -44,12 +44,7 @@ CFLAGS:=					\
  -D 'MES_VERSION="git"'				\
  -D 'MES_PKGDATADIR="/usr/local/share/mes"'	\
  -I include					\
- -fno-builtin					\
- -Wno-discarded-qualifiers			\
- -Wno-discarded-array-qualifiers		\
- -Wno-ignored-qualifiers			\
- -Wno-incompatible-pointer-types		\
- -Wno-int-conversion
+ -fno-builtin
 
 LIBMES_SOURCES =				\
  src/builtins.c					\
@@ -81,6 +76,7 @@ M2_SOURCES =					\
  lib/linux/x86-mes-m2/crt1.c			\
  lib/linux/x86-mes-m2/_exit.c			\
  lib/linux/x86-mes-m2/_write.c			\
+ lib/m2/cast.c					\
  lib/m2/exit.c					\
  lib/mes/write.c				\
  lib/linux/x86-mes-m2/syscall.c			\
@@ -162,6 +158,7 @@ MES_LIBC =					\
 
 GCC_SOURCES =					\
  lib/mes/__mes_debug.c				\
+ lib/mes/cast.c					\
  lib/mes/eputc.c				\
  lib/mes/eputs.c				\
  lib/mes/fdgetc.c				\

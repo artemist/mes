@@ -18,6 +18,7 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mes/lib.h>
 #include <linux/syscall.h>
 #include <syscall.h>
 #include <sys/stat.h>
@@ -25,7 +26,7 @@
 int
 chmod (char const *file_name, mode_t mask)
 {
-  long long_file_name = file_name;
-  long long_mask = mask;
+  long long_file_name = cast_charp_to_long (file_name);
+  long long_mask = cast_int_to_long (mask);
   return _sys_call2 (SYS_chmod, long_file_name, long_mask);
 }

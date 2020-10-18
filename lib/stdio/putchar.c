@@ -18,12 +18,13 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mes/lib.h>
 #include <stdio.h>
 
 int
 putchar (int c)
 {
-  char *p = &c;
+  char *p = cast_intp_to_charp (&c);
   write (__stdout, p, 1);
   return 0;
 }

@@ -18,14 +18,15 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <mes/lib-mini.h>
+#include <mes/lib.h>
 #include <linux/syscall.h>
 #include <syscall.h>
 
 char *
 _getcwd (char *buffer, size_t size)
 {
-  int r = _sys_call2 (SYS_getcwd, buffer, size);
+  long long_buffer = cast_charp_to_long (buffer);
+  int r = _sys_call2 (SYS_getcwd, long_buffer, size);
   if (r >= 0)
     return buffer;
   return 0;

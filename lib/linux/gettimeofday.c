@@ -18,6 +18,7 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mes/lib.h>
 #include <linux/syscall.h>
 #include <syscall.h>
 #include <sys/time.h>
@@ -25,7 +26,7 @@
 int
 gettimeofday (struct timeval *tv, struct timezone *tz)
 {
-  long long_tv = tv;
-  long long_tz = tz;
+  long long_tv = cast_voidp_to_long (tv);
+  long long_tz = cast_voidp_to_long (tz);
   return _sys_call2 (SYS_gettimeofday, long_tv, long_tz);
 }

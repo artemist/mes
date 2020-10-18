@@ -93,6 +93,7 @@ libmes_SOURCES="
 $libc_mini_shared_SOURCES
 lib/ctype/isnumber.c
 lib/mes/abtol.c
+lib/mes/cast.c
 lib/mes/eputc.c
 lib/mes/fdgetc.c
 lib/mes/fdputc.c

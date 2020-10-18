@@ -23,7 +23,7 @@
 int
 fdputc (int c, int fd)
 {
-  char *p = &c;
+  char *p = cast_intp_to_charp (&c);
   write (fd, p, 1);
   return 0;
 }

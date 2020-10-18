@@ -30,7 +30,7 @@ void *
 malloc (size_t size)
 {
   if (!__brk)
-    __brk = (char *) brk (0);
+    __brk = cast_long_to_charp (brk (0));
   /* align what we give back. */
   __brk = (char*) (((uintptr_t) __brk
                     + sizeof (max_align_t) - 1) & -sizeof (max_align_t));

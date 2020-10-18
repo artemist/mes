@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -19,12 +19,39 @@
  */
 
 #include <mes/lib.h>
-#include <linux/syscall.h>
-#include <syscall.h>
 
-int
-unlink (char const *file_name)
+#undef cast_intp_to_charp
+#undef cast_long_to_charp
+#undef cast_charp_to_long
+#undef cast_int_to_long
+#undef cast_voidp_to_long
+
+char*
+cast_intp_to_charp (int const *i)
 {
-  long long_file_name = cast_charp_to_long (file_name);
-  return _sys_call1 (SYS_unlink, long_file_name);
+  return i;
+}
+
+char*
+cast_long_to_charp (long i)
+{
+  return i;
+}
+
+long
+cast_charp_to_long (char const *i)
+{
+  return i;
+}
+
+long
+cast_int_to_long (int i)
+{
+  return i;
+}
+
+long
+cast_voidp_to_long (void const *i)
+{
+  return i;
 }

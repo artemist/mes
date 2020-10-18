@@ -18,6 +18,7 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mes/lib.h>
 #include <linux/syscall.h>
 #include <syscall.h>
 #include <time.h>
@@ -25,7 +26,7 @@
 int
 clock_gettime (clockid_t clk_id, struct timespec *tp)
 {
-  long long_clk_id = clk_id;
-  long long_tp = tp;
-  return _sys_call2 (SYS_clock_gettime, clk_id, tp);
+  long long_clk_id = cast_int_to_long (clk_id);
+  long long_tp = cast_voidp_to_long (tp);
+  return _sys_call2 (SYS_clock_gettime, long_clk_id, long_tp);
 }

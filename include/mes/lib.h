@@ -23,6 +23,18 @@
 
 #include <mes/lib-mini.h>
 
+char* cast_intp_to_charp (int const *i);
+char* cast_long_to_charp (long i);
+long cast_charp_to_long (char const *);
+long cast_int_to_long (int i);
+long cast_voidp_to_long (void const *);
+
+// #define cast_intp_to_charp(x) ((char*) x)
+// #define cast_long_to_charp(x) ((char*) x)
+// #define cast_charp_to_long(x) ((long) x)
+// #define cast_int_to_long(x) ((long) x)
+// #define cast_voidp_to_long(x) ((long) x)
+
 int __mes_debug ();
 void __ungetc_init ();
 void __ungetc_clear (int filedes);

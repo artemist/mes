@@ -30,6 +30,12 @@ int errno;
 // CONSTANT EOF 0xffffffff
 // CONSTANT __FILEDES_MAX 512
 
+char* cast_intp_to_charp (int *i);
+char* cast_long_to_charp (long i);
+long cast_charp_to_long (char const *);
+long cast_int_to_long (int i);
+long cast_voidp_to_long (void const *);
+
 char *itoa (int number);
 char *ltoa (long number);
 int __ungetc_p (int filedes);
