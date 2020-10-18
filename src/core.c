@@ -29,127 +29,127 @@
 
 #include <stdlib.h>
 
-SCM
-assoc_string (SCM x, SCM a)     /*:((internal)) */
+struct scm *
+assoc_string (struct scm *x, struct scm *a)     /*:((internal)) */
 {
-  SCM b;
+  struct scm *b;
   while (a != cell_nil)
     {
-      b = CAR (a);
-      if (TYPE (CAR (b)) == TSTRING)
-        if (string_equal_p (x, CAR (b)) == cell_t)
+      b = a->car;
+      if (b->car->type == TSTRING)
+        if (string_equal_p (x, b->car) == cell_t)
           return b;
-      a = CDR (a);
+      a = a->cdr;
     }
   if (a != cell_nil)
-    return CAR (a);
+    return a->car;
   return cell_f;
 }
 
-SCM
-car (SCM x)
+struct scm *
+car (struct scm *x)
 {
 #if !__MESC_MES__
-  if (TYPE (x) != TPAIR)
+  if (x->type != TPAIR)
     error (cell_symbol_not_a_pair, cons (x, cell_symbol_car));
 #endif
-  return CAR (x);
+  return x->car;
 }
 
-SCM
-cdr (SCM x)
+struct scm *
+cdr (struct scm *x)
 {
 #if !__MESC_MES__
-  if (TYPE (x) != TPAIR)
+  if (x->type != TPAIR)
     error (cell_symbol_not_a_pair, cons (x, cell_symbol_cdr));
 #endif
-  return CDR (x);
+  return x->cdr;
 }
 
-SCM
-list (SCM x)                    /*:((arity . n)) */
+struct scm *
+list (struct scm *x)                    /*:((arity . n)) */
 {
   return x;
 }
 
-SCM
-null_p (SCM x)
+struct scm *
+null_p (struct scm *x)
 {
   if (x == cell_nil)
     return cell_t;
   return cell_f;
 }
 
-SCM
-eq_p (SCM x, SCM y)
+struct scm *
+eq_p (struct scm *x, struct scm *y)
 {
   if (x == y)
     return cell_t;
-  int t = TYPE (x);
+  int t = x->type;
   if (t == TKEYWORD)
     {
-      if (TYPE (y) == TKEYWORD)
+      if (y->type == TKEYWORD)
         return string_equal_p (x, y);
       return cell_f;
     }
   if (t == TCHAR)
     {
-      if (TYPE (y) != TCHAR)
+      if (y->type != TCHAR)
         return cell_f;
-      if (VALUE (x) == VALUE (y))
+      if (x->value == y->value)
         return cell_t;
       return cell_f;
     }
   if (t == TNUMBER)
     {
-      if (TYPE (y) != TNUMBER)
+      if (y->type != TNUMBER)
         return cell_f;
-      if (VALUE (x) == VALUE (y))
+      if (x->value == y->value)
         return cell_t;
       return cell_f;
     }
   return cell_f;
 }
 
-SCM
-values (SCM x)                  /*:((arity . n)) */
+struct scm *
+values (struct scm *x)                  /*:((arity . n)) */
 {
-  SCM v = cons (0, x);
-  TYPE (v) = TVALUES;
+  struct scm *v = cons (0, x);
+  v->type = TVALUES;
   return v;
 }
 
-SCM
-acons (SCM key, SCM value, SCM alist)
+struct scm *
+acons (struct scm *key, struct scm *value, struct scm *alist)
 {
   return cons (cons (key, value), alist);
 }
 
 long
-length__ (SCM x)                /*:((internal)) */
+length__ (struct scm *x)                /*:((internal)) */
 {
   long n = 0;
   while (x != cell_nil)
     {
       n = n + 1;
-      if (TYPE (x) != TPAIR)
+      if (x->type != TPAIR)
         return -1;
-      x = CDR (x);
+      x = x->cdr;
     }
   return n;
 }
 
-SCM
-length (SCM x)
+struct scm *
+length (struct scm *x)
 {
   return make_number (length__ (x));
 }
 
-SCM
-error (SCM key, SCM x)
+struct scm *
+error (struct scm *key, struct scm *x)
 {
 #if !__MESC_MES__ && !__M2_PLANET__
-  SCM throw = module_ref (R0, cell_symbol_throw);
+  struct scm *throw = module_ref (R0, cell_symbol_throw);
   if (throw != cell_undefined)
     return apply (throw, cons (key, cons (x, cell_nil)), R0);
 #endif
@@ -161,107 +161,107 @@ error (SCM key, SCM x)
   exit (1);
 }
 
-SCM
-append2 (SCM x, SCM y)
+struct scm *
+append2 (struct scm *x, struct scm *y)
 {
   if (x == cell_nil)
     return y;
-  if (TYPE (x) != TPAIR)
+  if (x->type != TPAIR)
     error (cell_symbol_not_a_pair, cons (x, cstring_to_symbol ("append2")));
-  SCM r = cell_nil;
+  struct scm *r = cell_nil;
   while (x != cell_nil)
     {
-      r = cons (CAR (x), r);
-      x = CDR (x);
+      r = cons (x->car, r);
+      x = x->cdr;
     }
   return reverse_x_ (r, y);
 }
 
-SCM
-append_reverse (SCM x, SCM y)
+struct scm *
+append_reverse (struct scm *x, struct scm *y)
 {
   if (x == cell_nil)
     return y;
-  if (TYPE (x) != TPAIR)
+  if (x->type != TPAIR)
     error (cell_symbol_not_a_pair, cons (x, cstring_to_symbol ("append-reverse")));
   while (x != cell_nil)
     {
-      y = cons (CAR (x), y);
-      x = CDR (x);
+      y = cons (x->car, y);
+      x = x->cdr;
     }
   return y;
 }
 
-SCM
-reverse_x_ (SCM x, SCM t)
+struct scm *
+reverse_x_ (struct scm *x, struct scm *t)
 {
-  if (x != cell_nil && TYPE (x) != TPAIR)
+  if (x != cell_nil && x->type != TPAIR)
     error (cell_symbol_not_a_pair, cons (x, cstring_to_symbol ("core:reverse!")));
-  SCM r = t;
+  struct scm *r = t;
   while (x != cell_nil)
     {
-      t = CDR (x);
-      CDR (x) = r;
+      t = x->cdr;
+      x->cdr = r;
       r = x;
       x = t;
     }
   return r;
 }
 
-SCM
-assq (SCM x, SCM a)
+struct scm *
+assq (struct scm *x, struct scm *a)
 {
-  if (TYPE (a) != TPAIR)
+  if (a->type != TPAIR)
     return cell_f;
-  int t = TYPE (x);
+  int t = x->type;
 
   if (t == TSYMBOL || t == TSPECIAL)
     while (a != cell_nil)
       {
-        if (x == CAAR (a))
-          return CAR (a);
-        a = CDR (a);
+        if (x == a->car->car)
+          return a->car;
+        a = a->cdr;
       }
   else if (t == TCHAR || t == TNUMBER)
     {
-      long v = VALUE (x);
+      long v = x->value;
       while (a != cell_nil)
         {
-          if (v == VALUE (CAAR (a)))
-            return CAR (a);
-          a = CDR (a);
+          if (v == a->car->car->value)
+            return a->car;
+          a = a->cdr;
         }
     }
   else if (t == TKEYWORD)
     {
       while (a != cell_nil)
         {
-          if (string_equal_p (x, CAAR (a)) == cell_t)
-            return CAR (a);
-          a = CDR (a);
+          if (string_equal_p (x, a->car->car) == cell_t)
+            return a->car;
+          a = a->cdr;
         }
     }
   else
     /* pointer equality, e.g. on strings. */
     while (a != cell_nil)
       {
-        if (x == CAAR (a))
-          return CAR (a);
-        a = CDR (a);
+        if (x == a->car->car)
+          return a->car;
+        a = a->cdr;
       }
   return cell_f;
 }
 
-SCM
-assoc (SCM x, SCM a)
+struct scm *
+assoc (struct scm *x, struct scm *a)
 {
-  if (TYPE (x) == TSTRING)
+  if (x->type == TSTRING)
     return assoc_string (x, a);
   while (a != cell_nil)
     {
-      if (equal2_p (x, CAAR (a)) == cell_t)
-        return CAR (a);
-      a = CDR (a);
+      if (equal2_p (x, a->car->car) == cell_t)
+        return a->car;
+      a = a->cdr;
     }
   return cell_f;
 }

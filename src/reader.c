@@ -26,16 +26,16 @@
 #include <stdio.h>
 #include <string.h>
 
-SCM
-read_input_file_env_ (SCM e, SCM a)
+struct scm *
+read_input_file_env_ (struct scm *e, struct scm *a)
 {
   if (e == cell_nil)
     return e;
   return cons (e, read_input_file_env_ (read_env (a), a));
 }
 
-SCM
-read_input_file_env (SCM a)
+struct scm *
+read_input_file_env (struct scm *a)
 {
   return read_input_file_env_ (read_env (cell_nil), cell_nil);
 }
@@ -52,9 +52,9 @@ reader_read_line_comment (int c)
   error (cell_symbol_system_error, make_string0 ("reader_read_line_comment"));
 }
 
-SCM reader_read_block_comment (int s, int c);
-SCM reader_read_hash (int c, SCM a);
-SCM reader_read_list (int c, SCM a);
+struct scm *reader_read_block_comment (int s, int c);
+struct scm *reader_read_hash (int c, struct scm *a);
+struct scm *reader_read_list (int c, struct scm *a);
 
 int
 reader_identifier_p (int c)
@@ -68,7 +68,7 @@ reader_end_of_word_p (int c)
   return (c == '"' || c == ';' || c == '(' || c == ')' || isspace (c) || c == EOF);
 }
 
-SCM
+struct scm *
 reader_read_identifier_or_number (int c)
 {
   int i = 0;
@@ -110,8 +110,8 @@ reader_read_identifier_or_number (int c)
   return cstring_to_symbol (g_buf);
 }
 
-SCM
-reader_read_sexp_ (int c, SCM a)
+struct scm *
+reader_read_sexp_ (int c, struct scm *a)
 {
 reset_reader:
   if (c == EOF)
@@ -173,30 +173,30 @@ reader_eat_whitespace (int c)
   return c;
 }
 
-SCM
-reader_read_list (int c, SCM a)
+struct scm *
+reader_read_list (int c, struct scm *a)
 {
   c = reader_eat_whitespace (c);
   if (c == ')')
     return cell_nil;
   if (c == EOF)
     error (cell_symbol_not_a_pair, make_string0 ("EOF in list"));
-  SCM s = reader_read_sexp_ (c, a);
+  struct scm *s = reader_read_sexp_ (c, a);
   if (s == cell_dot)
     {
       s = reader_read_list (readchar (), a);
-      return CAR (s);
+      return s->car;
     }
   return cons (s, reader_read_list (readchar (), a));
 }
 
-SCM
-read_env (SCM a)
+struct scm *
+read_env (struct scm *a)
 {
   return reader_read_sexp_ (readchar (), a);
 }
 
-SCM
+struct scm *
 reader_read_block_comment (int s, int c)
 {
   if (c == s)
@@ -205,8 +205,8 @@ reader_read_block_comment (int s, int c)
   return reader_read_block_comment (s, readchar ());
 }
 
-SCM
-reader_read_hash (int c, SCM a)
+struct scm *
+reader_read_hash (int c, struct scm *a)
 {
   if (c == '!')
     {
@@ -238,9 +238,9 @@ reader_read_hash (int c, SCM a)
     return cons (cell_symbol_quasisyntax, cons (reader_read_sexp_ (readchar (), a), cell_nil));
   if (c == ':')
     {
-      SCM x = reader_read_identifier_or_number (readchar ());
-      SCM msg = make_string0 ("keyword perifx ':' not followed by a symbol: ");
-      if (TYPE (x) == TNUMBER)
+      struct scm *x = reader_read_identifier_or_number (readchar ());
+      struct scm *msg = make_string0 ("keyword perifx ':' not followed by a symbol: ");
+      if (x->type == TNUMBER)
         error (cell_symbol_system_error, cons (msg, x));
       return symbol_to_keyword (x);
     }
@@ -262,13 +262,13 @@ reader_read_hash (int c, SCM a)
   return reader_read_sexp_ (readchar (), a);
 }
 
-SCM
-reader_read_sexp (SCM c, SCM s, SCM a)
+struct scm *
+reader_read_sexp (struct scm *c, struct scm *s, struct scm *a)
 {
-  return reader_read_sexp_ (VALUE (c), a);
+  return reader_read_sexp_ (c->value, a);
 }
 
-SCM
+struct scm *
 reader_read_character ()
 {
   int c = readchar ();
@@ -286,8 +286,8 @@ reader_read_character ()
     }
   else if (c == 'x' && ((p >= '0' && p <= '9') || (p >= 'a' && p <= 'f') || (p >= 'F' && p <= 'F')))
     {
-      SCM n = reader_read_hex ();
-      c = VALUE (n);
+      struct scm *n = reader_read_hex ();
+      c = n->value;
       eputs ("reading hex c=");
       eputs (itoa (c));
       eputs ("\n");
@@ -354,7 +354,7 @@ reader_read_character ()
   return make_char (c);
 }
 
-SCM
+struct scm *
 reader_read_binary ()
 {
   long n = 0;
@@ -378,7 +378,7 @@ reader_read_binary ()
   return make_number (n);
 }
 
-SCM
+struct scm *
 reader_read_octal ()
 {
   long n = 0;
@@ -402,7 +402,7 @@ reader_read_octal ()
   return make_number (n);
 }
 
-SCM
+struct scm *
 reader_read_hex ()
 {
   long n = 0;
@@ -431,7 +431,7 @@ reader_read_hex ()
   return make_number (n);
 }
 
-SCM
+struct scm *
 reader_read_string ()
 {
   size_t i = 0;
@@ -472,8 +472,8 @@ reader_read_string ()
             c = 27;
           else if (c == 'x')
             {
-              SCM n = reader_read_hex ();
-              c = VALUE (n);
+              struct scm *n = reader_read_hex ();
+              c = n->value;
             }
         }
       g_buf[i] = c;

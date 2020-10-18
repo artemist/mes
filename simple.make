@@ -191,7 +191,6 @@ M2_PLANET_INCLUDES =				\
  include/m2/lib.h				\
  include/linux/x86/syscall.h			\
  include/mes/mes.h				\
- include/mes/m2.h				\
  include/mes/builtins.h				\
  include/mes/constants.h			\
  include/mes/symbols.h				\

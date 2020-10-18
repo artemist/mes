@@ -40,7 +40,7 @@ assert_max_string (size_t i, char const *msg, char *string)
 }
 
 char const *
-list_to_cstring (SCM list, size_t *size)
+list_to_cstring (struct scm *list, size_t *size)
 {
   size_t i = 0;
   char *p = g_buf;
@@ -48,8 +48,8 @@ list_to_cstring (SCM list, size_t *size)
     {
       if (i > MAX_STRING)
         assert_max_string (i, "list_to_string", g_buf);
-      SCM x = car (list);
-      g_buf[i] = VALUE (x);
+      struct scm *x = car (list);
+      g_buf[i] = x->value;
       i = i + 1;
       list = cdr (list);
     }
@@ -59,16 +59,16 @@ list_to_cstring (SCM list, size_t *size)
   return g_buf;
 }
 
-SCM
-string_equal_p (SCM a, SCM b)   /*:((name . "string=?")) */
+struct scm *
+string_equal_p (struct scm *a, struct scm *b)   /*:((name . "string=?")) */
 {
-  if (!((TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD)))
+  if (!((a->type == TSTRING && b->type == TSTRING) || (a->type == TKEYWORD || b->type == TKEYWORD)))
     {
       eputs ("type a: ");
-      eputs (itoa (TYPE (a)));
+      eputs (itoa (a->type));
       eputs ("\n");
       eputs ("type b: ");
-      eputs (itoa (TYPE (b)));
+      eputs (itoa (b->type));
       eputs ("\n");
       eputs ("a= ");
       write_error_ (a);
@@ -76,60 +76,60 @@ string_equal_p (SCM a, SCM b)   /*:((name . "string=?")) */
       eputs ("b= ");
       write_error_ (b);
       eputs ("\n");
-      assert_msg ((TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD), "(TYPE (a) == TSTRING && TYPE (b) == TSTRING) || (TYPE (a) == TKEYWORD || TYPE (b) == TKEYWORD)");
+      assert_msg ((a->type == TSTRING && b->type == TSTRING) || (a->type == TKEYWORD || b->type == TKEYWORD), "(a->type == TSTRING && b->type == TSTRING) || (a->type == TKEYWORD || b->type == TKEYWORD)");
     }
   if (a == b)
     return cell_t;
-  if (STRING (a) == STRING (b))
+  if (a->string == b->string)
     return cell_t;
-  if (LENGTH (a) == 0 && LENGTH (b) == 0)
+  if (a->length == 0 && b->length == 0)
     return cell_t;
-  if (LENGTH (a) == LENGTH (b))
-    if (memcmp (cell_bytes (STRING (a)), cell_bytes (STRING (b)), LENGTH (a)) == 0)
+  if (a->length == b->length)
+    if (memcmp (cell_bytes (a->string), cell_bytes (b->string), a->length) == 0)
       return cell_t;
 
   return cell_f;
 }
 
-SCM
-symbol_to_string (SCM symbol)
+struct scm *
+symbol_to_string (struct scm *symbol)
 {
-  return make_cell (TSTRING, CAR (symbol), CDR (symbol));
+  return make_cell (TSTRING, symbol->car, symbol->cdr);
 }
 
-SCM
-symbol_to_keyword (SCM symbol)
+struct scm *
+symbol_to_keyword (struct scm *symbol)
 {
-  return make_cell (TKEYWORD, CAR (symbol), CDR (symbol));
+  return make_cell (TKEYWORD, symbol->car, symbol->cdr);
 }
 
-SCM
-keyword_to_string (SCM keyword)
+struct scm *
+keyword_to_string (struct scm *keyword)
 {
-  return make_cell (TSTRING, CAR (keyword), CDR (keyword));
+  return make_cell (TSTRING, keyword->car, keyword->cdr);
 }
 
-SCM
-string_to_symbol (SCM string)
+struct scm *
+string_to_symbol (struct scm *string)
 {
-  SCM x = hash_ref (g_symbols, string, cell_f);
+  struct scm *x = hash_ref (g_symbols, string, cell_f);
   if (x == cell_f)
     x = make_symbol (string);
   return x;
 }
 
-SCM
-make_symbol (SCM string)
+struct scm *
+make_symbol (struct scm *string)
 {
-  SCM x = make_cell (TSYMBOL, LENGTH (string), STRING (string));
+  struct scm *x = make_cell (TSYMBOL, string->length, string->string);
   hash_set_x (g_symbols, string, x);
   return x;
 }
 
-SCM
+struct scm *
 bytes_to_list (char const *s, size_t i)
 {
-  SCM p = cell_nil;
+  struct scm *p = cell_nil;
   while (i != 0)
     {
       i = i - 1;
@@ -139,42 +139,42 @@ bytes_to_list (char const *s, size_t i)
   return p;
 }
 
-SCM
+struct scm *
 cstring_to_list (char const *s)
 {
   return bytes_to_list (s, strlen (s));
 }
 
-SCM
+struct scm *
 cstring_to_symbol (char const *s)
 {
-  SCM string = make_string0 (s);
+  struct scm *string = make_string0 (s);
   return string_to_symbol (string);
 }
 
-SCM
-string_to_list (SCM string)
+struct scm *
+string_to_list (struct scm *string)
 {
-  return bytes_to_list (cell_bytes (STRING (string)), LENGTH (string));
+  return bytes_to_list (cell_bytes (string->string), string->length);
 }
 
-SCM
-list_to_string (SCM list)
+struct scm *
+list_to_string (struct scm *list)
 {
   size_t size;
   char const *s = list_to_cstring (list, &size);
   return make_string (s, size);
 }
 
-SCM
-read_string (SCM port)          /*:((arity . n)) */
+struct scm *
+read_string (struct scm *port)          /*:((arity . n)) */
 {
   int fd = __stdin;
-  if (TYPE (port) == TPAIR)
+  if (port->type == TPAIR)
     {
-      SCM p = car (port);
-      if (TYPE (p) == TNUMBER)
-        __stdin = VALUE (p);
+      struct scm *p = car (port);
+      if (p->type == TNUMBER)
+        __stdin = p->value;
     }
   int c = readchar ();
   size_t i = 0;
@@ -191,42 +191,42 @@ read_string (SCM port)          /*:((arity . n)) */
   return make_string (g_buf, i);
 }
 
-SCM
-string_append (SCM x)           /*:((arity . n)) */
+struct scm *
+string_append (struct scm *x)           /*:((arity . n)) */
 {
   char *p = g_buf;
   g_buf[0] = 0;
   size_t size = 0;
   while (x != cell_nil)
     {
-      SCM string = CAR (x);
-      assert_msg (TYPE (string) == TSTRING, "TYPE (string) == TSTRING");
-      memcpy (p, cell_bytes (STRING (string)), LENGTH (string) + 1);
-      p = p + LENGTH (string);
-      size = size + LENGTH (string);
+      struct scm *string = x->car;
+      assert_msg (string->type == TSTRING, "string->type == TSTRING");
+      memcpy (p, cell_bytes (string->string), string->length + 1);
+      p = p + string->length;
+      size = size + string->length;
       if (size > MAX_STRING)
         assert_max_string (size, "string_append", g_buf);
-      x = CDR (x);
+      x = x->cdr;
     }
   return make_string (g_buf, size);
 }
 
-SCM
-string_length (SCM string)
+struct scm *
+string_length (struct scm *string)
 {
-  assert_msg (TYPE (string) == TSTRING, "TYPE (string) == TSTRING");
-  return make_number (LENGTH (string));
+  assert_msg (string->type == TSTRING, "string->type == TSTRING");
+  return make_number (string->length);
 }
 
-SCM
-string_ref (SCM str, SCM k)
+struct scm *
+string_ref (struct scm *str, struct scm *k)
 {
-  assert_msg (TYPE (str) == TSTRING, "TYPE (str) == TSTRING");
-  assert_msg (TYPE (k) == TNUMBER, "TYPE (k) == TNUMBER");
-  size_t size = LENGTH (str);
-  size_t i = VALUE (k);
+  assert_msg (str->type == TSTRING, "str->type == TSTRING");
+  assert_msg (k->type == TNUMBER, "k->type == TNUMBER");
+  size_t size = str->length;
+  size_t i = k->value;
   if (i > size)
     error (cell_symbol_system_error, cons (make_string0 ("value out of range"), k));
-  char const *p = cell_bytes (STRING (str));
+  char const *p = cell_bytes (str->string);
   return make_char (p[i]);
 }

@@ -28,10 +28,8 @@
 #include <sys/time.h>
 #include <time.h>
 
-// char const *MES_PKGDATADIR = "mes";
-
-SCM
-mes_g_stack (SCM a)             /*:((internal)) */
+struct scm *
+mes_g_stack (struct scm *a)             /*:((internal)) */
 {
   g_stack = STACK_SIZE;
   R0 = a;
@@ -41,10 +39,10 @@ mes_g_stack (SCM a)             /*:((internal)) */
   return R0;
 }
 
-SCM
+struct scm *
 mes_environment (int argc, char **argv)
 {
-  SCM a = init_symbols ();
+  struct scm *a = init_symbols ();
 
   char *compiler = "gnuc";
 #if __MESC__
@@ -67,7 +65,7 @@ mes_environment (int argc, char **argv)
   a = acons (cell_symbol_arch, make_string0 (arch), a);
 
 #if !MES_MINI
-  SCM lst = cell_nil;
+  struct scm *lst = cell_nil;
   int i;
   for (i = argc - 1; i >= 0; i = i - 1)
     lst = cons (make_string0 (argv[i]), lst);
@@ -150,7 +148,7 @@ open_boot ()
     }
 }
 
-SCM
+struct scm *
 read_boot ()                    /*:((internal)) */
 {
   R2 = read_input_file_env (R0);
@@ -187,7 +185,7 @@ main (int argc, char **argv, char **envp)
 {
   init (envp);
 
-  SCM a = mes_environment (argc, argv);
+  struct scm *a = mes_environment (argc, argv);
   a = mes_builtins (a);
   a = init_time (a);
   M0 = make_initial_module (a);
@@ -196,7 +194,7 @@ main (int argc, char **argv, char **envp)
   if (g_debug > 5)
     module_printer (M0);
 
-  SCM program = read_boot ();
+  struct scm *program = read_boot ();
   R0 = acons (cell_symbol_program, program, R0);
   push_cc (R2, cell_unspecified, R0, cell_unspecified);
 

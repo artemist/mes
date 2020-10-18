@@ -33,11 +33,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-SCM
-exit_ (SCM x)                   /*:((name . "exit")) */
+struct scm *
+exit_ (struct scm *x)                   /*:((name . "exit")) */
 {
-  assert_msg (TYPE (x) == TNUMBER, "TYPE (x) == TNUMBER");
-  exit (VALUE (x));
+  assert_msg (x->type == TNUMBER, "x->type == TNUMBER");
+  exit (x->value);
 }
 
 int
@@ -49,12 +49,12 @@ peekchar ()
       unreadchar (c);
       return c;
     }
-  SCM port = current_input_port ();
-  SCM string = STRING (port);
-  size_t length = LENGTH (string);
+  struct scm *port = current_input_port ();
+  struct scm *string = port->string;
+  size_t length = string->length;
   if (length == 0)
     return -1;
-  char const *p = cell_bytes (STRING (string));
+  char const *p = cell_bytes (string->string);
   return p[0];
 }
 
@@ -63,15 +63,15 @@ readchar ()
 {
   if (__stdin >= 0)
     return fdgetc (__stdin);
-  SCM port = current_input_port ();
-  SCM string = STRING (port);
-  size_t length = LENGTH (string);
+  struct scm *port = current_input_port ();
+  struct scm *string = port->string;
+  size_t length = string->length;
   if (length == 0)
     return -1;
-  char const *p = cell_bytes (STRING (string));
+  char const *p = cell_bytes (string->string);
   int c = p[0];
   p = p + 1;
-  STRING (port) = make_string (p, length - 1);
+  port->string = make_string (p, length - 1);
   return c;
 }
 
@@ -82,243 +82,243 @@ unreadchar (int c)
     return fdungetc (c, __stdin);
   if (c == EOF) /* can't unread EOF */
     return c;
-  SCM port = current_input_port ();
-  SCM string = STRING (port);
-  size_t length = LENGTH (string);
-  char *p = cell_bytes (STRING (string));
+  struct scm *port = current_input_port ();
+  struct scm *string = port->string;
+  size_t length = string->length;
+  char *p = cell_bytes (string->string);
   p = p - 1;
   string = make_string (p, length + 1);
-  p = cell_bytes (STRING (string));
+  p = cell_bytes (string->string);
   p[0] = c;
-  STRING (port) = string;
+  port->string = string;
   return c;
 }
 
-SCM
+struct scm *
 peek_byte ()
 {
   return make_number (peekchar ());
 }
 
-SCM
+struct scm *
 read_byte ()
 {
   return make_number (readchar ());
 }
 
-SCM
-unread_byte (SCM i)
+struct scm *
+unread_byte (struct scm *i)
 {
-  unreadchar (VALUE (i));
+  unreadchar (i->value);
   return i;
 }
 
-SCM
+struct scm *
 peek_char ()
 {
   return make_char (peekchar ());
 }
 
-SCM
-read_char (SCM port)            /*:((arity . n)) */
+struct scm *
+read_char (struct scm *port)            /*:((arity . n)) */
 {
   int fd = __stdin;
-  if (TYPE (port) == TPAIR)
-    if (TYPE (CAR (port)) == TNUMBER)
-      __stdin = VALUE (CAR (port));
-  SCM c = make_char (readchar ());
+  if (port->type == TPAIR)
+    if (port->car->type == TNUMBER)
+      __stdin = port->car->value;
+  struct scm *c = make_char (readchar ());
   __stdin = fd;
   return c;
 }
 
-SCM
-unread_char (SCM i)
+struct scm *
+unread_char (struct scm *i)
 {
-  unreadchar (VALUE (i));
+  unreadchar (i->value);
   return i;
 }
 
-SCM
-write_char (SCM i)              /*:((arity . n)) */
+struct scm *
+write_char (struct scm *i)              /*:((arity . n)) */
 {
   write_byte (i);
   return i;
 }
 
-SCM
-write_byte (SCM x)              /*:((arity . n)) */
+struct scm *
+write_byte (struct scm *x)              /*:((arity . n)) */
 {
-  SCM c = car (x);
-  SCM p = cdr (x);
+  struct scm *c = car (x);
+  struct scm *p = cdr (x);
   int fd = __stdout;
-  if (TYPE (p) == TPAIR)
+  if (p->type == TPAIR)
     {
-      SCM f = CAR (p);
-      if (TYPE (f) == TNUMBER)
+      struct scm *f = p->car;
+      if (f->type == TNUMBER)
         {
-          long v = VALUE (f);
+          long v = f->value;
           if (v != 1)
             fd = v;
           if (v == 2)
             fd = __stderr;
         }
     }
-  char cc = VALUE (c);
+  char cc = c->value;
   write (fd, &cc, 1);
 #if !__MESC__
-  assert_msg (TYPE (c) == TNUMBER || TYPE (c) == TCHAR, "TYPE (c) == TNUMBER || TYPE (c) == TCHAR");
+  assert_msg (c->type == TNUMBER || c->type == TCHAR, "c->type == TNUMBER || c->type == TCHAR");
 #endif
   return c;
 }
 
-SCM
-getenv_ (SCM s)                 /*:((name . "getenv")) */
+struct scm *
+getenv_ (struct scm *s)                 /*:((name . "getenv")) */
 {
   char *p;
-  p = getenv (cell_bytes (STRING (s)));
+  p = getenv (cell_bytes (s->string));
   if (p != 0)
     return make_string0 (p);
   return cell_f;
 }
 
-SCM
-setenv_ (SCM s, SCM v)          /*:((name . "setenv")) */
+struct scm *
+setenv_ (struct scm *s, struct scm *v)          /*:((name . "setenv")) */
 {
   char *buf = __setenv_buf;
-  strcpy (buf, cell_bytes (STRING (s)));
-  setenv (buf, cell_bytes (STRING (v)), 1);
+  strcpy (buf, cell_bytes (s->string));
+  setenv (buf, cell_bytes (v->string), 1);
   return cell_unspecified;
 }
 
-SCM
-access_p (SCM file_name, SCM mode)
+struct scm *
+access_p (struct scm *file_name, struct scm *mode)
 {
-  int result = access (cell_bytes (STRING (file_name)), VALUE (mode));
+  int result = access (cell_bytes (file_name->string), mode->value);
   if (result == 0)
     return cell_t;
   return cell_f;
 }
 
-SCM
+struct scm *
 current_input_port ()
 {
   if (__stdin >= 0)
     return make_number (__stdin);
-  SCM x = g_ports;
+  struct scm *x = g_ports;
   while (x != 0)
     {
-      SCM a = CAR (x);
-      if (PORT (a) == __stdin)
+      struct scm *a = x->car;
+      if (a->port == __stdin)
         return a;
-      x = CDR (x);
+      x = x->cdr;
     }
-  return CAR (x);
+  return x->car;
 }
 
-SCM
-open_input_file (SCM file_name)
+struct scm *
+open_input_file (struct scm *file_name)
 {
-  int filedes = mes_open (cell_bytes (STRING (file_name)), O_RDONLY, 0);
+  int filedes = mes_open (cell_bytes (file_name->string), O_RDONLY, 0);
   if (filedes == -1)
     error (cell_symbol_system_error, cons (make_string0 ("No such file or directory"), file_name));
   return make_number (filedes);
 }
 
-SCM
-open_input_string (SCM string)
+struct scm *
+open_input_string (struct scm *string)
 {
-  SCM port = make_string_port (string);
+  struct scm *port = make_string_port (string);
   g_ports = cons (port, g_ports);
   return port;
 }
 
-SCM
-set_current_input_port (SCM port)
+struct scm *
+set_current_input_port (struct scm *port)
 {
-  SCM prev = current_input_port ();
-  if (TYPE (port) == TNUMBER)
+  struct scm *prev = current_input_port ();
+  if (port->type == TNUMBER)
     {
-      int p = VALUE (port);
+      int p = port->value;
       if (p != 0)
         __stdin = p;
       else
         __stdin = STDIN;
     }
-  else if (TYPE (port) == TPORT)
-    __stdin = PORT (port);
+  else if (port->type == TPORT)
+    __stdin = port->port;
   return prev;
 }
 
-SCM
+struct scm *
 current_output_port ()
 {
   return make_number (__stdout);
 }
 
-SCM
+struct scm *
 current_error_port ()
 {
   return make_number (__stderr);
 }
 
-SCM
-open_output_file (SCM x)        /*:((arity . n)) */
+struct scm *
+open_output_file (struct scm *x)        /*:((arity . n)) */
 {
-  SCM file_name = car (x);
+  struct scm *file_name = car (x);
   x = cdr (x);
   int mode = S_IRUSR | S_IWUSR;
-  if (TYPE (x) == TPAIR)
+  if (x->type == TPAIR)
     {
-      SCM i = car (x);
-      if (TYPE (i) == TNUMBER)
-        mode = VALUE (i);
+      struct scm *i = car (x);
+      if (i->type == TNUMBER)
+        mode = i->value;
     }
-  return make_number (mes_open (cell_bytes (STRING (file_name)), O_WRONLY | O_CREAT | O_TRUNC, mode));
+  return make_number (mes_open (cell_bytes (file_name->string), O_WRONLY | O_CREAT | O_TRUNC, mode));
 }
 
-SCM
-set_current_output_port (SCM port)
+struct scm *
+set_current_output_port (struct scm *port)
 {
-  if (VALUE (port) != 0)
-    __stdout = VALUE (port);
+  if (port->value != 0)
+    __stdout = port->value;
   else
     __stdout = STDOUT;
   return current_output_port ();
 }
 
-SCM
-set_current_error_port (SCM port)
+struct scm *
+set_current_error_port (struct scm *port)
 {
-  if (VALUE (port) != 0)
-    __stderr = VALUE (port);
+  if (port->value != 0)
+    __stderr = port->value;
   else
     __stderr = STDERR;
   return current_error_port ();
 }
 
-SCM
-chmod_ (SCM file_name, SCM mode)        /*:((name . "chmod")) */
+struct scm *
+chmod_ (struct scm *file_name, struct scm *mode)        /*:((name . "chmod")) */
 {
-  chmod (cell_bytes (STRING (file_name)), VALUE (mode));
+  chmod (cell_bytes (file_name->string), mode->value);
   return cell_unspecified;
 }
 
-SCM
-isatty_p (SCM port)
+struct scm *
+isatty_p (struct scm *port)
 {
-  if (isatty (VALUE (port)) != 0)
+  if (isatty (port->value) != 0)
     return cell_t;
   return cell_f;
 }
 
-SCM
+struct scm *
 primitive_fork ()
 {
   return make_number (fork ());
 }
 
-SCM
-execl_ (SCM file_name, SCM args)        /*:((name . "execl")) */
+struct scm *
+execl_ (struct scm *file_name, struct scm *args)        /*:((name . "execl")) */
 {
   char **c_argv = __execl_c_argv;
   int i = 0;
@@ -326,15 +326,15 @@ execl_ (SCM file_name, SCM args)        /*:((name . "execl")) */
   if (length__ (args) > 1000)
     error (cell_symbol_system_error,
            cons (file_name, cons (make_string0 ("too many arguments"), cons (file_name, args))));
-  c_argv[i] = cell_bytes (STRING (file_name));
+  c_argv[i] = cell_bytes (file_name->string);
   i = i + 1;
   while (args != cell_nil)
     {
-      assert_msg (TYPE (CAR (args)) == TSTRING, "TYPE (CAR (args)) == TSTRING");
-      SCM arg = CAR (args);
-      c_argv[i] = cell_bytes (STRING (arg));
+      assert_msg (args->car->type == TSTRING, "args->car->type == TSTRING");
+      struct scm *arg = args->car;
+      c_argv[i] = cell_bytes (arg->string);
       i = i + 1;
-      args = CDR (args);
+      args = args->cdr;
       if (g_debug > 2)
         {
           eputs ("arg[");
@@ -348,11 +348,11 @@ execl_ (SCM file_name, SCM args)        /*:((name . "execl")) */
   return make_number (execv (c_argv[0], c_argv));
 }
 
-SCM
-waitpid_ (SCM pid, SCM options)
+struct scm *
+waitpid_ (struct scm *pid, struct scm *options)
 {
   int status;
-  int child = waitpid (VALUE (pid), &status, VALUE (options));
+  int child = waitpid (pid->value, &status, options->value);
   return cons (make_number (child), make_number (status));
 }
 
@@ -366,20 +366,20 @@ waitpid_ (SCM pid, SCM options)
 #define TIME_UNITS_PER_SECOND 1000
 #endif
 
-SCM
-init_time (SCM a)               /*:((internal)) */
+struct scm *
+init_time (struct scm *a)               /*:((internal)) */
 {
   clock_gettime (CLOCK_PROCESS_CPUTIME_ID, g_start_time);
   a = acons (cell_symbol_internal_time_units_per_second, make_number (TIME_UNITS_PER_SECOND), a);
 }
 
-SCM
+struct scm *
 current_time ()
 {
   return make_number (time (0));
 }
 
-SCM
+struct scm *
 gettimeofday_ ()                /*:((name . "gettimeofday")) */
 {
   struct timeval *time = __gettimeofday_time;
@@ -393,7 +393,7 @@ seconds_and_nanoseconds_to_long (long s, long ns)
   return s * TIME_UNITS_PER_SECOND + ns / (1000000000 / TIME_UNITS_PER_SECOND);
 }
 
-SCM
+struct scm *
 get_internal_run_time ()
 {
   struct timespec *ts = __get_internal_run_time_ts;
@@ -403,29 +403,29 @@ get_internal_run_time ()
   return make_number (time);
 }
 
-SCM
+struct scm *
 getcwd_ ()                      /*:((name . "getcwd")) */
 {
   char *buf = __getcwd_buf;
   return make_string0 (getcwd (buf, PATH_MAX));
 }
 
-SCM
-dup_ (SCM port)                 /*:((name . "dup")) */
+struct scm *
+dup_ (struct scm *port)                 /*:((name . "dup")) */
 {
-  return make_number (dup (VALUE (port)));
+  return make_number (dup (port->value));
 }
 
-SCM
-dup2_ (SCM old, SCM new)        /*:((name . "dup2")) */
+struct scm *
+dup2_ (struct scm *old, struct scm *new)        /*:((name . "dup2")) */
 {
-  dup2 (VALUE (old), VALUE (new));
+  dup2 (old->value, new->value);
   return cell_unspecified;
 }
 
-SCM
-delete_file (SCM file_name)
+struct scm *
+delete_file (struct scm *file_name)
 {
-  unlink (cell_bytes (STRING (file_name)));
+  unlink (cell_bytes (file_name->string));
   return cell_unspecified;
 }

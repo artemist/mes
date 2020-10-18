@@ -33,20 +33,20 @@
 // CONSTANT M2_CELL_SIZE 12
 #endif
 
-SCM g_symbol;
+struct scm *g_symbol;
 
-SCM
-init_symbol (SCM x, long type, char const *name)
+struct scm *
+init_symbol (struct scm *x, long type, char const *name)
 {
-  TYPE (x) = type;
+  x->type = type;
   if (g_symbols == 0)
     g_free = g_free + M2_CELL_SIZE;
   else
     {
       int length = strlen (name);
-      SCM string = make_string (name, length);
-      CAR (x) = length;
-      CDR (x) = STRING (string);
+      struct scm *string = make_string (name, length);
+      x->car = length;
+      x->cdr = string->string;
       hash_set_x (g_symbols, string, x);
     }
   g_symbol = g_symbol + M2_CELL_SIZE;
@@ -177,7 +177,7 @@ init_symbols_ ()                  /*:((internal)) */
   cell_symbol_test = init_symbol (g_symbol, TSYMBOL, "%%test");
 }
 
-SCM
+struct scm *
 init_symbols ()                  /*:((internal)) */
 {
   g_free = g_cells + M2_CELL_SIZE;
@@ -190,7 +190,7 @@ init_symbols ()                  /*:((internal)) */
   init_symbols_ ();
   g_ports = cell_nil;
 
-  SCM a = cell_nil;
+  struct scm *a = cell_nil;
   a = acons (cell_symbol_call_with_values, cell_symbol_call_with_values, a);
   a = acons (cell_symbol_boot_module, cell_symbol_boot_module, a);
   a = acons (cell_symbol_current_module, cell_symbol_current_module, a);

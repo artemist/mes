@@ -21,11 +21,11 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-SCM
+struct scm *
 make_builtin_type ()            /*:((internal)) */
 {
-  SCM record_type = cell_symbol_record_type;
-  SCM fields = cell_nil;
+  struct scm *record_type = cell_symbol_record_type;
+  struct scm *fields = cell_nil;
   fields = cons (cstring_to_symbol ("address"), fields);
   fields = cons (cstring_to_symbol ("arity"), fields);
   fields = cons (cstring_to_symbol ("name"), fields);
@@ -34,10 +34,10 @@ make_builtin_type ()            /*:((internal)) */
   return make_struct (record_type, fields, cell_unspecified);
 }
 
-SCM
-make_builtin (SCM builtin_type, SCM name, SCM arity, SCM function)
+struct scm *
+make_builtin (struct scm *builtin_type, struct scm *name, struct scm *arity, struct scm *function)
 {
-  SCM values = cell_nil;
+  struct scm *values = cell_nil;
   values = cons (function, values);
   values = cons (arity, values);
   values = cons (name, values);
@@ -45,42 +45,42 @@ make_builtin (SCM builtin_type, SCM name, SCM arity, SCM function)
   return make_struct (builtin_type, values, cstring_to_symbol ("builtin-printer"));
 }
 
-SCM
-builtin_name (SCM builtin)
+struct scm *
+builtin_name (struct scm *builtin)
 {
   return struct_ref_ (builtin, 3);
 }
 
-SCM
-builtin_arity (SCM builtin)
+struct scm *
+builtin_arity (struct scm *builtin)
 {
   return struct_ref_ (builtin, 4);
 }
 
 FUNCTION
-builtin_function (SCM builtin)
+builtin_function (struct scm *builtin)
 {
-  SCM x = struct_ref_ (builtin, 5);
-  return VALUE (x);
+  struct scm *x = struct_ref_ (builtin, 5);
+  return x->value;
 }
 
-SCM
-builtin_p (SCM x)
+struct scm *
+builtin_p (struct scm *x)
 {
-  if (TYPE (x) == TSTRUCT)
+  if (x->type == TSTRUCT)
     if (struct_ref_ (x, 2) == cell_symbol_builtin)
       return cell_t;
   return cell_f;
 }
 
-SCM
-builtin_printer (SCM builtin)
+struct scm *
+builtin_printer (struct scm *builtin)
 {
   fdputs ("#<procedure ", __stdout);
   display_ (builtin_name (builtin));
   fdputc (' ', __stdout);
-  SCM x = builtin_arity (builtin);
-  int arity = VALUE (x);
+  struct scm *x = builtin_arity (builtin);
+  int arity = x->value;
   if (arity == -1)
     fdputc ('_', __stdout);
   else
@@ -97,19 +97,19 @@ builtin_printer (SCM builtin)
   fdputc ('>', __stdout);
 }
 
-SCM
-init_builtin (SCM builtin_type, char const *name, int arity, FUNCTION function, SCM a)
+struct scm *
+init_builtin (struct scm *builtin_type, char const *name, int arity, FUNCTION function, struct scm *a)
 {
-  SCM s = cstring_to_symbol (name);
+  struct scm *s = cstring_to_symbol (name);
   return acons (s,
                 make_builtin (builtin_type, symbol_to_string (s), make_number (arity),
                               make_number (function)), a);
 }
 
-SCM
-mes_builtins (SCM a)            /*:((internal)) */
+struct scm *
+mes_builtins (struct scm *a)            /*:((internal)) */
 {
-  SCM builtin_type = make_builtin_type ();
+  struct scm *builtin_type = make_builtin_type ();
 
   if (g_mini != 0)
     {

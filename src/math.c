@@ -28,28 +28,28 @@
 #include <string.h>
 
 void
-assert_number (char const *name, SCM x)
+assert_number (char const *name, struct scm *x)
 {
-  if (TYPE (x) != TNUMBER)
+  if (x->type != TNUMBER)
     {
       eputs (name);
       error (cell_symbol_not_a_number, x);
     }
 }
 
-SCM
-greater_p (SCM x)               /*:((name . ">") (arity . n)) */
+struct scm *
+greater_p (struct scm *x)               /*:((name . ">") (arity . n)) */
 {
   if (x == cell_nil)
     return cell_t;
-  assert_number ("greater_p", CAR (x));
-  long n = VALUE (CAR (x));
-  x = CDR (x);
+  assert_number ("greater_p", x->car);
+  long n = x->car->value;
+  x = x->cdr;
   while (x != cell_nil)
     {
-      assert_number ("greater_p", CAR (x));
-      SCM i = car (x);
-      long v = VALUE (i);
+      assert_number ("greater_p", x->car);
+      struct scm *i = car (x);
+      long v = i->value;
       if (v >= n)
         return cell_f;
       n = v;
@@ -58,19 +58,19 @@ greater_p (SCM x)               /*:((name . ">") (arity . n)) */
   return cell_t;
 }
 
-SCM
-less_p (SCM x)                  /*:((name . "<") (arity . n)) */
+struct scm *
+less_p (struct scm *x)                  /*:((name . "<") (arity . n)) */
 {
   if (x == cell_nil)
     return cell_t;
-  assert_number ("less_p", CAR (x));
-  long n = VALUE (CAR (x));
-  x = CDR (x);
+  assert_number ("less_p", x->car);
+  long n = x->car->value;
+  x = x->cdr;
   while (x != cell_nil)
     {
-      assert_number ("less_p", CAR (x));
-      SCM i = car (x);
-      long v = VALUE (i);
+      assert_number ("less_p", x->car);
+      struct scm *i = car (x);
+      long v = i->value;
       if (v <= n)
         return cell_f;
       n = v;
@@ -79,18 +79,18 @@ less_p (SCM x)                  /*:((name . "<") (arity . n)) */
   return cell_t;
 }
 
-SCM
-is_p (SCM x)                    /*:((name . "=") (arity . n)) */
+struct scm *
+is_p (struct scm *x)                    /*:((name . "=") (arity . n)) */
 {
   if (x == cell_nil)
     return cell_t;
-  assert_number ("is_p", CAR (x));
-  long n = VALUE (CAR (x));
+  assert_number ("is_p", x->car);
+  long n = x->car->value;
   x = cdr (x);
   while (x != cell_nil)
     {
-      SCM i = car (x);
-      long v = VALUE (i);
+      struct scm *i = car (x);
+      long v = i->value;
       if (v != n)
         return cell_f;
       x = cdr (x);
@@ -98,57 +98,57 @@ is_p (SCM x)                    /*:((name . "=") (arity . n)) */
   return cell_t;
 }
 
-SCM
-minus (SCM x)                   /*:((name . "-") (arity . n)) */
+struct scm *
+minus (struct scm *x)                   /*:((name . "-") (arity . n)) */
 {
-  assert_number ("minus", CAR (x));
-  long n = VALUE (CAR (x));
+  assert_number ("minus", x->car);
+  long n = x->car->value;
   x = cdr (x);
   if (x == cell_nil)
     n = -n;
   while (x != cell_nil)
     {
-      SCM i = car (x);
+      struct scm *i = car (x);
       assert_number ("minus", i);
-      long v = VALUE (i);
+      long v = i->value;
       n = n - v;
       x = cdr (x);
     }
   return make_number (n);
 }
 
-SCM
-plus (SCM x)                    /*:((name . "+") (arity . n)) */
+struct scm *
+plus (struct scm *x)                    /*:((name . "+") (arity . n)) */
 {
   long n = 0;
   while (x != cell_nil)
     {
-      SCM i = car (x);
+      struct scm *i = car (x);
       assert_number ("plus", i);
-      long v = VALUE (i);
+      long v = i->value;
       n = n + v;
       x = cdr (x);
     }
   return make_number (n);
 }
 
-SCM
-divide (SCM x)                  /*:((name . "/") (arity . n)) */
+struct scm *
+divide (struct scm *x)                  /*:((name . "/") (arity . n)) */
 {
   long n = 1;
   if (x != cell_nil)
     {
-      SCM i = car (x);
+      struct scm *i = car (x);
       assert_number ("divide", i);
-      long v = VALUE (i);
+      long v = i->value;
       n = v;
       x = cdr (x);
     }
   while (x != cell_nil)
     {
-      SCM i = car (x);
+      struct scm *i = car (x);
       assert_number ("divide", i);
-      long v = VALUE (i);
+      long v = i->value;
       if (v == 0)
         error (cstring_to_symbol ("divide-by-zero"), x);
       if (n == 0)
@@ -159,13 +159,13 @@ divide (SCM x)                  /*:((name . "/") (arity . n)) */
   return make_number (n);
 }
 
-SCM
-modulo (SCM a, SCM b)
+struct scm *
+modulo (struct scm *a, struct scm *b)
 {
   assert_number ("modulo", a);
   assert_number ("modulo", b);
-  long x = VALUE (a);
-  long y = VALUE (b);
+  long x = a->value;
+  long y = b->value;
   if (y == 0)
     error (cstring_to_symbol ("divide-by-zero"), a);
   while (x < 0)
@@ -176,81 +176,81 @@ modulo (SCM a, SCM b)
   return make_number (x);
 }
 
-SCM
-multiply (SCM x)                /*:((name . "*") (arity . n)) */
+struct scm *
+multiply (struct scm *x)                /*:((name . "*") (arity . n)) */
 {
   long n = 1;
   while (x != cell_nil)
     {
-      SCM i = car (x);
+      struct scm *i = car (x);
       assert_number ("multiply", i);
-      long v = VALUE (i);
+      long v = i->value;
       n = n * v;
       x = cdr (x);
     }
   return make_number (n);
 }
 
-SCM
-logand (SCM x)                  /*:((arity . n)) */
+struct scm *
+logand (struct scm *x)                  /*:((arity . n)) */
 {
   long n = -1;
   while (x != cell_nil)
     {
-      SCM i = car (x);
+      struct scm *i = car (x);
       assert_number ("multiply", i);
-      long v = VALUE (i);
+      long v = i->value;
       n = n & v;
       x = cdr (x);
     }
   return make_number (n);
 }
 
-SCM
-logior (SCM x)                  /*:((arity . n)) */
+struct scm *
+logior (struct scm *x)                  /*:((arity . n)) */
 {
   long n = 0;
   while (x != cell_nil)
     {
-      SCM i = car (x);
+      struct scm *i = car (x);
       assert_number ("logior", i);
-      long v = VALUE (i);
+      long v = i->value;
       n = n | v;
       x = cdr (x);
     }
   return make_number (n);
 }
 
-SCM
-lognot (SCM x)
+struct scm *
+lognot (struct scm *x)
 {
   assert_number ("lognot", x);
-  long n = ~VALUE (x);
+  long n = ~x->value;
   return make_number (n);
 }
 
-SCM
-logxor (SCM x)                  /*:((arity . n)) */
+struct scm *
+logxor (struct scm *x)                  /*:((arity . n)) */
 {
   long n = 0;
   while (x != cell_nil)
     {
-      SCM i = car (x);
+      struct scm *i = car (x);
       assert_number ("logxor", i);
-      long v = VALUE (i);
+      long v = i->value;
       n = n ^ v;
       x = cdr (x);
     }
   return make_number (n);
 }
 
-SCM
-ash (SCM n, SCM count)
+struct scm *
+ash (struct scm *n, struct scm *count)
 {
   assert_number ("ash", n);
   assert_number ("ash", count);
-  long cn = VALUE (n);
-  long ccount = VALUE (count);
+  long cn = n->value;
+  long ccount = count->value;
   long result;
   if (ccount < 0)
     result = cn >> -ccount;

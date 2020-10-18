@@ -21,29 +21,29 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-SCM
-apply_builtin0 (SCM fn)
+struct scm *
+apply_builtin0 (struct scm *fn)
 {
   FUNCTION fp = builtin_function (fn);
   return fp ();
 }
 
-SCM
-apply_builtin1 (SCM fn, SCM x)
+struct scm *
+apply_builtin1 (struct scm *fn, struct scm *x)
 {
   FUNCTION fp = builtin_function (fn);
   return fp (x);
 }
 
-SCM
-apply_builtin2 (SCM fn, SCM x, SCM y)
+struct scm *
+apply_builtin2 (struct scm *fn, struct scm *x, struct scm *y)
 {
   FUNCTION fp = builtin_function (fn);
   return fp (x, y);
 }
 
-SCM
-apply_builtin3 (SCM fn, SCM x, SCM y, SCM z)
+struct scm *
+apply_builtin3 (struct scm *fn, struct scm *x, struct scm *y, struct scm *z)
 {
   FUNCTION fp = builtin_function (fn);
   return fp (x, y, z);

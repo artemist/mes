@@ -29,24 +29,24 @@ struct scm
   long type;
   union
   {
-    SCM car;
+    struct scm *car;
     char *bytes;
     long length;
-    SCM ref;
-    SCM variable;
-    SCM macro;
+    struct scm *ref;
+    struct scm *variable;
+    struct scm *macro;
     long port;
   };
   union
   {
-    SCM cdr;
-    SCM closure;
-    SCM continuation;
+    struct scm *cdr;
+    struct scm *closure;
+    struct scm *continuation;
     char *name;
-    SCM string;
-    SCM structure;
+    struct scm *string;
+    struct scm *structure;
     long value;
-    SCM vector;
+    struct scm *vector;
   };
 };
 
@@ -54,24 +54,24 @@ struct scm
 char *g_datadir;
 int g_debug;
 char *g_buf;
-SCM g_continuations;
-SCM g_symbols;
-SCM g_symbol_max;
+struct scm *g_continuations;
+struct scm *g_symbols;
+struct scm *g_symbol_max;
 int g_mini;
 
 /* a/env */
-SCM R0;
+struct scm *R0;
 /* param 1 */
-SCM R1;
+struct scm *R1;
 /* save 2 */
-SCM R2;
+struct scm *R2;
 /* continuation */
-SCM R3;
+struct scm *R3;
 /* current-module */
-SCM M0;
+struct scm *M0;
 /* macro */
-SCM g_macros;
-SCM g_ports;
+struct scm *g_macros;
+struct scm *g_ports;
 
 /* gc */
 long ARENA_SIZE;
@@ -81,13 +81,13 @@ long JAM_SIZE;
 long GC_SAFETY;
 long MAX_STRING;
 char *g_arena;
-SCM cell_arena;
-SCM cell_zero;
+struct scm *cell_arena;
+struct scm *cell_zero;
 
-SCM g_free;
-SCM g_symbol;
+struct scm *g_free;
+struct scm *g_symbol;
 
-SCM *g_stack_array;
+struct scm **g_stack_array;
 struct scm *g_cells;
 struct scm *g_news;
 long g_stack;
@@ -102,54 +102,54 @@ struct timespec *g_start_time;
 struct timeval *__gettimeofday_time;
 struct timespec *__get_internal_run_time_ts;
 
-SCM alloc (long n);
-SCM apply (SCM f, SCM x, SCM a);
-SCM apply_builtin (SCM fn, SCM x);
-SCM apply_builtin0 (SCM fn);
-SCM apply_builtin1 (SCM fn, SCM x);
-SCM apply_builtin2 (SCM fn, SCM x, SCM y);
-SCM apply_builtin3 (SCM fn, SCM x, SCM y, SCM z);
-SCM builtin_name (SCM builtin);
-SCM cstring_to_list (char const *s);
-SCM cstring_to_symbol (char const *s);
-SCM cell_ref (SCM cell, long index);
-SCM fdisplay_ (SCM, int, int);
-SCM init_symbols ();
-SCM init_time (SCM a);
-SCM make_builtin_type ();
-SCM make_bytes (char const *s, size_t length);
-SCM make_cell (long type, SCM car, SCM cdr);
-SCM make_char (int n);
-SCM make_continuation (long n);
-SCM make_hash_table_ (long size);
-SCM make_hashq_type ();
-SCM make_initial_module (SCM a);
-SCM make_macro (SCM name, SCM x);
-SCM make_number (long n);
-SCM make_ref (SCM x);
-SCM make_string (char const *s, size_t length);
-SCM make_string0 (char const *s);
-SCM make_string_port (SCM x);
-SCM make_vector_ (long k, SCM e);
-SCM mes_builtins (SCM a);
-SCM push_cc (SCM p1, SCM p2, SCM a, SCM c);
-SCM struct_ref_ (SCM x, long i);
-SCM struct_set_x_ (SCM x, long i, SCM e);
-SCM vector_ref_ (SCM x, long i);
-SCM vector_set_x_ (SCM x, long i, SCM e);
-FUNCTION builtin_function (SCM builtin);
-char *cell_bytes (SCM x);
-char *news_bytes (SCM x);
+struct scm *alloc (long n);
+struct scm *apply (struct scm *f, struct scm *x, struct scm *a);
+struct scm *apply_builtin (struct scm *fn, struct scm *x);
+struct scm *apply_builtin0 (struct scm *fn);
+struct scm *apply_builtin1 (struct scm *fn, struct scm *x);
+struct scm *apply_builtin2 (struct scm *fn, struct scm *x, struct scm *y);
+struct scm *apply_builtin3 (struct scm *fn, struct scm *x, struct scm *y, struct scm *z);
+struct scm *builtin_name (struct scm *builtin);
+struct scm *cstring_to_list (char const *s);
+struct scm *cstring_to_symbol (char const *s);
+struct scm *cell_ref (struct scm *cell, long index);
+struct scm *fdisplay_ (struct scm *, int, int);
+struct scm *init_symbols ();
+struct scm *init_time (struct scm *a);
+struct scm *make_builtin_type ();
+struct scm *make_bytes (char const *s, size_t length);
+struct scm *make_cell (long type, struct scm *car, struct scm *cdr);
+struct scm *make_char (int n);
+struct scm *make_continuation (long n);
+struct scm *make_hash_table_ (long size);
+struct scm *make_hashq_type ();
+struct scm *make_initial_module (struct scm *a);
+struct scm *make_macro (struct scm *name, struct scm *x);
+struct scm *make_number (long n);
+struct scm *make_ref (struct scm *x);
+struct scm *make_string (char const *s, size_t length);
+struct scm *make_string0 (char const *s);
+struct scm *make_string_port (struct scm *x);
+struct scm *make_vector_ (long k, struct scm *e);
+struct scm *mes_builtins (struct scm *a);
+struct scm *push_cc (struct scm *p1, struct scm *p2, struct scm *a, struct scm *c);
+struct scm *struct_ref_ (struct scm *x, long i);
+struct scm *struct_set_x_ (struct scm *x, long i, struct scm *e);
+struct scm *vector_ref_ (struct scm *x, long i);
+struct scm *vector_set_x_ (struct scm *x, long i, struct scm *e);
+FUNCTION builtin_function (struct scm *builtin);
+char *cell_bytes (struct scm *x);
+char *news_bytes (struct scm *x);
 int peekchar ();
 int readchar ();
 int unreadchar ();
 long gc_free ();
-long length__ (SCM x);
+long length__ (struct scm *x);
 size_t bytes_cells (size_t length);
 void assert_max_string (size_t i, char const *msg, char *string);
 void assert_msg (int check, char *msg);
-void assert_number (char const *name, SCM x);
-void copy_cell (SCM to, SCM from);
+void assert_number (char const *name, struct scm *x);
+void copy_cell (struct scm *to, struct scm *from);
 void gc_ ();
 void gc_dump_arena (struct scm *cells, long size);
 void gc_init ();
@@ -161,7 +161,6 @@ void init_symbols_ ();
 
 #include "mes/builtins.h"
 #include "mes/constants.h"
-#include "mes/macros.h"
 #include "mes/symbols.h"
 
 #endif /* __MES_MES_H */

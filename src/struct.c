@@ -21,70 +21,70 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-SCM
-make_struct (SCM type, SCM fields, SCM printer)
+struct scm *
+make_struct (struct scm *type, struct scm *fields, struct scm *printer)
 {
   long size = 2 + length__ (fields);
-  SCM x = alloc (1);
-  SCM v = alloc (size);
-  TYPE (x) = TSTRUCT;
-  LENGTH (x) = size;
-  STRUCT (x) = v;
+  struct scm *x = alloc (1);
+  struct scm *v = alloc (size);
+  x->type = TSTRUCT;
+  x->length = size;
+  x->structure = v;
   copy_cell (v, vector_entry (type));
   copy_cell (cell_ref (v, 1), vector_entry (printer));
   long i;
   for (i = 2; i < size; i = i + 1)
     {
-      SCM e = cell_unspecified;
+      struct scm *e = cell_unspecified;
       if (fields != cell_nil)
         {
-          e = CAR (fields);
-          fields = CDR (fields);
+          e = fields->car;
+          fields = fields->cdr;
         }
       copy_cell (cell_ref (v, i), vector_entry (e));
     }
   return x;
 }
 
-SCM
-struct_length (SCM x)
+struct scm *
+struct_length (struct scm *x)
 {
-  assert_msg (TYPE (x) == TSTRUCT, "TYPE (x) == TSTRUCT");
-  return make_number (LENGTH (x));
+  assert_msg (x->type == TSTRUCT, "x->type == TSTRUCT");
+  return make_number (x->length);
 }
 
-SCM
-struct_ref_ (SCM x, long i)
+struct scm *
+struct_ref_ (struct scm *x, long i)
 {
-  assert_msg (TYPE (x) == TSTRUCT, "TYPE (x) == TSTRUCT");
-  assert_msg (i < LENGTH (x), "i < LENGTH (x)");
-  SCM e = cell_ref (STRUCT (x), i);
-  if (TYPE (e) == TREF)
-    e = REF (e);
-  if (TYPE (e) == TCHAR)
-    e = make_char (VALUE (e));
-  if (TYPE (e) == TNUMBER)
-    e = make_number (VALUE (e));
+  assert_msg (x->type == TSTRUCT, "x->type == TSTRUCT");
+  assert_msg (i < x->length, "i < x->length");
+  struct scm *e = cell_ref (x->structure, i);
+  if (e->type == TREF)
+    e = e->ref;
+  if (e->type == TCHAR)
+    e = make_char (e->value);
+  if (e->type == TNUMBER)
+    e = make_number (e->value);
   return e;
 }
 
-SCM
-struct_set_x_ (SCM x, long i, SCM e)
+struct scm *
+struct_set_x_ (struct scm *x, long i, struct scm *e)
 {
-  assert_msg (TYPE (x) == TSTRUCT, "TYPE (x) == TSTRUCT");
-  assert_msg (i < LENGTH (x), "i < LENGTH (x)");
-  copy_cell (cell_ref (STRUCT (x), i), vector_entry (e));
+  assert_msg (x->type == TSTRUCT, "x->type == TSTRUCT");
+  assert_msg (i < x->length, "i < x->length");
+  copy_cell (cell_ref (x->structure, i), vector_entry (e));
   return cell_unspecified;
 }
 
-SCM
-struct_ref (SCM x, SCM i)
+struct scm *
+struct_ref (struct scm *x, struct scm *i)
 {
-  return struct_ref_ (x, VALUE (i));
+  return struct_ref_ (x, i->value);
 }
 
-SCM
-struct_set_x (SCM x, SCM i, SCM e)
+struct scm *
+struct_set_x (struct scm *x, struct scm *i, struct scm *e)
 {
-  return struct_set_x_ (x, VALUE (i), e);
+  return struct_set_x_ (x, i->value, e);
 }

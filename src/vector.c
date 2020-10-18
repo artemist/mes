@@ -29,14 +29,14 @@
 // CONSTANT M2_CELL_SIZE 12
 #endif
 
-SCM
-make_vector_ (long k, SCM e)
+struct scm *
+make_vector_ (long k, struct scm *e)
 {
-  SCM x = alloc (1);
-  SCM v = alloc (k);
-  TYPE (x) = TVECTOR;
-  LENGTH (x) = k;
-  VECTOR (x) = v;
+  struct scm *x = alloc (1);
+  struct scm *v = alloc (k);
+  x->type = TVECTOR;
+  x->length = k;
+  x->vector = v;
   long i;
   for (i = 0; i < k; i = i + 1)
     copy_cell (cell_ref (v, i), vector_entry (e));
@@ -44,75 +44,75 @@ make_vector_ (long k, SCM e)
   return x;
 }
 
-SCM
-make_vector (SCM x)               /*:((arity . n)) */
+struct scm *
+make_vector (struct scm *x)               /*:((arity . n)) */
 {
-  SCM k = CAR (x);
+  struct scm *k = x->car;
   assert_number ("make-vector", k);
-  long n = VALUE (k);
-  SCM e = cell_unspecified;
-  if (CDR (x) != cell_nil)
-    e = CADR (x);
+  long n = k->value;
+  struct scm *e = cell_unspecified;
+  if (x->cdr != cell_nil)
+    e = x->cdr->car;
 
   return make_vector_ (n, e);
 }
 
-SCM
-vector_length (SCM x)
+struct scm *
+vector_length (struct scm *x)
 {
-  assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
-  return make_number (LENGTH (x));
+  assert_msg (x->type == TVECTOR, "x->type == TVECTOR");
+  return make_number (x->length);
 }
 
-SCM
-vector_ref_ (SCM x, long i)
+struct scm *
+vector_ref_ (struct scm *x, long i)
 {
-  assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
-  assert_msg (i < LENGTH (x), "i < LENGTH (x)");
-  SCM e = cell_ref (VECTOR (x), i);
-  if (TYPE (e) == TREF)
-    e = REF (e);
-  if (TYPE (e) == TCHAR)
-    e = make_char (VALUE (e));
-  if (TYPE (e) == TNUMBER)
-    e = make_number (VALUE (e));
+  assert_msg (x->type == TVECTOR, "x->type == TVECTOR");
+  assert_msg (i < x->length, "i < x->length");
+  struct scm *e = cell_ref (x->vector, i);
+  if (e->type == TREF)
+    e = e->ref;
+  if (e->type == TCHAR)
+    e = make_char (e->value);
+  if (e->type == TNUMBER)
+    e = make_number (e->value);
   return e;
 }
 
-SCM
-vector_ref (SCM x, SCM i)
+struct scm *
+vector_ref (struct scm *x, struct scm *i)
 {
-  return vector_ref_ (x, VALUE (i));
+  return vector_ref_ (x, i->value);
 }
 
-SCM
-vector_entry (SCM x)
+struct scm *
+vector_entry (struct scm *x)
 {
-  if (TYPE (x) != TCHAR && TYPE (x) != TNUMBER)
+  if (x->type != TCHAR && x->type != TNUMBER)
     x = make_ref (x);
   return x;
 }
 
-SCM
-vector_set_x_ (SCM x, long i, SCM e)
+struct scm *
+vector_set_x_ (struct scm *x, long i, struct scm *e)
 {
-  assert_msg (TYPE (x) == TVECTOR, "TYPE (x) == TVECTOR");
-  assert_msg (i < LENGTH (x), "i < LENGTH (x)");
-  copy_cell (cell_ref (VECTOR (x), i), vector_entry (e));
+  assert_msg (x->type == TVECTOR, "x->type == TVECTOR");
+  assert_msg (i < x->length, "i < x->length");
+  copy_cell (cell_ref (x->vector, i), vector_entry (e));
   return cell_unspecified;
 }
 
-SCM
-vector_set_x (SCM x, SCM i, SCM e)
+struct scm *
+vector_set_x (struct scm *x, struct scm *i, struct scm *e)
 {
-  return vector_set_x_ (x, VALUE (i), e);
+  return vector_set_x_ (x, i->value, e);
 }
 
-SCM
-list_to_vector (SCM x)
+struct scm *
+list_to_vector (struct scm *x)
 {
-  SCM v = make_vector_ (length__ (x), cell_unspecified);
-  SCM p = VECTOR (v);
+  struct scm *v = make_vector_ (length__ (x), cell_unspecified);
+  struct scm *p = v->vector;
   while (x != cell_nil)
     {
       copy_cell (p, vector_entry (car (x)));
@@ -122,16 +122,16 @@ list_to_vector (SCM x)
   return v;
 }
 
-SCM
-vector_to_list (SCM v)
+struct scm *
+vector_to_list (struct scm *v)
 {
-  SCM x = cell_nil;
+  struct scm *x = cell_nil;
   long i;
-  for (i = LENGTH (v); i; i = i - 1)
+  for (i = v->length; i; i = i - 1)
     {
-      SCM e = cell_ref (VECTOR (v), i - 1);
-      if (TYPE (e) == TREF)
-        e = REF (e);
+      struct scm *e = cell_ref (v->vector, i - 1);
+      if (e->type == TREF)
+        e = e->ref;
       x = cons (e, x);
     }
   return x;

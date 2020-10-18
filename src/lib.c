@@ -29,54 +29,54 @@
 
 #include <stdlib.h>
 
-SCM
-type_ (SCM x)
+struct scm *
+type_ (struct scm *x)
 {
-  return make_number (TYPE (x));
+  return make_number (x->type);
 }
 
-SCM
-car_ (SCM x)
+struct scm *
+car_ (struct scm *x)
 {
-  SCM a = CAR (x);
-  if (TYPE (x) == TPAIR)
+  struct scm *a = x->car;
+  if (x->type == TPAIR)
     return a;
   return make_number (a);
 }
 
-SCM
-cdr_ (SCM x)
+struct scm *
+cdr_ (struct scm *x)
 {
-  SCM d = CDR (x);
-  if (TYPE (x) == TPAIR || TYPE (x) == TCLOSURE)
+  struct scm *d = x->cdr;
+  if (x->type == TPAIR || x->type == TCLOSURE)
     return d;
   return make_number (d);
 }
 
-SCM
-xassq (SCM x, SCM a)            /* For speed in core. */
+struct scm *
+xassq (struct scm *x, struct scm *a)            /* For speed in core. */
 {
   while (a != cell_nil)
     {
-      if (x == CDAR (a))
-        return CAR (a);
-      a = CDR (a);
+      if (x == a->car->cdr)
+        return a->car;
+      a = a->cdr;
     }
   return cell_f;
 }
 
-SCM
-memq (SCM x, SCM a)
+struct scm *
+memq (struct scm *x, struct scm *a)
 {
-  int t = TYPE (x);
+  int t = x->type;
   if (t == TCHAR || t == TNUMBER)
     {
-      long v = VALUE (x);
+      long v = x->value;
       while (a != cell_nil)
         {
-          if (v == VALUE (CAR (a)))
+          if (v == a->car->value)
             return a;
-          a = CDR (a);
+          a = a->cdr;
         }
       return cell_f;
     }
@@ -84,53 +84,53 @@ memq (SCM x, SCM a)
     {
       while (a != cell_nil)
         {
-          if (TYPE (CAR (a)) == TKEYWORD)
-            if (string_equal_p (x, CAR (a)) == cell_t)
+          if (a->car->type == TKEYWORD)
+            if (string_equal_p (x, a->car) == cell_t)
               return a;
-          a = CDR (a);
+          a = a->cdr;
         }
       return cell_f;
     }
   while (a != cell_nil)
     {
-      if (x == CAR (a))
+      if (x == a->car)
         return a;
-      a = CDR (a);
+      a = a->cdr;
     }
   return cell_f;
 }
 
-SCM
-equal2_p (SCM a, SCM b)
+struct scm *
+equal2_p (struct scm *a, struct scm *b)
 {
 equal2:
   if (a == b)
     return cell_t;
-  if (TYPE (a) == TPAIR && TYPE (b) == TPAIR)
+  if (a->type == TPAIR && b->type == TPAIR)
     {
-      if (equal2_p (CAR (a), CAR (b)) == cell_t)
+      if (equal2_p (a->car, b->car) == cell_t)
         {
-          a = CDR (a);
-          b = CDR (b);
+          a = a->cdr;
+          b = b->cdr;
           goto equal2;
         }
       return cell_f;
     }
-  if (TYPE (a) == TSTRING && TYPE (b) == TSTRING)
+  if (a->type == TSTRING && b->type == TSTRING)
     return string_equal_p (a, b);
-  if (TYPE (a) == TVECTOR && TYPE (b) == TVECTOR)
+  if (a->type == TVECTOR && b->type == TVECTOR)
     {
-      if (LENGTH (a) != LENGTH (b))
+      if (a->length != b->length)
         return cell_f;
       long i;
-      for (i = 0; i < LENGTH (a); i = i + 1)
+      for (i = 0; i < a->length; i = i + 1)
         {
-          SCM ai = cell_ref (VECTOR (a), i);
-          SCM bi = cell_ref (VECTOR (b), i);
-          if (TYPE (ai) == TREF)
-            ai = REF (ai);
-          if (TYPE (bi) == TREF)
-            bi = REF (bi);
+          struct scm *ai = cell_ref (a->vector, i);
+          struct scm *bi = cell_ref (b->vector, i);
+          if (ai->type == TREF)
+            ai = ai->ref;
+          if (bi->type == TREF)
+            bi = bi->ref;
           if (equal2_p (ai, bi) == cell_f)
             return cell_f;
         }
@@ -139,34 +139,34 @@ equal2:
   return eq_p (a, b);
 }
 
-SCM
-last_pair (SCM x)
+struct scm *
+last_pair (struct scm *x)
 {
   while (x != cell_nil)
     {
-      if (CDR (x) == cell_nil)
+      if (x->cdr == cell_nil)
         return x;
-      x = CDR (x);
+      x = x->cdr;
     }
   return x;
 }
 
-SCM
-pair_p (SCM x)
+struct scm *
+pair_p (struct scm *x)
 {
-  if (TYPE (x) == TPAIR)
+  if (x->type == TPAIR)
     return cell_t;
   return cell_f;
 }
 
-SCM
-char_to_integer (SCM x)
+struct scm *
+char_to_integer (struct scm *x)
 {
-  return make_number (VALUE (x));
+  return make_number (x->value);
 }
 
-SCM
-integer_to_char (SCM x)
+struct scm *
+integer_to_char (struct scm *x)
 {
-  return make_char (VALUE (x));
+  return make_char (x->value);
 }

@@ -98,34 +98,34 @@ fdwrite_string (char *s, int length, int fd)
     fdwrite_string_char (s[i], fd);
 }
 
-SCM display_helper (SCM x, int cont, char *sep, int fd, int write_p);
+struct scm *display_helper (struct scm *x, int cont, char *sep, int fd, int write_p);
 
-SCM
-display_helper (SCM x, int cont, char *sep, int fd, int write_p)
+struct scm *
+display_helper (struct scm *x, int cont, char *sep, int fd, int write_p)
 {
   fdputs (sep, fd);
   if (g_depth == 0)
     return cell_unspecified;
   g_depth = g_depth - 1;
 
-  int t = TYPE (x);
+  int t = x->type;
   if (t == TCHAR)
     {
       if (write_p == 0)
-        fdputc (VALUE (x), fd);
+        fdputc (x->value, fd);
       else
         {
           fdputs ("#", fd);
-          fdwrite_char (VALUE (x), fd);
+          fdwrite_char (x->value, fd);
         }
     }
   else if (t == TCLOSURE)
     {
       fdputs ("#<closure ", fd);
-      SCM circ = CADR (x);
-      SCM name = CADR (circ);
-      SCM args = CAR (CDDR (x));
-      display_helper (CAR (name), 0, "", fd, 0);
+      struct scm *circ = x->cdr->car;
+      struct scm *name = circ->cdr->car;
+      struct scm *args = x->cdr->cdr->car;
+      display_helper (name->car, 0, "", fd, 0);
       fdputc (' ', fd);
       display_helper (args, 0, "", fd, 0);
       fdputs (">", fd);
@@ -133,48 +133,48 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
   else if (t == TMACRO)
     {
       fdputs ("#<macro ", fd);
-      display_helper (CDR (x), cont, "", fd, 0);
+      display_helper (x->cdr, cont, "", fd, 0);
       fdputs (">", fd);
     }
   else if (t == TVARIABLE)
     {
       fdputs ("#<variable ", fd);
-      display_helper (CAR (VARIABLE (x)), cont, "", fd, 0);
+      display_helper (x->variable->car, cont, "", fd, 0);
       fdputs (">", fd);
     }
   else if (t == TNUMBER)
     {
-      fdputs (itoa (VALUE (x)), fd);
+      fdputs (itoa (x->value), fd);
     }
   else if (t == TPAIR)
     {
       if (cont == 0)
         fdputs ("(", fd);
-      if (CAR (x) == cell_circular && CADR (x) != cell_closure)
+      if (x->car == cell_circular && x->cdr->car != cell_closure)
         {
           fdputs ("(*circ* . ", fd);
           int i = 0;
-          x = CDR (x);
+          x = x->cdr;
           while (x != cell_nil && i < 10)
             {
               i = i + 1;
-              fdisplay_ (CAAR (x), fd, write_p);
+              fdisplay_ (x->car->car, fd, write_p);
               fdputs (" ", fd);
-              x = CDR (x);
+              x = x->cdr;
             }
           fdputs (" ...)", fd);
         }
       else
         {
           if (x != 0 && x != cell_nil)
-            fdisplay_ (CAR (x), fd, write_p);
-          if (CDR (x) != 0 && TYPE (CDR (x)) == TPAIR)
-            display_helper (CDR (x), 1, " ", fd, write_p);
-          else if (CDR (x) != 0 && CDR (x) != cell_nil)
+            fdisplay_ (x->car, fd, write_p);
+          if (x->cdr != 0 && x->cdr->type == TPAIR)
+            display_helper (x->cdr, 1, " ", fd, write_p);
+          else if (x->cdr != 0 && x->cdr != cell_nil)
             {
-              if (TYPE (CDR (x)) != TPAIR)
+              if (x->cdr->type != TPAIR)
                 fdputs (" . ", fd);
-              fdisplay_ (CDR (x), fd, write_p);
+              fdisplay_ (x->cdr, fd, write_p);
             }
         }
       if (cont == 0)
@@ -183,52 +183,52 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
   else if (t == TPORT)
     {
       fdputs ("#<port ", fd);
-      fdputs (itoa (PORT (x)), fd);
+      fdputs (itoa (x->port), fd);
       fdputs (" ", fd);
-      x = STRING (x);
+      x = x->string;
       fdputc ('"', fd);
-      fdwrite_string (cell_bytes (STRING (x)), LENGTH (x), fd);
+      fdwrite_string (cell_bytes (x->string), x->length, fd);
       fdputc ('"', fd);
       fdputs (">", fd);
     }
   else if (t == TKEYWORD)
     {
       fdputs ("#:", fd);
-      fdwrite_string (cell_bytes (STRING (x)), LENGTH (x), fd);
+      fdwrite_string (cell_bytes (x->string), x->length, fd);
     }
   else if (t == TSTRING)
     {
       if (write_p == 1)
         {
           fdputc ('"', fd);
-          fdwrite_string (cell_bytes (STRING (x)), LENGTH (x), fd);
+          fdwrite_string (cell_bytes (x->string), x->length, fd);
           fdputc ('"', fd);
         }
       else
-        fdputs (cell_bytes (STRING (x)), fd);
+        fdputs (cell_bytes (x->string), fd);
     }
   else if (t == TSPECIAL || t == TSYMBOL)
-    fdwrite_string (cell_bytes (STRING (x)), LENGTH (x), fd);
+    fdwrite_string (cell_bytes (x->string), x->length, fd);
   else if (t == TREF)
-    fdisplay_ (REF (x), fd, write_p);
+    fdisplay_ (x->ref, fd, write_p);
   else if (t == TSTRUCT)
     {
-      SCM printer = struct_ref_ (x, STRUCT_PRINTER);
-      if (TYPE (printer) == TREF)
-        printer = REF (printer);
-      if (TYPE (printer) == TCLOSURE || builtin_p (printer) == cell_t)
+      struct scm *printer = struct_ref_ (x, STRUCT_PRINTER);
+      if (printer->type == TREF)
+        printer = printer->ref;
+      if (printer->type == TCLOSURE || builtin_p (printer) == cell_t)
         apply (printer, cons (x, cell_nil), R0);
       else
         {
           fdputs ("#<", fd);
-          fdisplay_ (STRUCT (x), fd, write_p);
-          SCM t = CAR (x);
-          long size = LENGTH (x);
+          fdisplay_ (x->structure, fd, write_p);
+          struct scm *t = x->car;
+          long size = x->length;
           long i;
           for (i = 2; i < size; i = i + 1)
             {
               fdputc (' ', fd);
-              fdisplay_ (cell_ref (STRUCT (x), i), fd, write_p);
+              fdisplay_ (cell_ref (x->structure, i), fd, write_p);
             }
           fdputc ('>', fd);
         }
@@ -236,13 +236,13 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
   else if (t == TVECTOR)
     {
       fdputs ("#(", fd);
-      SCM t = CAR (x);
+      struct scm *t = x->car;
       long i;
-      for (i = 0; i < LENGTH (x); i = i + 1)
+      for (i = 0; i < x->length; i = i + 1)
         {
           if (i != 0)
             fdputc (' ', fd);
-          fdisplay_ (cell_ref (VECTOR (x), i), fd, write_p);
+          fdisplay_ (cell_ref (x->vector, i), fd, write_p);
         }
       fdputc (')', fd);
     }
@@ -257,50 +257,50 @@ display_helper (SCM x, int cont, char *sep, int fd, int write_p)
   return cell_unspecified;
 }
 
-SCM
-display_ (SCM x)
+struct scm *
+display_ (struct scm *x)
 {
   g_depth = 5;
   return display_helper (x, 0, "", __stdout, 0);
 }
 
-SCM
-display_error_ (SCM x)
+struct scm *
+display_error_ (struct scm *x)
 {
   g_depth = 5;
   return display_helper (x, 0, "", __stderr, 0);
 }
 
-SCM
-display_port_ (SCM x, SCM p)
+struct scm *
+display_port_ (struct scm *x, struct scm *p)
 {
-  assert_msg (TYPE (p) == TNUMBER, "TYPE (p) == TNUMBER");
-  return fdisplay_ (x, VALUE (p), 0);
+  assert_msg (p->type == TNUMBER, "p->type == TNUMBER");
+  return fdisplay_ (x, p->value, 0);
 }
 
-SCM
-write_ (SCM x)
+struct scm *
+write_ (struct scm *x)
 {
   g_depth = 5;
   return display_helper (x, 0, "", __stdout, 1);
 }
 
-SCM
-write_error_ (SCM x)
+struct scm *
+write_error_ (struct scm *x)
 {
   g_depth = 5;
   return display_helper (x, 0, "", __stderr, 1);
 }
 
-SCM
-write_port_ (SCM x, SCM p)
+struct scm *
+write_port_ (struct scm *x, struct scm *p)
 {
-  assert_msg (TYPE (p) == TNUMBER, "TYPE (p) == TNUMBER");
-  return fdisplay_ (x, VALUE (p), 1);
+  assert_msg (p->type == TNUMBER, "p->type == TNUMBER");
+  return fdisplay_ (x, p->value, 1);
 }
 
-SCM
-fdisplay_ (SCM x, int fd, int write_p)  /*:((internal)) */
+struct scm *
+fdisplay_ (struct scm *x, int fd, int write_p)  /*:((internal)) */
 {
   g_depth = 5;
   return display_helper (x, 0, "", fd, write_p);

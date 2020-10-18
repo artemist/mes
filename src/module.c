@@ -21,10 +21,10 @@
 #include "mes/lib.h"
 #include "mes/mes.h"
 
-SCM
+struct scm *
 make_module_type ()             /*:(internal)) */
 {
-  SCM fields = cell_nil;
+  struct scm *fields = cell_nil;
   fields = cons (cstring_to_symbol ("globals"), fields);
   fields = cons (cstring_to_symbol ("locals"), fields);
   fields = cons (cstring_to_symbol ("name"), fields);
@@ -33,40 +33,40 @@ make_module_type ()             /*:(internal)) */
   return make_struct (cell_symbol_record_type, fields, cell_unspecified);
 }
 
-SCM
-make_initial_module (SCM a)     /*:((internal)) */
+struct scm *
+make_initial_module (struct scm *a)     /*:((internal)) */
 {
-  SCM module_type = make_module_type ();
+  struct scm *module_type = make_module_type ();
   a = acons (cell_symbol_module, module_type, a);
 
-  SCM hashq_type = make_hashq_type ();
+  struct scm *hashq_type = make_hashq_type ();
   a = acons (cell_symbol_hashq_table, hashq_type, a);
 
-  SCM name = cons (cstring_to_symbol ("boot"), cell_nil);
-  SCM globals = make_hash_table_ (0);
-  SCM locals = cell_nil;
+  struct scm *name = cons (cstring_to_symbol ("boot"), cell_nil);
+  struct scm *globals = make_hash_table_ (0);
+  struct scm *locals = cell_nil;
 
-  SCM values = cell_nil;
+  struct scm *values = cell_nil;
   values = cons (globals, values);
   values = cons (locals, values);
   values = cons (name, values);
   values = cons (cell_symbol_module, values);
-  SCM module = make_struct (module_type, values, cstring_to_symbol ("module-printer"));
+  struct scm *module = make_struct (module_type, values, cstring_to_symbol ("module-printer"));
   R0 = cell_nil;
-  R0 = cons (CADR (a), R0);
-  R0 = cons (CAR (a), R0);
+  R0 = cons (a->cdr->car, R0);
+  R0 = cons (a->car, R0);
   M0 = module;
-  while (TYPE (a) == TPAIR)
+  while (a->type == TPAIR)
     {
-      module_define_x (module, CAAR (a), CDAR (a));
-      a = CDR (a);
+      module_define_x (module, a->car->car, a->car->cdr);
+      a = a->cdr;
     }
 
   return module;
 }
 
-SCM
-module_printer (SCM module)
+struct scm *
+module_printer (struct scm *module)
 {
   fdputs ("#<", __stdout);
   display_ (struct_ref_ (module, 2));
@@ -77,40 +77,40 @@ module_printer (SCM module)
   fdputs ("locals: ", __stdout);
   display_ (struct_ref_ (module, 4));
   fdputc (' ', __stdout);
-  SCM table = struct_ref_ (module, 5);
+  struct scm *table = struct_ref_ (module, 5);
   fdputs ("globals:\n  ", __stdout);
   display_ (table);
   fdputc ('>', __stdout);
 }
 
-SCM
-module_variable (SCM module, SCM name)
+struct scm *
+module_variable (struct scm *module, struct scm *name)
 {
-  /*SCM locals = struct_ref_ (module, 3);*/
-  SCM locals = module;
-  SCM x = assq (name, locals);
+  /*struct scm *locals = struct_ref_ (module, 3);*/
+  struct scm *locals = module;
+  struct scm *x = assq (name, locals);
   if (x == cell_f)
     {
       module = M0;
-      SCM globals = struct_ref_ (module, 5);
+      struct scm *globals = struct_ref_ (module, 5);
       x = hashq_get_handle (globals, name, cell_f);
     }
   return x;
 }
 
-SCM
-module_ref (SCM module, SCM name)
+struct scm *
+module_ref (struct scm *module, struct scm *name)
 {
-  SCM x = module_variable (module, name);
+  struct scm *x = module_variable (module, name);
   if (x == cell_f)
     return cell_undefined;
-  return CDR (x);
+  return x->cdr;
 }
 
-SCM
-module_define_x (SCM module, SCM name, SCM value)
+struct scm *
+module_define_x (struct scm *module, struct scm *name, struct scm *value)
 {
   module = M0;
-  SCM globals = struct_ref_ (module, 5);
+  struct scm *globals = struct_ref_ (module, 5);
   return hashq_set_x (globals, name, value);
 }

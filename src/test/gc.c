@@ -46,17 +46,17 @@ test_setup ()
   M0 = cell_zero;
 
   memset (g_arena + sizeof (struct scm), 0, ARENA_SIZE * sizeof (struct scm));
-  TYPE (cell_zero) = TCHAR;
-  VALUE (cell_zero) = 'c';
+  cell_zero->type = TCHAR;
+  cell_zero->value = 'c';
   g_free = cell_f;
 }
 
 void
 print_arena (long length)
 {
-  SCM v = cell_arena;
-  TYPE (v) = TVECTOR;
-  LENGTH (v) = length;
+  struct scm *v = cell_arena;
+  v->type = TVECTOR;
+  v->length = length;
   eputs ("arena["); eputs (ntoab (g_cells, 16, 0)); eputs ("]: "); write_ (v); eputs ("\n");
 }
 
@@ -72,19 +72,19 @@ test_gc (char const *name)
   eputs ("\n");
 
   gc_ ();
-  VALUE (cell_zero) = 'd';
+  cell_zero->value = 'd';
   print_arena (gc_free () - 1);
   gc_stats_ ("2");
   eputs ("\n");
 
   gc_ ();
-  VALUE (cell_zero) = 'e';
+  cell_zero->value = 'e';
   print_arena (gc_free () - 1);
   gc_stats_ ("3");
   eputs ("\n");
 
   gc_ ();
-  VALUE (cell_zero) = 'f';
+  cell_zero->value = 'f';
   print_arena (gc_free () - 1);
   gc_stats_ ("3");
   eputs ("\n");
@@ -113,8 +113,8 @@ void
 test_cons ()
 {
   test_setup ();
-  SCM a = make_number (42);
-  SCM d = make_number (101);
+  struct scm *a = make_number (42);
+  struct scm *d = make_number (101);
   cons (a, d);
 
   g_free = g_symbol_max + M2_CELL_SIZE;
@@ -125,9 +125,9 @@ void
 test_list ()
 {
   test_setup ();
-  SCM a = make_number (42);
-  SCM d = make_number (101);
-  SCM lst = cons (d, cell_nil);
+  struct scm *a = make_number (42);
+  struct scm *d = make_number (101);
+  struct scm *lst = cons (d, cell_nil);
   cons (a, lst);
 
   g_free = g_symbol_max + M2_CELL_SIZE;
@@ -138,7 +138,7 @@ void
 test_string ()
 {
   test_setup ();
-  SCM s = make_string0 ("hello");
+  struct scm *s = make_string0 ("hello");
 
   g_free = g_symbol_max + M2_CELL_SIZE;
   test_gc ("string");
@@ -148,9 +148,9 @@ void
 test_vector ()
 {
   test_setup ();
-  SCM v = make_vector_ (4, cell_zero);
-  SCM one = make_number (1);
-  SCM two = make_number (2);
+  struct scm *v = make_vector_ (4, cell_zero);
+  struct scm *one = make_number (1);
+  struct scm *two = make_number (2);
   vector_set_x_ (v, 1, one);
   vector_set_x_ (v, 2, two);
 
@@ -162,9 +162,9 @@ void
 test_struct ()
 {
   test_setup ();
-  SCM type = make_char ('t');
-  SCM printer = make_char ('p');
-  SCM fields = cons (make_char ('f'), cell_nil);
+  struct scm *type = make_char ('t');
+  struct scm *printer = make_char ('p');
+  struct scm *fields = cons (make_char ('f'), cell_nil);
   make_struct (type, fields, printer);
 
   g_free = g_symbol_max + M2_CELL_SIZE;

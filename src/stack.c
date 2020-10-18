@@ -24,8 +24,8 @@
 
 #include <stdlib.h>
 
-SCM
-frame_printer (SCM frame)
+struct scm *
+frame_printer (struct scm *frame)
 {
   fdputs ("#<", __stdout);
   display_ (struct_ref_ (frame, 2));
@@ -35,22 +35,22 @@ frame_printer (SCM frame)
   fdputc ('>', __stdout);
 }
 
-SCM
+struct scm *
 make_frame_type ()              /*:((internal)) */
 {
-  SCM fields = cell_nil;
+  struct scm *fields = cell_nil;
   fields = cons (cell_symbol_procedure, fields);
   fields = cons (fields, cell_nil);
   fields = cons (cell_symbol_frame, fields);
   return make_struct (cell_symbol_record_type, fields, cell_unspecified);
 }
 
-SCM
-make_frame (SCM stack, long index)
+struct scm *
+make_frame (struct scm *stack, long index)
 {
-  SCM frame_type = make_frame_type ();
+  struct scm *frame_type = make_frame_type ();
   long array_index = 0;
-  SCM procedure = 0;
+  struct scm *procedure = 0;
   if (index != 0)
     {
       array_index = (STACK_SIZE - (index * FRAME_SIZE));
@@ -58,50 +58,50 @@ make_frame (SCM stack, long index)
     }
   if (procedure == 0)
     procedure = cell_f;
-  SCM values = cell_nil;
+  struct scm *values = cell_nil;
   values = cons (procedure, values);
   values = cons (cell_symbol_frame, values);
   return make_struct (frame_type, values, cstring_to_symbol ("frame-printer"));
 }
 
-SCM
+struct scm *
 make_stack_type ()              /*:((internal)) */
 {
-  SCM fields = cell_nil;
+  struct scm *fields = cell_nil;
   fields = cons (cstring_to_symbol ("frames"), fields);
   fields = cons (fields, cell_nil);
   fields = cons (cell_symbol_stack, fields);
   return make_struct (cell_symbol_record_type, fields, cell_unspecified);
 }
 
-SCM
-make_stack (SCM stack)          /*:((arity . n)) */
+struct scm *
+make_stack (struct scm *stack)          /*:((arity . n)) */
 {
-  SCM stack_type = make_stack_type ();
+  struct scm *stack_type = make_stack_type ();
   long size = (STACK_SIZE - g_stack) / FRAME_SIZE;
-  SCM frames = make_vector_ (size, cell_unspecified);
+  struct scm *frames = make_vector_ (size, cell_unspecified);
   long i;
   for (i = 0; i < size; i = i + 1)
     {
-      SCM frame = make_frame (stack, i);
+      struct scm *frame = make_frame (stack, i);
       vector_set_x_ (frames, i, frame);
     }
-  SCM values = cell_nil;
+  struct scm *values = cell_nil;
   values = cons (frames, values);
   values = cons (cell_symbol_stack, values);
   return make_struct (stack_type, values, cell_unspecified);
 }
 
-SCM
-stack_length (SCM stack)
+struct scm *
+stack_length (struct scm *stack)
 {
-  SCM frames = struct_ref_ (stack, 3);
+  struct scm *frames = struct_ref_ (stack, 3);
   return vector_length (frames);
 }
 
-SCM
-stack_ref (SCM stack, SCM index)
+struct scm *
+stack_ref (struct scm *stack, struct scm *index)
 {
-  SCM frames = struct_ref_ (stack, 3);
+  struct scm *frames = struct_ref_ (stack, 3);
   return vector_ref (frames, index);
 }

@@ -36,116 +36,116 @@ hash_cstring (char const *s, long size)
 }
 
 int
-hashq_ (SCM x, long size)
+hashq_ (struct scm *x, long size)
 {
-  if (TYPE (x) == TSPECIAL || TYPE (x) == TSYMBOL)
-    return hash_cstring (cell_bytes (STRING (x)), size);    /* FIXME: hash x directly. */
+  if (x->type == TSPECIAL || x->type == TSYMBOL)
+    return hash_cstring (cell_bytes (x->string), size);    /* FIXME: hash x directly. */
   error (cell_symbol_system_error, cons (make_string0 ("hashq_: not a symbol"), x));
 }
 
 int
-hash_ (SCM x, long size)
+hash_ (struct scm *x, long size)
 {
-  if (TYPE (x) != TSTRING)
+  if (x->type != TSTRING)
     {
       eputs ("hash_ failed, not a string:");
       display_error_ (x);
       assert_msg (0, "0");
     }
-  return hash_cstring (cell_bytes (STRING (x)), size);
+  return hash_cstring (cell_bytes (x->string), size);
 }
 
-SCM
-hashq (SCM x, SCM size)
+struct scm *
+hashq (struct scm *x, struct scm *size)
 {
   eputs ("hashq not supporteed\n");
   assert_msg (0, "0");
 }
 
-SCM
-hash (SCM x, SCM size)
+struct scm *
+hash (struct scm *x, struct scm *size)
 {
   eputs ("hash not supporteed\n");
   assert_msg (0, "0");
 }
 
-SCM
-hashq_get_handle (SCM table, SCM key, SCM dflt)
+struct scm *
+hashq_get_handle (struct scm *table, struct scm *key, struct scm *dflt)
 {
-  SCM s = struct_ref_ (table, 3);
-  long size = VALUE (s);
+  struct scm *s = struct_ref_ (table, 3);
+  long size = s->value;
   unsigned hash = hashq_ (key, size);
-  SCM buckets = struct_ref_ (table, 4);
-  SCM bucket = vector_ref_ (buckets, hash);
-  SCM x = cell_f;
-  if (TYPE (dflt) == TPAIR)
-    x = CAR (dflt);
-  if (TYPE (bucket) == TPAIR)
+  struct scm *buckets = struct_ref_ (table, 4);
+  struct scm *bucket = vector_ref_ (buckets, hash);
+  struct scm *x = cell_f;
+  if (dflt->type == TPAIR)
+    x = dflt->car;
+  if (bucket->type == TPAIR)
     x = assq (key, bucket);
   return x;
 }
 
-SCM
-hashq_ref (SCM table, SCM key, SCM dflt)
+struct scm *
+hashq_ref (struct scm *table, struct scm *key, struct scm *dflt)
 {
-  SCM x = hashq_get_handle (table, key, dflt);
+  struct scm *x = hashq_get_handle (table, key, dflt);
   if (x != cell_f)
-    x = CDR (x);
+    x = x->cdr;
   return x;
 }
 
-SCM
-hash_ref (SCM table, SCM key, SCM dflt)
+struct scm *
+hash_ref (struct scm *table, struct scm *key, struct scm *dflt)
 {
-  SCM s = struct_ref_ (table, 3);
-  long size = VALUE (s);
+  struct scm *s = struct_ref_ (table, 3);
+  long size = s->value;
   unsigned hash = hash_ (key, size);
-  SCM buckets = struct_ref_ (table, 4);
-  SCM bucket = vector_ref_ (buckets, hash);
-  SCM x = cell_f;
-  if (TYPE (dflt) == TPAIR)
-    x = CAR (dflt);
-  if (TYPE (bucket) == TPAIR)
+  struct scm *buckets = struct_ref_ (table, 4);
+  struct scm *bucket = vector_ref_ (buckets, hash);
+  struct scm *x = cell_f;
+  if (dflt->type == TPAIR)
+    x = dflt->car;
+  if (bucket->type == TPAIR)
     {
       x = assoc (key, bucket);
       if (x != cell_f)
-        x = CDR (x);
+        x = x->cdr;
     }
   return x;
 }
 
-SCM
-hash_set_x_ (SCM table, unsigned hash, SCM key, SCM value)
+struct scm *
+hash_set_x_ (struct scm *table, unsigned hash, struct scm *key, struct scm *value)
 {
-  SCM buckets = struct_ref_ (table, 4);
-  SCM bucket = vector_ref_ (buckets, hash);
-  if (TYPE (bucket) != TPAIR)
+  struct scm *buckets = struct_ref_ (table, 4);
+  struct scm *bucket = vector_ref_ (buckets, hash);
+  if (bucket->type != TPAIR)
     bucket = cell_nil;
   bucket = acons (key, value, bucket);
   vector_set_x_ (buckets, hash, bucket);
   return value;
 }
 
-SCM
-hashq_set_x (SCM table, SCM key, SCM value)
+struct scm *
+hashq_set_x (struct scm *table, struct scm *key, struct scm *value)
 {
-  SCM s = struct_ref_ (table, 3);
-  long size = VALUE (s);
+  struct scm *s = struct_ref_ (table, 3);
+  long size = s->value;
   unsigned hash = hashq_ (key, size);
   return hash_set_x_ (table, hash, key, value);
 }
 
-SCM
-hash_set_x (SCM table, SCM key, SCM value)
+struct scm *
+hash_set_x (struct scm *table, struct scm *key, struct scm *value)
 {
-  SCM s = struct_ref_ (table, 3);
-  long size = VALUE (s);
+  struct scm *s = struct_ref_ (table, 3);
+  long size = s->value;
   unsigned hash = hash_ (key, size);
   return hash_set_x_ (table, hash, key, value);
 }
 
-SCM
-hash_table_printer (SCM table)
+struct scm *
+hash_table_printer (struct scm *table)
 {
   fdputs ("#<", __stdout);
   display_ (struct_ref_ (table, 2));
@@ -153,20 +153,20 @@ hash_table_printer (SCM table)
   fdputs ("size: ", __stdout);
   display_ (struct_ref_ (table, 3));
   fdputc (' ', __stdout);
-  SCM buckets = struct_ref_ (table, 4);
+  struct scm *buckets = struct_ref_ (table, 4);
   fdputs ("buckets: ", __stdout);
   int i;
-  for (i = 0; i < LENGTH (buckets); i = i + 1)
+  for (i = 0; i < buckets->length; i = i + 1)
     {
-      SCM e = vector_ref_ (buckets, i);
+      struct scm *e = vector_ref_ (buckets, i);
       if (e != cell_unspecified)
         {
           fdputc ('[', __stdout);
-          while (TYPE (e) == TPAIR)
+          while (e->type == TPAIR)
             {
-              write_ (CAAR (e));
-              e = CDR (e);
-              if (TYPE (e) == TPAIR)
+              write_ (e->car->car);
+              e = e->cdr;
+              if (e->type == TPAIR)
                 fdputc (' ', __stdout);
             }
           fdputs ("]\n  ", __stdout);
@@ -175,10 +175,10 @@ hash_table_printer (SCM table)
   fdputc ('>', __stdout);
 }
 
-SCM
+struct scm *
 make_hashq_type ()              /*:((internal)) */
 {
-  SCM fields = cell_nil;
+  struct scm *fields = cell_nil;
   fields = cons (cell_symbol_buckets, fields);
   fields = cons (cell_symbol_size, fields);
   fields = cons (fields, cell_nil);
@@ -186,15 +186,15 @@ make_hashq_type ()              /*:((internal)) */
   return make_struct (cell_symbol_record_type, fields, cell_unspecified);
 }
 
-SCM
+struct scm *
 make_hash_table_ (long size)
 {
   if (size == 0)
     size = 100;
-  SCM hashq_type = make_hashq_type ();
+  struct scm *hashq_type = make_hashq_type ();
 
-  SCM buckets = make_vector_ (size, cell_unspecified);
-  SCM values = cell_nil;
+  struct scm *buckets = make_vector_ (size, cell_unspecified);
+  struct scm *values = cell_nil;
   values = cons (buckets, values);
   values = cons (make_number (size), values);
   values = cons (cell_symbol_hashq_table, values);
@@ -203,14 +203,14 @@ make_hash_table_ (long size)
   return make_struct (hashq_type, values, cell_unspecified);
 }
 
-SCM
-make_hash_table (SCM x)
+struct scm *
+make_hash_table (struct scm *x)
 {
   long size = 0;
-  if (TYPE (x) == TPAIR)
+  if (x->type == TPAIR)
     {
-      assert_msg (TYPE (x) == TNUMBER, "TYPE (x) == TNUMBER");
-      size = VALUE (x);
+      assert_msg (x->type == TNUMBER, "x->type == TNUMBER");
+      size = x->value;
     }
   return make_hash_table_ (size);
 }
