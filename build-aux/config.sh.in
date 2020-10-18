@@ -35,8 +35,10 @@ GUIX="@GUIX@"
 HELP2MAN="@HELP2MAN@"
 HEX2="@HEX2@"
 LDFLAGS=${LDFLAGS-"@LDFLAGS@"}
+KAEM="@KAEM@"
 MAKEINFO="@MAKEINFO@"
 M1="@M1@"
+M2_PLANET="@M2_PLANET@"
 MES_FOR_BUILD="@MES_FOR_BUILD@"
 NYACC="@NYACC@"
 PACKAGE="@PACKAGE@"
@@ -99,8 +101,10 @@ export V
 export colors
 export compiler
 export courageous
+export mes_cpu
 export srcdest
 export srcdir
+export stage0_cpu
 export GUILE_AUTO_COMPILE
 export MES_PREFIX
 export TESTS

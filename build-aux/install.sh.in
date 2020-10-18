@@ -47,6 +47,9 @@ cp $_v bin/mes ${DESTDIR}${bindir}/mes
 if test -f bin/mes-gcc; then
     cp $_v bin/mes-gcc ${DESTDIR}${bindir}/mes-gcc
 fi
+if test -f bin/mes-m2; then
+    cp $_v bin/mes-m2 ${DESTDIR}${bindir}/mes-m2
+fi
 if test -f bin/mes-mescc; then
     cp $_v bin/mes-mescc ${DESTDIR}${bindir}/mes-mescc
 fi

@@ -35,6 +35,11 @@ MES_PREFIX=${MES_PREFIX-$PWD}
 . ${srcdest}build-aux/configure-lib.sh
 . ${srcdest}build-aux/cflags.sh
 
+if test -n "@M2_PLANET@"; then
+    echo "  KAEM         kaem.run"
+    kaem --strict --verbose
+fi
+
 CPPFLAGS="-D HAVE_CONFIG_H=1 -I include"
 libdir=$PWD/lib
 export libdir

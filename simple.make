@@ -180,6 +180,7 @@ gc-m2: bin/gc-m2
 
 bin/mes-gcc: simple.make $(GCC_SOURCES) $(MES_SOURCES) $(INCLUDES) | bin
 	$(CC) $(CFLAGS) $(GCC_SOURCES) $(MES_SOURCES) -o $@
+	cp -f $@ bin/mes
 
 bin/gc-gcc: simple.make $(GCC_SOURCES) $(TEST_GC_SOURCES) $(INCLUDES) | bin
 	$(CC) $(CFLAGS) -D GC_TEST=1 $(GCC_SOURCES) $(TEST_GC_SOURCES) -o $@
@@ -197,32 +198,33 @@ M2_PLANET_SOURCES =				\
  $(M2_PLANET_INCLUDES:%.h=%.h)			\
  $(M2_SOURCES)
 
-bin/mes-m2.M1: simple.make $(M2_PLANET_SOURCES) $(MES_SOURCES) $(M2_PLANET_INCLUDES) | bin
+m2/mes-m2.M1: simple.make $(M2_PLANET_SOURCES) $(MES_SOURCES) $(M2_PLANET_INCLUDES) | bin
 	$(M2_PLANET) $(M2_PLANET_FLAGS) $(M2_PLANET_SOURCES:%=-f %)  $(MES_SOURCES:%.c=-f %.c) -o $@ || rm -f $@
 
-bin/mes-m2.blood-elf.M1: bin/mes-m2.M1
+m2/mes-m2.blood-elf.M1: m2/mes-m2.M1
 #	blood-elf --32 -f $< -o $@
 	blood-elf -f $< -o $@
 
-bin/mes-m2.hex2: bin/mes-m2.blood-elf.M1
+m2/mes-m2.hex2: m2/mes-m2.blood-elf.M1
 	M1					\
 	    --architecture $(M2_PLANET_ARCH)	\
 	    --little-endian			\
 	    -f lib/m2/x86/x86_defs.M1		\
 	    -f lib/x86-mes/x86.M1		\
 	    -f lib/linux/x86-mes-m2/crt1.M1	\
-	    -f bin/mes-m2.M1			\
-	    -f bin/mes-m2.blood-elf.M1		\
+	    -f m2/mes-m2.M1			\
+	    -f m2/mes-m2.blood-elf.M1		\
 	    -o $@
 
-bin/mes-m2: bin/mes-m2.hex2
+bin/mes-m2: m2/mes-m2.hex2
 	hex2					\
 	    --architecture $(M2_PLANET_ARCH)	\
 	    --little-endian			\
 	    --base-address 0x1000000		\
 	    -f lib/x86-mes/elf32-header.hex2	\
-	    -f bin/mes-m2.hex2			\
+	    -f m2/mes-m2.hex2			\
 	    -o $@
+	cp -f $@ bin/mes
 
 # Clean up after ourselves
 .PHONY: clean

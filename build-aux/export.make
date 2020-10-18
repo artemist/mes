@@ -50,6 +50,7 @@ export mes_cpu
 export mes_bits
 export mes_libc
 export mes_kernel
+export stage0_cpu
 
 ifdef V
 export V

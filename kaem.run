@@ -22,6 +22,8 @@
 mes_cpu=${mes_cpu:-x86}
 stage0_cpu=${stage0_cpu:-x86}
 
+mkdir -p m2
+
 M2-Planet                                       \
     --debug                                     \
     --architecture ${stage0_cpu}                \
@@ -112,9 +114,9 @@ M2-Planet                                       \
     -f src/struct.c                             \
     -f src/symbol.c                             \
     -f src/vector.c                             \
-    -o bin/mes.M1
+    -o m2/mes.M1
 
-blood-elf -f bin/mes.M1 -o bin/mes.blood-elf-M1
+blood-elf -f m2/mes.M1 -o m2/mes.blood-elf-M1
 
 M1                                              \
     --architecture ${stage0_cpu}                \
@@ -122,17 +124,19 @@ M1                                              \
     -f lib/m2/${mes_cpu}/${mes_cpu}_defs.M1     \
     -f lib/${mes_cpu}-mes/${mes_cpu}.M1         \
     -f lib/linux/${mes_cpu}-mes-m2/crt1.M1      \
-    -f bin/mes.M1                               \
-    -f bin/mes.blood-elf-M1                     \
-    -o bin/mes.hex2
+    -f m2/mes.M1                                \
+    -f m2/mes.blood-elf-M1                      \
+    -o m2/mes.hex2
 
+mkdir -p bin
 hex2                                            \
     --architecture ${stage0_cpu}                \
     --little-endian                             \
     --base-address 0x1000000                    \
     -f lib/m2/${mes_cpu}/ELF-${mes_cpu}.hex2    \
-    -f bin/mes.hex2                             \
+    -f m2/mes.hex2                              \
     -o bin/mes-m2
 
 echo Running mes-m2
 ./bin/mes-m2 -c "(display 'Hello,M2-mes!) (newline)"
+cp bin/mes-m2 bin/mes
