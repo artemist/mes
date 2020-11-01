@@ -119,12 +119,6 @@
 
 (define else #t)
 
-(define (procedure? p)
-  (cond ((builtin? p) #t)
-        ((and (pair? p) (eq? (car p) 'lambda)))
-        ((closure? p) #t)
-        (#t #f)))
-
 (define (map f h . t)
   (if (or (null? h)
           (and (pair? t) (null? (car t)))
