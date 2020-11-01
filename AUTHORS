@@ -60,7 +60,7 @@ PEG from Guile
 mes/module/mes/peg/
 
 Pmatch from Guile
-mes/module/mes/pmatch.scm
+mes/module/system/base/pmatch.scm
 
 Pretty-print from Guile
 mes/module/mes/pretty-print.scm
