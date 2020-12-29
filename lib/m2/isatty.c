@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -27,9 +27,6 @@
 // CONSTANT TCGETS 0x5401
 #define TCGETS 0x5401
 
-// CONSTANT NCCS 19
-#define NCCS 19
-
 struct ktermios
 {
   unsigned c_iflag;
@@ -37,7 +34,7 @@ struct ktermios
   unsigned c_cflag;
   unsigned c_lflag;
   char c_line;
-  char c_cc[NCCS];
+  char c_cc[19];
   unsigned c_ispeed;
   unsigned c_ospeed;
 };
