@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # GNU Mes --- Maxwell Equations of Software
-# Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -42,7 +42,7 @@ gcc -g -D HAVE_CONFIG_H=1 -I include\
     lib/mes/eputs.c\
     lib/mes/oputs.c\
     \
-    lib/mes/div.c\
+    lib/mes/cast.c\
     lib/mes/itoa.c\
     lib/mes/ltoa.c\
     lib/mes/ltoab.c\
@@ -57,6 +57,14 @@ gcc -g -D HAVE_CONFIG_H=1 -I include\
     lib/mes/ntoab.c\
     lib/mes/oputc.c\
     \
+    lib/mes/__assert_fail.c\
+    lib/mes/assert_msg.c\
+    \
+    src/builtins.c\
+    src/cc.c\
+    src/core.c\
+    src/display.c\
+    src/eval-apply.c\
     src/gc.c\
     src/hash.c\
     src/lib.c\
@@ -65,8 +73,10 @@ gcc -g -D HAVE_CONFIG_H=1 -I include\
     src/module.c\
     src/posix.c\
     src/reader.c\
+    src/stack.c\
     src/string.c\
     src/struct.c\
+    src/symbol.c\
     src/vector.c
 
 ## Check ##
@@ -81,29 +91,53 @@ echo '(display "hello\n")' | MES_BOOT=boot-01.scm out-system-libc/mes
 MES_DEBUG=4 MES=out-system-libc/mes tests/base.test
 
 # GC test
-MES_DEBUG=3 MES_ARENA=10000 MES_MAX_ARENA=10000 MES_BOOT=scaffold/gc-test.scm out-system-libc/mes
+MES_DEBUG=3 MES_ARENA=10000 MES_MAX_ARENA=10000 MES_BOOT=tests/gc.test out-system-libc/mes
 
 # MesCC test
-MES_DEBUG=2 MES=out-system-libc/mes sh -x scripts/mescc -m $mes_bits -nostdlib\
-         -I include -I include/$mes_kernel/$mes_cpu\
-         -o out-system-libc/hello\
-         lib/linux/$mes_cpu-mes-mescc/crt1.c\
-         \
-         lib/mes/eputs.c\
-         \
-         lib/linux/$mes_cpu-mes-mescc/_exit.c\
-         lib/linux/$mes_cpu-mes-mescc/_write.c\
-         \
-         lib/mes/write.c\
-         lib/string/strlen.c\
-         \
-         scaffold/hello.c
+# Interesting, but compiling multiple C files is not supported (yet).
+# MES_DEBUG=2 MES=out-system-libc/mes sh -x scripts/mescc -L lib -m $mes_bits -nostdlib\
+#          -I include -I include/$mes_kernel/$mes_cpu\
+#          -o out-system-libc/hello\
+#          lib/linux/$mes_cpu-mes-mescc/crt1.c\
+#          \
+#          lib/mes/eputs.c\
+#          \
+#          lib/linux/$mes_cpu-mes-mescc/_exit.c\
+#          lib/linux/$mes_cpu-mes-mescc/_write.c\
+#          \
+#          lib/mes/globals.c\
+#          lib/mes/mini-write.c\
+#          lib/string/strlen.c\
+#          \
+#          scaffold/hello.c
+
+cat                                             \
+    lib/linux/$mes_cpu-mes-mescc/crt1.c         \
+                                                \
+    lib/mes/eputs.c                             \
+                                                \
+    lib/linux/$mes_cpu-mes-mescc/_exit.c        \
+    lib/linux/$mes_cpu-mes-mescc/_write.c       \
+                                                \
+    lib/mes/globals.c                           \
+    lib/mes/mini-write.c                        \
+    lib/string/strlen.c                         \
+                                                \
+    scaffold/hello.c                            \
+    > out-system-libc/hello.c
+
+MES_DEBUG=2 MES=out-system-libc/mes sh -x scripts/mescc -L lib -m $mes_bits -nostdlib   \
+         -I include -I include/$mes_kernel/$mes_cpu                                     \
+         -o out-system-libc/hello                                                       \
+         out-system-libc/hello.c
+
 set +e
 out-system-libc/hello
 r=$?
 if [ $r != 42 ]; then
    exit 1
 fi
+set -e
 
 ################################################################################
 # Mes C lib build
@@ -136,6 +170,7 @@ $CC -g -D HAVE_CONFIG_H=1 -I include -I include/$mes_kernel/$mes_cpu\
     \
     lib/linux/$mes_cpu-mes-gcc/crt1.c\
     \
+    lib/mes/globals.c\
     lib/mes/eputs.c\
     lib/mes/oputs.c\
     \
@@ -146,7 +181,7 @@ $CC -g -D HAVE_CONFIG_H=1 -I include -I include/$mes_kernel/$mes_cpu\
     lib/$mes_kernel/$mes_cpu-mes-$compiler/_exit.c\
     lib/$mes_kernel/$mes_cpu-mes-$compiler/_write.c\
     \
-    lib/mes/div.c\
+    lib/mes/cast.c\
     lib/mes/itoa.c\
     lib/mes/ltoa.c\
     lib/mes/ltoab.c\
@@ -169,6 +204,7 @@ $CC -g -D HAVE_CONFIG_H=1 -I include -I include/$mes_kernel/$mes_cpu\
     lib/ctype/isxdigit.c\
     \
     lib/mes/__assert_fail.c\
+    lib/mes/assert_msg.c\
     lib/mes/__buffered_read.c\
     lib/mes/__mes_debug.c\
     lib/posix/execv.c\
@@ -176,7 +212,6 @@ $CC -g -D HAVE_CONFIG_H=1 -I include -I include/$mes_kernel/$mes_cpu\
     lib/posix/getenv.c\
     lib/posix/isatty.c\
     lib/posix/open.c\
-    lib/posix/read.c\
     lib/posix/setenv.c\
     lib/posix/wait.c\
     lib/stdio/fgetc.c\
@@ -214,12 +249,18 @@ $CC -g -D HAVE_CONFIG_H=1 -I include -I include/$mes_kernel/$mes_cpu\
     lib/linux/gettimeofday.c\
     lib/linux/ioctl.c\
     lib/linux/_open3.c\
+    lib/linux/read.c\
     lib/linux/_read.c\
     lib/linux/time.c\
     lib/linux/unlink.c\
     lib/linux/waitpid.c\
     lib/linux/$mes_cpu-mes-$compiler/syscall.c\
     \
+    src/builtins.c\
+    src/cc.c\
+    src/core.c\
+    src/display.c\
+    src/eval-apply.c\
     src/gc.c\
     src/hash.c\
     src/lib.c\
@@ -228,8 +269,10 @@ $CC -g -D HAVE_CONFIG_H=1 -I include -I include/$mes_kernel/$mes_cpu\
     src/module.c\
     src/posix.c\
     src/reader.c\
+    src/stack.c\
     src/string.c\
     src/struct.c\
+    src/symbol.c\
     src/vector.c
 
 ## Check ##
@@ -244,26 +287,50 @@ echo '(display "hello\n")' | MES_BOOT=boot-01.scm out-mes/mes
 MES_DEBUG=4 MES=out-mes/mes tests/base.test
 
 # GC test
-MES_DEBUG=3 MES_ARENA=10000 MES_MAX_ARENA=10000 MES_BOOT=scaffold/gc-test.scm out-mes/mes
+MES_DEBUG=3 MES_ARENA=10000 MES_MAX_ARENA=10000 MES_BOOT=tests/gc.test out-mes/mes
 
 # MesCC test
-MES_DEBUG=2 MES=out-mes/mes sh -x scripts/mescc -m $mes_bits -nostdlib\
-         -I include -I include/$mes_kernel/$mes_cpu\
-         -o out-mes/hello\
-         lib/linux/$mes_cpu-mes-mescc/crt1.c\
-         \
-         lib/mes/eputs.c\
-         \
-         lib/linux/$mes_cpu-mes-mescc/_exit.c\
-         lib/linux/$mes_cpu-mes-mescc/_write.c\
-         \
-         lib/mes/write.c\
-         lib/string/strlen.c\
-         \
-         scaffold/hello.c
+# Interesting, but compiling multiple C files is not supported (yet).
+# MES_DEBUG=2 MES=out-mes/mes sh -x scripts/mescc -L lib -m $mes_bits -nostdlib\
+#          -I include -I include/$mes_kernel/$mes_cpu\
+#          -o out-mes/hello\
+#          lib/linux/$mes_cpu-mes-mescc/crt1.c\
+#          \
+#          lib/mes/eputs.c\
+#          \
+#          lib/linux/$mes_cpu-mes-mescc/_exit.c\
+#          lib/linux/$mes_cpu-mes-mescc/_write.c\
+#          \
+#          lib/mes/globals.c\
+#          lib/mes/mini-write.c\
+#          lib/string/strlen.c\
+#          \
+#          scaffold/hello.c
+
+cat                                             \
+    lib/linux/$mes_cpu-mes-mescc/crt1.c         \
+                                                \
+    lib/mes/eputs.c                             \
+                                                \
+    lib/linux/$mes_cpu-mes-mescc/_exit.c        \
+    lib/linux/$mes_cpu-mes-mescc/_write.c       \
+                                                \
+    lib/mes/globals.c                           \
+    lib/mes/mini-write.c                        \
+    lib/string/strlen.c                         \
+                                                \
+    scaffold/hello.c                            \
+    > out-mes/hello.c
+
+MES_DEBUG=2 MES=out-mes/mes sh -x scripts/mescc -L lib -m $mes_bits -nostdlib   \
+         -I include -I include/$mes_kernel/$mes_cpu                             \
+         -o out-mes/hello                                                       \
+         out-mes/hello.c
+
 set +e
 out-mes/hello
 r=$?
 if [ $r != 42 ]; then
    exit 1
 fi
+set -e
