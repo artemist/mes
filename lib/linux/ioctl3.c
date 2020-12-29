@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -20,15 +20,12 @@
 
 #include <linux/syscall.h>
 #include <syscall.h>
-#include <stdarg.h>
-#include <sys/ioctl.h>
+#include <mes/lib.h>
 
 int
-ioctl (int filedes, long command, int data)
+ioctl3 (int filedes, size_t command, long data)
 {
-  long long_filedes = filedes;
-  long long_command = command;
-  long long_data = data;
-  int r = _sys_call3 (SYS_ioctl, long_filedes, long_command, long_data);
+  long long_filedes = cast_int_to_long (filedes);
+  int r = _sys_call3 (SYS_ioctl, long_filedes, command, data);
   return r;
 }

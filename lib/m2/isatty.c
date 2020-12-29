@@ -46,6 +46,6 @@ isatty (int filedes)
 {
   if (__isatty_kernel_termios == 0)
     __isatty_kernel_termios = malloc (sizeof (struct ktermios));
-  int r = ioctl (filedes, TCGETS, __isatty_kernel_termios);
+  int r = ioctl3 (filedes, TCGETS, __isatty_kernel_termios);
   return r == 0;
 }

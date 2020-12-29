@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,18 +18,16 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <linux/syscall.h>
-#include <syscall.h>
-#include <stdarg.h>
-#include <sys/ioctl.h>
+#include <mes/lib.h>
+#include <errno.h>
 
 int
-ioctl (int filedes, unsigned long command, ...)
+ioctl3 (int filedes, unsigned long command, long data)
 {
-  va_list ap;
-  va_start (ap, command);
-  int data = va_arg (ap, int);
-  int r = _sys_call3 (SYS_ioctl, (int) filedes, (long) command, (int) data);
-  va_end (ap);
-  return r;
+  static int stub = 0;
+  if (__mes_debug () && !stub)
+    eputs ("ioctl3 stub\n");
+  stub = 1;
+  errno = 0;
+  return 0;
 }

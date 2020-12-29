@@ -188,7 +188,7 @@ lib/stub/execve.c
 lib/stub/fork.c
 lib/stub/_getcwd.c
 lib/stub/gettimeofday.c
-lib/stub/ioctl.c
+lib/stub/ioctl3.c
 lib/stub/time.c
 lib/stub/unlink.c
 lib/stub/waitpid.c
@@ -208,7 +208,7 @@ lib/linux/fork.c
 lib/linux/fsync.c
 lib/linux/_getcwd.c
 lib/linux/gettimeofday.c
-lib/linux/ioctl.c
+lib/linux/ioctl3.c
 lib/linux/_open3.c
 lib/linux/malloc.c
 lib/linux/_read.c
@@ -413,6 +413,7 @@ lib/linux/getgid.c
 lib/linux/getppid.c
 lib/linux/getrusage.c
 lib/linux/getuid.c
+lib/linux/ioctl.c
 lib/linux/link.c
 lib/linux/lstat.c
 lib/linux/mkdir.c

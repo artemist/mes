@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -28,17 +28,6 @@ ioctl (int filedes, unsigned long command, ...)
   static int stub = 0;
   if (__mes_debug () && !stub)
     eputs ("ioctl stub\n");
-  stub = 1;
-  errno = 0;
-  return 0;
-}
-
-int
-ioctl3 (int filedes, unsigned long command, long data)
-{
-  static int stub = 0;
-  if (__mes_debug () && !stub)
-    eputs ("ioctl3 stub\n");
   stub = 1;
   errno = 0;
   return 0;

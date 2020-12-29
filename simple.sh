@@ -247,7 +247,7 @@ $CC -g -D HAVE_CONFIG_H=1 -I include -I include/$mes_kernel/$mes_cpu\
     lib/linux/fsync.c\
     lib/linux/_getcwd.c\
     lib/linux/gettimeofday.c\
-    lib/linux/ioctl.c\
+    lib/linux/ioctl3.c\
     lib/linux/_open3.c\
     lib/linux/read.c\
     lib/linux/_read.c\

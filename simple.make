@@ -119,7 +119,7 @@ M2_SOURCES =					\
  lib/posix/setenv.c				\
  lib/linux/access.c				\
  lib/m2/chmod.c					\
- lib/m2/ioctl.c  				\
+ lib/linux/ioctl3.c  				\
  lib/m2/isatty.c				\
  lib/linux/fork.c				\
  lib/m2/execve.c				\

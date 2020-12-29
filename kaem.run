@@ -80,7 +80,7 @@ M2-Planet                                       \
     -f lib/posix/setenv.c                       \
     -f lib/linux/access.c                       \
     -f lib/m2/chmod.c                           \
-    -f lib/m2/ioctl.c                           \
+    -f lib/linux/ioctl3.c                       \
     -f lib/m2/isatty.c                          \
     -f lib/linux/fork.c                         \
     -f lib/m2/execve.c                          \
