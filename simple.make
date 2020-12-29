@@ -129,7 +129,7 @@ M2_SOURCES =					\
  lib/m2/clock_gettime.c				\
  lib/m2/time.c					\
  lib/linux/_getcwd.c				\
- lib/m2/getcwd.c				\
+ lib/posix/getcwd.c				\
  lib/linux/dup.c				\
  lib/linux/dup2.c				\
  lib/string/strcmp.c				\
