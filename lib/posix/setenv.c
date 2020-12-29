@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -30,12 +30,13 @@ setenv (char const *s, char const *v, int overwrite_p)
 {
   char **p = environ;
   int length = strlen (s);
+  char* q;
 
   while (p[0] != 0)
     {
       if (strncmp (s, p[0], length) == 0)
         {
-          char *q = p[0] + length;
+          q = p[0] + length;
           if (q[0] == '=')
             break;
         }

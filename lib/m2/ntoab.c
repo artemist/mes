@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -38,6 +38,7 @@ ntoab (long x, int base, int signed_p)
 
   int sign_p = 0;
   unsigned u;
+  unsigned i;
   if (signed_p != 0 && x < 0)
     {
       sign_p = 1;
@@ -48,7 +49,6 @@ ntoab (long x, int base, int signed_p)
 
   do
     {
-      unsigned i;
       i = u % base;
       u = u / base;
       if (i > 9)

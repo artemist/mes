@@ -1,6 +1,6 @@
 /*
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -30,6 +30,7 @@ getenv (char const *s)
 {
   /* eputs ("\ngetenv s="); eputs (s); eputs ("\n"); */
   char **p = environ;
+  char *q;
   int length = strlen (s);
 
   while (p[0] != 0)
@@ -38,7 +39,7 @@ getenv (char const *s)
       if (strncmp (s, p[0], length) == 0)
         {
           /* eputs ("found!\n"); */
-          char *q = p[0] + length;
+          q = p[0] + length;
           if (q[0] == '=')
             return q + 1;
         }
