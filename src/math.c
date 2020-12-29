@@ -156,18 +156,32 @@ divide (struct scm *x)                  /*:((name . "/") (arity . n)) */
       n = v;
       x = cdr (x);
     }
+  int sign_p = 0;
+  size_t u = n;
+  if (n < 0)
+    {
+      sign_p = 1;
+      u = -n;
+    }
+  size_t w;
   while (x != cell_nil)
     {
       i = car (x);
       assert_number ("divide", i);
       v = i->value;
+      sign_p = sign_p && v > 0 || !sign_p && v < 0;
+      w = v;
       if (v == 0)
         error (cstring_to_symbol ("divide-by-zero"), x);
-      if (n == 0)
+      if (u == 0)
         break;
-      n = n / v;
+      if (w != 1)
+        u = u / w;
       x = cdr (x);
     }
+  n = u;
+  if (sign_p)
+    n = -n;
   return make_number (n);
 }
 
