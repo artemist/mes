@@ -90,37 +90,41 @@ get_machine.")
     (license gpl3+)))
 
 (define-public m2-planet
-  (let ((commit "1fc2aeab483208bd2ba117b21df3894c182470ec")
-        (revision "0"))
-    (package
-      (name "m2-planet")
-      (version (string-append "1.4.0-" revision "." (string-take commit 7)))
-      (source (origin
-                (method git-fetch)
-                (uri (git-reference
-                      (url "https://github.com/oriansj/m2-planet.git")
-                      (commit commit)))
-                (file-name (git-file-name name version))
-                (sha256
-                 (base32
-                  "1fj3xiqcibdfi78b43nn6w8hs3vkz32yb06n8r5mna8pnjdmn00l"))))
-      (native-inputs
-       `(("gcc-toolchain" ,gcc-toolchain-7)
-         ("mescc-tools" ,mescc-tools)))
-      (build-system gnu-build-system)
-      (arguments
-       `(#:make-flags (list (string-append "PREFIX=" (assoc-ref %outputs "out")))
-         #:tests? #f
-         #:phases (modify-phases %standard-phases
-                    (delete 'bootstrap)
-                    (delete 'configure))))
-      (synopsis "The PLAtform NEutral Transpiler")
-      (description
-       "M2-Planet, The PLAtform NEutral Transpiler, when combined with
+  (package
+    (name "m2-planet")
+    (version "1.7.0")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/oriansj/m2-planet.git")
+             (commit (string-append "Release_" version))))
+       (file-name (string-append name "-" version ".tar.gz"))
+       (sha256
+        (base32
+         "052j63xv44zqy7jndjw36jpyciz00p11d78w2rhy539qa5vdzad7"))))
+    (native-inputs
+     `(("mescc-tools" ,mescc-tools)))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:make-flags (list (string-append "PREFIX=" (assoc-ref %outputs "out"))
+                          (string-append "CC=" ,(cc-for-target)))
+       #:tests? #f
+       #:phases (modify-phases %standard-phases
+                  (delete 'bootstrap)
+                  (delete 'configure)
+                  (add-after 'unpack 'patch-prefix
+                    (lambda _
+                      (substitute* "sha256.sh"
+                        (("\\$\\(which sha256sum\\)") (which "sha256sum")))
+                      #t)))))
+    (synopsis "The PLAtform NEutral Transpiler")
+    (description
+     "M2-Planet, The PLAtform NEutral Transpiler, when combined with
 mescc-tools compiles a subset of the C language into working binaries
 with introspective steps inbetween.")
-      (home-page "https://savannah.nongnu.org/projects/mescc-tools")
-      (license gpl3+))))
+    (home-page "https://savannah.nongnu.org/projects/mescc-tools")
+    (license gpl3+)))
 
 (define-public nyacc-0.99
   (package
