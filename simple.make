@@ -1,6 +1,6 @@
 # GNU Mes --- Maxwell Equations of Software
 # Copyright © 2019 Jeremiah Orians <jeremiah@pdp10.guru>
-# Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -102,7 +102,7 @@ M2_SOURCES =					\
  lib/string/strncmp.c				\
  lib/posix/getenv.c				\
  lib/mes/fdputs.c				\
- lib/m2/ntoab.c					\
+ lib/mes/ntoab.c				\
  lib/ctype/isdigit.c				\
  lib/ctype/isxdigit.c				\
  lib/ctype/isspace.c				\
@@ -139,7 +139,7 @@ M2_SOURCES =					\
 
 M2_TODO =					\
  lib/m2/file_print.c				\
- lib/m2/ntoab.c					\
+ lib/mes/ntoab.c				\
  lib/mes/fdgetc.c				\
  lib/mes/fdungetc.c
 

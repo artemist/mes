@@ -23,45 +23,45 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if __M2_PLANET__ || !(__MESC__ && __arm__)
+size_t
+__mesabi_uldiv (size_t a, size_t b, size_t *remainder)
+{
+  remainder[0] = a % b;
+  return a / b;
+}
+#endif
+
 char *__itoa_buf;
 
 char *
 ntoab (long x, unsigned base, int signed_p)
 {
-#if 0
-  if (! __itoa_buf)
+  if (__itoa_buf == 0)
     __itoa_buf = malloc (20);
-  p = __itoa_buf + 11;
-#else
-  static char buf[20];
-  char *p = buf + 19;
-#endif
+  char *p = __itoa_buf + 11;
 
   p[0] = 0;
   p = p - 1;
   assert_msg (base > 0, "base > 0");
 
   int sign_p = 0;
-  unsigned long u;
+  size_t i;
+  size_t u;
+  size_t b = base;
   if (signed_p != 0 && x < 0)
     {
       sign_p = 1;
       /* Avoid LONG_MIN */
-      u = (unsigned long) (-(x + 1));
-      ++u;
+      u = (-(x + 1));
+      u = u + 1;
     }
   else
     u = x;
 
   do
     {
-      unsigned long i;
-#if __MESC__ && __arm__
-      u = __mesabi_uldiv (u, (unsigned long) base, &i);
-#else
-      i = u % base;
-      u = u / base;
-#endif
+      u = __mesabi_uldiv (u, b, &i);
       if (i > 9)
         p[0] = 'a' + i - 10;
       else

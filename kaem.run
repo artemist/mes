@@ -1,5 +1,5 @@
 #! /bin/sh
-# Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -63,7 +63,7 @@ M2-Planet                                       \
     -f lib/string/strncmp.c                     \
     -f lib/posix/getenv.c                       \
     -f lib/mes/fdputs.c                         \
-    -f lib/m2/ntoab.c                           \
+    -f lib/mes/ntoab.c                          \
     -f lib/ctype/isdigit.c                      \
     -f lib/ctype/isxdigit.c                     \
     -f lib/ctype/isspace.c                      \
