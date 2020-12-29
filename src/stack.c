@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  * Copyright © 2021 W. J. van der Laan <laanwj@protonmail.com>
  *
  * This file is part of GNU Mes.
@@ -81,9 +81,10 @@ make_stack (struct scm *stack)          /*:((arity . n)) */
   long size = (STACK_SIZE - g_stack) / FRAME_SIZE;
   struct scm *frames = make_vector_ (size, cell_unspecified);
   long i;
+  struct scm* frame;
   for (i = 0; i < size; i = i + 1)
     {
-      struct scm *frame = make_frame (stack, i);
+      frame = make_frame (stack, i);
       vector_set_x_ (frames, i, frame);
     }
   struct scm *values = cell_nil;

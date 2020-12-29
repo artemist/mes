@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -361,11 +361,16 @@ gc_cellcpy (struct scm *dest, struct scm *src, size_t n)
   void *p = src;
   void *q = dest;
   long dist = p - q;
+  long t;
+  long a;
+  long d;
+  int i;
+  int c;
   while (n != 0)
     {
-      long t = src->type;
-      long a = src->car_value;
-      long d = src->cdr_value;
+      t = src->type;
+      a = src->car_value;
+      d = src->cdr_value;
       dest->type = t;
       if (t == TBROKEN_HEART)
         assert_msg (0, "gc_cellcpy: broken heart");
@@ -412,9 +417,9 @@ gc_cellcpy (struct scm *dest, struct scm *src, size_t n)
               eputs (cell_bytes (dest));
               eputs ("\n");
             }
-          int i = bytes_cells (a);
+          i = bytes_cells (a);
           n = n - i;
-          int c = i * M2_CELL_SIZE;
+          c = i * M2_CELL_SIZE;
           dest = dest + c;
           src = src + c;
         }
@@ -519,9 +524,10 @@ gc_loop (struct scm *scan)
 {
   struct scm *car;
   struct scm *cdr;
+  long t;
   while (scan < g_free)
     {
-      long t = scan->type;
+      t = scan->type;
       if (t == TBROKEN_HEART)
         assert_msg (0, "gc_loop: broken heart");
       /* *INDENT-OFF* */
@@ -739,6 +745,12 @@ gc_dump_arena (struct scm *cells, long size)
 {
   struct scm *end = g_cells + (size * M2_CELL_SIZE);
   struct scm *dist = cells;
+  int i;
+  long t;
+  long a;
+  long d;
+  int c;
+  char* p;
   if (g_dump_filedes == 0)
     g_dump_filedes = mes_open ("dump.mo", O_CREAT|O_WRONLY, 0644);
   dumps ("stack="); dumps (ltoa (g_stack)); dumpc ('\n');
@@ -752,12 +764,11 @@ gc_dump_arena (struct scm *cells, long size)
     }
   while (size > 0)
     {
-      int i;
       for (i=0; i < 16; i = i + 1)
         {
-          long t = cells->type;
-          long a = cells->car_value;
-          long d = cells->cdr_value;
+          t = cells->type;
+          a = cells->car_value;
+          d = cells->cdr_value;
           if (size == 0)
             dumps ("0 0 0");
           else
@@ -800,8 +811,8 @@ gc_dump_arena (struct scm *cells, long size)
                 }
               if (t == TBYTES)
                 {
-                  int c = bytes_cells (a);
-                  char *p = cell_bytes (cells);
+                  c = bytes_cells (a);
+                  p = cell_bytes (cells);
                   size = size - c;
                   dumpc ('"');
                   while (a > 0)

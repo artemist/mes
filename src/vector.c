@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -127,9 +127,10 @@ vector_to_list (struct scm *v)
 {
   struct scm *x = cell_nil;
   long i;
+  struct scm *e;
   for (i = v->length; i; i = i - 1)
     {
-      struct scm *e = cell_ref (v->vector, i - 1);
+      e = cell_ref (v->vector, i - 1);
       if (e->type == TREF)
         e = e->ref;
       x = cons (e, x);

@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -103,6 +103,10 @@ memq (struct scm *x, struct scm *a)
 struct scm *
 equal2_p (struct scm *a, struct scm *b)
 {
+  long i;
+  struct scm *ai;
+  struct scm *bi;
+
 equal2:
   if (a == b)
     return cell_t;
@@ -122,11 +126,10 @@ equal2:
     {
       if (a->length != b->length)
         return cell_f;
-      long i;
       for (i = 0; i < a->length; i = i + 1)
         {
-          struct scm *ai = cell_ref (a->vector, i);
-          struct scm *bi = cell_ref (b->vector, i);
+          ai = cell_ref (a->vector, i);
+          bi = cell_ref (b->vector, i);
           if (ai->type == TREF)
             ai = ai->ref;
           if (bi->type == TREF)

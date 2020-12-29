@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  * Copyright © 2018 Jeremiah Orians <jeremiah@pdp10.guru>
  *
  * This file is part of GNU Mes.
@@ -439,6 +439,7 @@ reader_read_string ()
 {
   size_t i = 0;
   int c;
+  struct scm *n;
   do
     {
       if (i > MAX_STRING)
@@ -475,7 +476,7 @@ reader_read_string ()
             c = 27;
           else if (c == 'x')
             {
-              struct scm *n = reader_read_hex ();
+              n = reader_read_hex ();
               c = n->value;
             }
         }

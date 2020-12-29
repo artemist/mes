@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -45,11 +45,12 @@ list_to_cstring (struct scm *list, size_t *size)
 {
   size_t i = 0;
   char *p = g_buf;
+  struct scm *x;
   while (list != cell_nil)
     {
       if (i > MAX_STRING)
         assert_max_string (i, "list_to_string", g_buf);
-      struct scm *x = car (list);
+      x = car (list);
       g_buf[i] = x->value;
       i = i + 1;
       list = cdr (list);
@@ -131,10 +132,11 @@ struct scm *
 bytes_to_list (char const *s, size_t i)
 {
   struct scm *p = cell_nil;
+  int c;
   while (i != 0)
     {
       i = i - 1;
-      int c = (0x100 + s[i]) % 0x100;
+      c = (0x100 + s[i]) % 0x100;
       p = cons (make_char (c), p);
     }
   return p;
@@ -198,9 +200,10 @@ string_append (struct scm *x)           /*:((arity . n)) */
   char *p = g_buf;
   g_buf[0] = 0;
   size_t size = 0;
+  struct scm *string;
   while (x != cell_nil)
     {
-      struct scm *string = x->car;
+      string = x->car;
       assert_msg (string->type == TSTRING, "string->type == TSTRING");
       memcpy (p, cell_bytes (string->string), string->length + 1);
       p = p + string->length;

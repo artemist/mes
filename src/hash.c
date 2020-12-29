@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -156,9 +156,10 @@ hash_table_printer (struct scm *table)
   struct scm *buckets = struct_ref_ (table, 4);
   fdputs ("buckets: ", __stdout);
   int i;
+  struct scm *e;
   for (i = 0; i < buckets->length; i = i + 1)
     {
-      struct scm *e = vector_ref_ (buckets, i);
+      e = vector_ref_ (buckets, i);
       if (e != cell_unspecified)
         {
           fdputc ('[', __stdout);

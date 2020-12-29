@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -230,19 +230,22 @@ formal_p (struct scm *x, struct scm *formals)   /*:((internal)) */
 struct scm *
 expand_variable_ (struct scm *x, struct scm *formals, int top_p)        /*:((internal)) */
 {
+  struct scm *a;
+  struct scm *f;
+  struct scm *v;
   while (x->type == TPAIR)
     {
-      struct scm *a = x->car;
+      a = x->car;
       if (a->type == TPAIR)
         {
           if (a->car == cell_symbol_lambda)
             {
-              struct scm *f = a->cdr->car;
+              f = a->cdr->car;
               formals = add_formals (formals, f);
             }
           else if (a->car == cell_symbol_define || a->car == cell_symbol_define_macro)
             {
-              struct scm *f = a->cdr->car;
+              f = a->cdr->car;
               formals = add_formals (formals, f);
             }
           if (a->car != cell_symbol_quote)
@@ -252,13 +255,13 @@ expand_variable_ (struct scm *x, struct scm *formals, int top_p)        /*:((int
         {
           if (a == cell_symbol_lambda)
             {
-              struct scm *f = x->cdr->car;
+              f = x->cdr->car;
               formals = add_formals (formals, f);
               x = x->cdr;
             }
           else if (a == cell_symbol_define || a == cell_symbol_define_macro)
             {
-              struct scm *f = x->cdr->car;
+              f = x->cdr->car;
               if (top_p != 0 && f->type == TPAIR)
                 f = f->cdr;
               formals = add_formals (formals, f);
@@ -272,7 +275,7 @@ expand_variable_ (struct scm *x, struct scm *formals, int top_p)        /*:((int
                    && a != cell_symbol_primitive_load
                    && formal_p (x->car, formals) == 0)
             {
-              struct scm *v = module_variable (R0, a);
+              v = module_variable (R0, a);
               if (v != cell_f)
                 x->car = make_variable_ (v);
             }
@@ -293,17 +296,18 @@ struct scm *
 apply_builtin (struct scm *fn, struct scm *x)   /*:((internal)) */
 {
   struct scm *a = builtin_arity (fn);
+  struct scm *d;
   int arity = a->value;
   if ((arity > 0 || arity == -1) && x != cell_nil)
     {
-      struct scm *a = x->car;
+      a = x->car;
       if (a->type == TVALUES)
         x = cons (a->cdr->car, x->cdr);
     }
   if ((arity > 1 || arity == -1) && x != cell_nil)
     {
-      struct scm *a = x->car;
-      struct scm *d = x->cdr;
+      a = x->car;
+      d = x->cdr;
       if (d->type == TPAIR)
         if (d->car->type == TVALUES)
           x = cons (a, cons (d->car->cdr->car, d));

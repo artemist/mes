@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -205,9 +205,10 @@ current_input_port ()
   if (__stdin >= 0)
     return make_number (__stdin);
   struct scm *x = g_ports;
+  struct scm *a;
   while (x != 0)
     {
-      struct scm *a = x->car;
+      a = x->car;
       if (a->port == __stdin)
         return a;
       x = x->cdr;
@@ -328,10 +329,11 @@ execl_ (struct scm *file_name, struct scm *args)        /*:((name . "execl")) */
            cons (file_name, cons (make_string0 ("too many arguments"), cons (file_name, args))));
   c_argv[i] = cell_bytes (file_name->string);
   i = i + 1;
+  struct scm *arg;
   while (args != cell_nil)
     {
       assert_msg (args->car->type == TSTRING, "args->car->type == TSTRING");
-      struct scm *arg = args->car;
+      arg = args->car;
       c_argv[i] = cell_bytes (arg->string);
       i = i + 1;
       args = args->cdr;

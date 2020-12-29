@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -33,9 +33,10 @@ make_struct (struct scm *type, struct scm *fields, struct scm *printer)
   copy_cell (v, vector_entry (type));
   copy_cell (cell_ref (v, 1), vector_entry (printer));
   long i;
+  struct scm *e;
   for (i = 2; i < size; i = i + 1)
     {
-      struct scm *e = cell_unspecified;
+      e = cell_unspecified;
       if (fields != cell_nil)
         {
           e = fields->car;
