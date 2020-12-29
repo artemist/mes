@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -18,11 +18,15 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <mes/lib.h>
 #include <linux/syscall.h>
 #include <syscall.h>
 
 int
-execve (char const *file_name, char *const argv[], char *const env[])
+execve (char const *file_name, char **argv, char **env)
 {
-  return _sys_call3 (SYS_execve, (long) file_name, (long) argv, (long) env);
+  long long_file_name = cast_voidp_to_long (file_name);
+  long long_argv = cast_voidp_to_long (argv);
+  long long_env = cast_voidp_to_long (env);
+  return _sys_call3 (SYS_execve, long_file_name, long_argv, long_env);
 }
