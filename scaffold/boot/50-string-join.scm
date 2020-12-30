@@ -45,6 +45,7 @@
   (if (null? (cdr lst)) (car lst)
       (string-append (car lst) infix (string-join (cdr lst) infix))))
 
+(core:display "string-join\n")
 (if (string=? (string-join '("foo" "bar") "/") "foo/bar")
     (exit 0))
 (exit 1)
