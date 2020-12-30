@@ -56,9 +56,6 @@ module/mes/getopt-long.scm
 Optargs from Guile
 mes/module/mes/optargs.scm
 
-PEG from Guile
-mes/module/mes/peg/
-
 Pmatch from Guile
 mes/module/system/base/pmatch.scm
 
