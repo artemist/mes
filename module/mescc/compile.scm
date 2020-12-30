@@ -1,5 +1,5 @@
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
 ;;; This file is part of GNU Mes.
 ;;;
@@ -56,7 +56,7 @@
 
 (define* (c99-ast->info info o #:key verbose?)
   (when verbose?
-    (stderr "compiling: input\n")
+    (format (current-error-port) "compiling: input\n")
     (set! mescc:trace mescc:trace-verbose))
   (let ((info (ast->info o info)))
     (clean-info info)))
@@ -107,7 +107,7 @@
 (define (ast->type o info)
   (define (type-helper o info)
     (if (getenv "MESC_DEBUG")
-        (stderr "type-helper: ~s\n" o))
+        (format (current-error-port) "type-helper: ~s\n" o))
     (pmatch o
       (,t (guard (type? t)) t)
       (,p (guard (pointer? p)) p)
@@ -267,7 +267,7 @@
 (define (ast-type->size info o)
   (let ((type (->type (ast->type o info))))
     (cond ((type? type) (type:size type))
-          (else (stderr "error: ast-type->size: ~s => ~s\n" o type)
+          (else (format (current-error-port) "error: ast-type->size: ~s => ~s\n" o type)
                 4))))
 
 (define (field:name o)
@@ -389,7 +389,7 @@
           ((function? var) (function:type var))
           ((assoc-ref (.constants info) o) (assoc-ref (.types info) "default"))
           ((pair? var) (car var))
-          (else (stderr "error: ident->type ~s => ~s\n" o var)
+          (else (format (current-error-port) "error: ident->type ~s => ~s\n" o var)
                 #f))))
 
 (define (local:pointer o)
@@ -504,7 +504,7 @@
                  ((c-array? type) (c-array:type type))
                  ((type? type) type)
                  (else
-                  (stderr "unexpected type: ~s\n" type)
+                  (format (current-error-port) "unexpected type: ~s\n" type)
                   type)))
          (size (->size type* info))
          (reg-size (->size "*" info))
@@ -515,7 +515,7 @@
       ((2) (wrap-as (as info 'word-r->local+n id n)))
       ((4) (wrap-as (as info 'long-r->local+n id n)))
       (else
-       (stderr "unexpected size:~s\n" size)
+       (format (current-error-port) "unexpected size:~s\n" size)
        (wrap-as (as info 'r->local+n id n))))))
 
 (define (r->ident info)
@@ -1025,7 +1025,7 @@
                                 (when (and (not (assoc name (.functions info)))
                                            (not (assoc name globals))
                                            (not (equal? name (.function info))))
-                                  (stderr "warning: undeclared function: ~a\n" name))
+                                  (format (current-error-port) "warning: undeclared function: ~a\n" name))
                                 (append-text info (wrap-as (as info 'call-label name n))))
                               (let* ((info (expr->register `(p-expr (ident ,name)) info))
                                      (info (append-text info (wrap-as (as info 'call-r n)))))
@@ -1373,7 +1373,7 @@
                                                                                                     (as info 'r0/r1 signed?)))))
                                                            (info (free-register info)))
                                                       info))
-                                  (else (error (format #f "invalid operands to binary ~s (have ~s* and ~s*)" op type (ast->basic-type b info)))))))))
+                                  (else (error (format #f "invalid operands to binary ~s (have ~s* and ~s*) " op type (ast->basic-type b info)))))))))
            (when (and (equal? op "=")
                       (not (= size size-b))
                       (not (and (or (= size 1) (= size 2))
@@ -1384,8 +1384,8 @@
                                 (= size-b reg-size)))
                       (not (and (= size reg-size)
                                 (or (= size-b 1) (= size-b 2) (= size-b 4)))))
-             (stderr "ERROR assign: ~a" (with-output-to-string (lambda () (pretty-print-c99 o))))
-             (stderr "   size[~a]:~a != size[~a]:~a\n"  rank size rank-b size-b))
+             (format (current-error-port) "ERROR assign: ~a" (with-output-to-string (lambda () (pretty-print-c99 o))))
+             (format (current-error-port) "   size[~a]:~a != size[~a]:~a\n"  rank size rank-b size-b))
            (pmatch a
              ((p-expr (ident ,name))
               (if (or (<= size r-size)
@@ -2037,7 +2037,7 @@
     (((decl-spec-list (stor-spec (,store)) (type-spec ,type)))
      (type->info type #f info))
     (((@ . _))
-     (stderr "decl->info: skip: ~s\n" o)
+     (format (current-error-port) "decl->info: skip: ~s\n" o)
      info)
     (_ (error "decl->info: not supported:" o))))
 
@@ -2251,8 +2251,8 @@
                                   (map (const '(fixed "0")) (iota missing)))))
               (map (cut array-init-element->data (c-array:type type) <> info) inits)))
          (else
-          (stderr "array-init-element->data: oops:~s\n" o)
-          (stderr "type:~s\n" type)
+          (format (current-error-port) "array-init-element->data: oops:~s\n" o)
+          (format (current-error-port) "type:~s\n" type)
           (error "array-init-element->data: not supported: " o))))
     (_ (init->data type o info))
     (_ (error "array-init-element->data: not supported: " o))))
@@ -2655,7 +2655,7 @@
            (count (and=> local (compose local:id cdr)))
            (reg-size (->size "*" info))
            (stack (and count (* count reg-size))))
-      (if (and stack (getenv "MESC_DEBUG")) (stderr "        stack: ~a\n" stack))
+      (if (and stack (getenv "MESC_DEBUG")) (format (current-error-port) "        stack: ~a\n" stack))
       (clone info
              #:function #f
              #:globals (append (.statics info) (.globals info))

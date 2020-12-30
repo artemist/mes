@@ -22,6 +22,7 @@
   #:use-module (srfi srfi-26)
   #:use-module (ice-9 pretty-print)
   #:use-module (ice-9 getopt-long)
+  #:use-module (mes mes-0)
   #:use-module (mes misc)
 
   #:use-module (mescc info)
@@ -87,7 +88,7 @@
                     ;; function alignment not supported by MesCC-Tools 0.5.2
                     (filter (negate (cut eq? <> 'functions)) align))))
     (when verbose?
-      (stderr "dumping: ~a\n" M1-file-name))
+      (format (current-error-port) "dumping: ~a\n" M1-file-name))
     (with-output-to-file M1-file-name
       (cut infos->M1 M1-file-name infos #:align align #:verbose? verbose?))
     M1-file-name))
@@ -181,7 +182,7 @@
                     ;; function alignment not supported by MesCC-Tools 0.5.2
                     (filter (negate (cut eq? <> 'functions)) align))))
     (when verbose?
-      (stderr "dumping: ~a\n" M1-file-name))
+      (format (current-error-port) "dumping: ~a\n" M1-file-name))
     (with-output-to-file M1-file-name
       (cut infos->M1 M1-file-name infos #:align align))
     (or (M1->hex2 options (list M1-file-name))
@@ -205,7 +206,7 @@
                     ,@(append-map (cut list "-f" <>) M1-files)
                     "-o" ,hex2-file-name)))
     (when (and verbose? (> verbose? 1))
-      (stderr "~a\n" (string-join command)))
+      (format (current-error-port) "~a\n" (string-join command)))
     (and (zero? (apply assert-system* command))
          hex2-file-name)))
 
@@ -237,7 +238,7 @@
                     "-f" ,elf-footer
                     "-o" ,elf-file-name)))
     (when (and verbose? (> verbose? 1))
-      (stderr "~a\n" (string-join command)))
+      (format (current-error-port) "~a\n" (string-join command)))
     (and (zero? (apply assert-system* command))
          elf-file-name)))
 
@@ -300,9 +301,9 @@
          (verbose? (count-opt options 'verbose)))
     (let ((file (search-path path arch-file-name)))
       (when (and verbose? (> verbose? 1))
-        (stderr "arch-find=~s\n" arch-file-name)
-        (stderr "     path=~s\n" path)
-        (stderr "  => ~s\n" file))
+        (format (current-error-port) "arch-find=~s\n" arch-file-name)
+        (format (current-error-port) "     path=~s\n" path)
+        (format (current-error-port) "  => ~s\n" file))
       (or file
           (error (format #f "mescc: file not found: ~s" arch-file-name))))))
 
@@ -314,7 +315,7 @@
 (define (assert-system* . args)
   (let ((status (apply system* args)))
     (when (not (zero? status))
-      (stderr "mescc: failed: ~a\n" (string-join args))
+      (format (current-error-port) "mescc: failed: ~a\n" (string-join args))
       (exit (status:exit-val status)))
     status))
 

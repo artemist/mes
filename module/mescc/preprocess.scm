@@ -1,5 +1,5 @@
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016,2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2016,2017,2018,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
 ;;; This file is part of GNU Mes.
 ;;;
@@ -69,16 +69,6 @@
  (mes
   (insert-progress-monitors c99-act-v c99-len-v)))
 
-(define (logf port string . rest)
-  (apply format (cons* port string rest))
-  (force-output port)
-  #t)
-
-(define (stderr string . rest)
-  (apply logf (cons* (current-error-port) string rest)))
-
-(define mes? (pair? (current-module)))
-
 (define* (c99-input->full-ast #:key (prefix "") (defines '()) (includes '()) (arch "") verbose?)
   (let* ((sys-include (if (equal? prefix "") "include"
                           (string-append prefix "/include")))
@@ -102,8 +92,8 @@
                     ,(if mes-or-reproducible? "__MESC_MES__=1" "__MESC_MES__=0")
                     ,@defines)))
     (when (and verbose? (> verbose? 1))
-      (stderr "includes: ~s\n" includes)
-      (stderr "defines: ~s\n" defines))
+      (format (current-error-port) "includes: ~s\n" includes)
+      (format (current-error-port) "defines: ~s\n" defines))
     (parse-c99
      #:inc-dirs includes
      #:cpp-defs defines
@@ -111,7 +101,7 @@
 
 (define* (c99-input->ast #:key (prefix "") (defines '()) (includes '()) (arch "") verbose?)
   (when verbose?
-    (stderr "parsing: input\n"))
+    (format (current-error-port) "parsing: input\n"))
   ((compose ast-strip-attributes
             ast-strip-const
             ast-strip-comment)
