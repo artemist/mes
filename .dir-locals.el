@@ -1,5 +1,5 @@
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
 ;;; This file is part of GNU Mes.
 ;;;
@@ -35,6 +35,14 @@
   .
   ((geiser-active-implementations . (guile))
 
+   ;; Guile syntax
+   (eval . (put 'pass-if             'scheme-indent-function 1))
+   (eval . (put 'pass-if-not         'scheme-indent-function 1))
+   (eval . (put 'pass-if-eq          'scheme-indent-function 2))
+   (eval . (put 'pass-if-equal       'scheme-indent-function 2))
+   (eval . (put 'expect-fail         'scheme-indent-function 2))
+   (eval . (put 'pass-if-timeout     'scheme-indent-function 2))
+
    ;; Guix package
    (eval . (put 'package 'scheme-indent-function 0))
    (eval . (put 'origin 'scheme-indent-function 0))
@@ -50,6 +58,7 @@
 
    (eval
     .
+
     (progn
       (defun prefix-dir-locals-dir (elt)
         (concat (locate-dominating-file buffer-file-name ".dir-locals.el") elt))
