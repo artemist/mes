@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -167,6 +167,7 @@ mes_builtins (struct scm *a)            /*:((internal)) */
   a = init_builtin (builtin_type, "add-formals", 2, &add_formals, a);
   a = init_builtin (builtin_type, "eval-apply", 0, &eval_apply, a);
   /* src/gc.c */
+  a = init_builtin (builtin_type, "gc-stats", 0, &gc_stats, a);
   a = init_builtin (builtin_type, "cons", 2, &cons, a);
   a = init_builtin (builtin_type, "gc-check", 0, &gc_check, a);
   a = init_builtin (builtin_type, "gc", 0, &gc, a);

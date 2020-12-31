@@ -25,6 +25,8 @@
 #include <fcntl.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/time.h>
+#include <time.h>
 
 int g_dump_filedes;
 
@@ -120,12 +122,31 @@ gc_free ()
 void
 gc_stats_ (char const* where)
 {
-  long i = g_free - g_cells;
+  size_t i = g_free - g_cells;
   i = i / M2_CELL_SIZE;
-  eputs (where);
-  eputs (": [");
+  if (where)
+    {
+      eputs (where);
+      eputs (": ");
+    }
+  eputs ("[");
   eputs (ltoa (i));
   eputs ("]\n");
+}
+
+struct scm *
+gc_stats ()
+{
+  gc_stats_ (0);
+  size_t arena_used = g_free - g_cells;
+  arena_used = arena_used / M2_CELL_SIZE;
+  size_t arena_free = ARENA_SIZE - arena_used;
+  struct scm *r = cell_nil;
+  r =  acons (cstring_to_symbol ("gc-count"), make_number (gc_count), r);
+  r =  acons (cstring_to_symbol ("gc-time"), make_number (gc_time), r);
+  r =  acons (cstring_to_symbol ("arena-free"), make_number (arena_free), r);
+  r =  acons (cstring_to_symbol ("arena-size"), make_number (ARENA_SIZE), r);
+  return r;
 }
 
 struct scm *
@@ -642,9 +663,16 @@ gc ()
       write_error_ (R0);
       eputs ("\n");
     }
+  clock_gettime (CLOCK_PROCESS_CPUTIME_ID, gc_start_time);
   gc_push_frame ();
   gc_ ();
   gc_pop_frame ();
+  clock_gettime (CLOCK_PROCESS_CPUTIME_ID, gc_end_time);
+  long time = seconds_and_nanoseconds_to_long
+    (gc_end_time->tv_sec - gc_start_time->tv_sec,
+     gc_end_time->tv_nsec - gc_start_time->tv_nsec);
+  gc_time = gc_time + time;
+  gc_count = gc_count + 1;
   if (g_debug > 5)
     {
       eputs ("symbols: ");

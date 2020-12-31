@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -57,6 +57,7 @@ struct scm *set_env_x (struct scm *x, struct scm *e, struct scm *a);
 struct scm *add_formals (struct scm *formals, struct scm *x);
 struct scm *eval_apply ();
 /* src/gc.c */
+struct scm *gc_stats ();
 struct scm *cons (struct scm *x, struct scm *y);
 struct scm *gc_check ();
 struct scm *gc ();

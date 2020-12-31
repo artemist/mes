@@ -142,4 +142,9 @@ exec ${MES-bin/mes} --no-auto-compile -L ${0%/*} -L module -C module -e '(tests 
     (getenv "bar")
     (getenv "foo")))
 
+(display (gc-stats))
+(newline)
+(gc)
+(display (gc-stats))
+(newline)
 (result 'report)
