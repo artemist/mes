@@ -143,8 +143,8 @@
       ((type-name ,type) (ast->type type info))
       ((type-spec ,type) (ast->type type info))
 
-      ((sizeof-expr ,expr) (get-type "default" info))
-      ((sizeof-type ,type) (get-type "default" info))
+      ((sizeof-expr ,expr) (get-type "unsigned" info))
+      ((sizeof-type ,type) (get-type "unsigned" info))
 
       ((string ,string) (make-c-array (get-type "char" info) (1+ (string-length string))))
 
