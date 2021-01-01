@@ -49,6 +49,23 @@ Configure to compile with Tiny CC
      - bytes read
   6) globals
 
+* TESTING
+** make check recheck=true TESTS="tests/base lib/tests/scaffold/t.c"
+** mescc
+
+*** To skip MES tests, in "./check.sh", comment-out check-boot.sh, check-mes.sh.
+
+*** Running individual tests
+#+BEGIN_SRC bash
+cd gcc-lib
+V=2 CC=i686-unknown-linux-gnu-gcc ../pre-inst-env test-c.sh ../lib/tests/scaffold/t.c
+#+END_SRC
+
+#+BEGIN_SRC bash
+cd mescc-lib
+V=2 CC=mescc ../pre-inst-env test-c.sh ../lib/tests/scaffold/t.c
+#+END_SRC
+
 * Bugs
 ** mes: performance, Mes is now 2-10x slower than Guile.
 ** mes/mescc lack support for fork/exec on the Hurd.
@@ -184,7 +201,7 @@ https://notabug.org/rain1/hex86/src/master/tests/hex0b3.hex86
 ** linux syscalls: https://fedora.juszkiewicz.com.pl/syscalls.html
 * legalese
 
-Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+Copyright © 2016,2017,2018,2019,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright
