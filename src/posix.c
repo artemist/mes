@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -411,7 +411,13 @@ gettimeofday_ ()                /*:((name . "gettimeofday")) */
 long
 seconds_and_nanoseconds_to_long (long s, long ns)
 {
-  return s * TIME_UNITS_PER_SECOND + ns / (1000000000 / TIME_UNITS_PER_SECOND);
+  size_t uns = ns;
+  if (ns < 0)
+    {
+      uns = - ns;
+      return s * TIME_UNITS_PER_SECOND - uns / (1000000000 / TIME_UNITS_PER_SECOND);
+    }
+  return s * TIME_UNITS_PER_SECOND + uns / (1000000000 / TIME_UNITS_PER_SECOND);
 }
 
 struct scm *
