@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -26,13 +26,17 @@
 
 // CONSTANT PATH_MAX 1024
 
+char *__getcwd_buf;
+
 char *
 getcwd (char *buffer, int size)
 {
-  if (__getcwd_buf == 0)
-    __getcwd_buf = malloc (PATH_MAX);
-  char *buf = __getcwd_buf;
-  if (buffer != 0)
-    return _getcwd (buffer, size);
-  return _getcwd (buf, PATH_MAX);
+  if (buffer == 0)
+    buffer = __getcwd_buf;
+  if (buffer == 0)
+    {
+      __getcwd_buf = malloc (PATH_MAX);
+      buffer = __getcwd_buf;
+    }
+  return _getcwd (buffer, size);
 }

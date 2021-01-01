@@ -435,8 +435,7 @@ get_internal_run_time ()
 struct scm *
 getcwd_ ()                      /*:((name . "getcwd")) */
 {
-  char *buf = __getcwd_buf;
-  return make_string0 (getcwd (buf, PATH_MAX));
+  return make_string0 (getcwd (0, PATH_MAX));
 }
 
 struct scm *

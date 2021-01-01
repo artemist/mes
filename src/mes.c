@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -161,7 +161,6 @@ init (char **envp)
 {
   environ = envp;
   __execl_c_argv = malloc (1024 * sizeof (char *));     /* POSIX minimum: 4096 */
-  __getcwd_buf = malloc (PATH_MAX);
   __gettimeofday_time = malloc (sizeof (struct timeval));
   __get_internal_run_time_ts = malloc (sizeof (struct timespec));
   __open_boot_buf = malloc (PATH_MAX);
