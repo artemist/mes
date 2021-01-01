@@ -1,6 +1,6 @@
 # GNU Mes --- Maxwell Equations of Software
 # Copyright © 2019 Jeremiah Orians <jeremiah@pdp10.guru>
-# Copyright © 2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -129,7 +129,7 @@ M2_SOURCES =					\
  lib/m2/clock_gettime.c				\
  lib/m2/time.c					\
  lib/linux/_getcwd.c				\
- lib/posix/getcwd.c				\
+ lib/m2/getcwd.c				\
  lib/linux/dup.c				\
  lib/linux/dup2.c				\
  lib/string/strcmp.c				\

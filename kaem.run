@@ -91,7 +91,7 @@ M2-Planet                                       \
     -f lib/m2/clock_gettime.c                   \
     -f lib/m2/time.c                            \
     -f lib/linux/_getcwd.c                      \
-    -f lib/posix/getcwd.c                       \
+    -f lib/m2/getcwd.c                          \
     -f lib/linux/dup.c                          \
     -f lib/linux/dup2.c                         \
     -f lib/string/strcmp.c                      \
