@@ -77,12 +77,12 @@ struct scm *g_macros;
 struct scm *g_ports;
 
 /* gc */
-long ARENA_SIZE;
-long MAX_ARENA_SIZE;
-long STACK_SIZE;
-long JAM_SIZE;
-long GC_SAFETY;
-long MAX_STRING;
+size_t ARENA_SIZE;
+size_t MAX_ARENA_SIZE;
+size_t STACK_SIZE;
+size_t JAM_SIZE;
+size_t GC_SAFETY;
+size_t MAX_STRING;
 char *g_arena;
 struct scm *cell_arena;
 struct scm *cell_zero;
