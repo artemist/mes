@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  * Copyright © 2021 W. J. van der Laan <laanwj@protonmail.com>
  *
  * This file is part of GNU Mes.
@@ -190,16 +190,26 @@ modulo (struct scm *a, struct scm *b)
 {
   assert_number ("modulo", a);
   assert_number ("modulo", b);
-  long x = a->value;
-  long y = b->value;
-  if (y == 0)
+  long n = a->value;
+  long v = b->value;
+  if (v == 0)
     error (cstring_to_symbol ("divide-by-zero"), a);
-  while (x < 0)
-    x = x + y;
-  if (x != 0)
-    x = x % y;
-
-  return make_number (x);
+  int sign_p = 0;
+  size_t w = v;
+  if (v < 0)
+    {
+      sign_p = 1;
+      w = -v;
+    }
+  while (n < 0)
+    n = n + w;
+  size_t u = n;
+  if (u != 0)
+    u = u % w;
+  n = u;
+  if (sign_p)
+    n = -n;
+  return make_number (n);
 }
 
 struct scm *
