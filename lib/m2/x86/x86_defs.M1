@@ -1,4 +1,5 @@
 ## Copyright (C) 2017 Jeremiah Orians
+## Copyright (C) 2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ## This file is part of M2-Planet.
 ##
 ## M2-Planet is free software: you can redistribute it and/or modify
@@ -68,6 +69,7 @@ DEFINE MULTIPLY_eax_by_ebx_into_eax F7EB
 DEFINE MULTIPLYS_eax_by_ebx_into_eax F7E3
 DEFINE NULL 00000000
 DEFINE NOT_eax F7D0
+DEFINE NOP 00000000
 DEFINE OR_eax_ebx 09D8
 DEFINE POP_eax 58
 DEFINE POP_ebx 5B
