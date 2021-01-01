@@ -1218,9 +1218,9 @@
         ((rshift ,a ,b) ((binop->r info) a b 'r0>>r1))
         ((div ,a ,b)
          ((binop->r info) a b 'r0/r1
-          (or (signed? (ast->type a info)) (signed? (ast->type b info)))))
+          (signed? (ast->type a info))))
         ((mod ,a ,b) ((binop->r info) a b 'r0%r1
-                      (or (signed? (ast->type a info)) (signed? (ast->type b info)))))
+                      (signed? (ast->type a info))))
         ((mul ,a ,b) ((binop->r info) a b 'r0*r1))
 
         ((not ,expr)
@@ -1361,7 +1361,7 @@
                                              info)))
                                  (info (expr->register a info))
                                  (info (append-text info (wrap-as (as info 'swap-r0-r1))))
-                                 (signed? (or (signed? type) (signed? type-b)))
+                                 (signed? (signed? type))
                                  (info (append-text info (cond ((equal? op "+=") (wrap-as (as info 'r0+r1)))
                                                                ((equal? op "-=") (wrap-as (as info 'r0-r1)))
                                                                ((equal? op "*=") (wrap-as (as info 'r0*r1)))
