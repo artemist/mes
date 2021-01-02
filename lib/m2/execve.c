@@ -22,7 +22,10 @@
 #include <syscall.h>
 
 int
-execve (char const *file_name, char *const argv[], char *const env[])
+execve (char const *file_name, char **argv, char **env)
 {
-  return _sys_call3 (SYS_execve, (long) file_name, (long) argv, (long) env);
+  long long_file_name = file_name;
+  long long_argv = argv;
+  long long_env = env;
+  return _sys_call3 (SYS_execve, file_name, argv, env);
 }

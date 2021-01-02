@@ -84,7 +84,7 @@ M2-Planet                                       \
     -f lib/linux/ioctl3.c                       \
     -f lib/m2/isatty.c                          \
     -f lib/linux/fork.c                         \
-    -f lib/linux/execve.c                       \
+    -f lib/m2/execve.c                          \
     -f lib/m2/execv.c                           \
     -f lib/m2/waitpid.c                         \
     -f lib/linux/gettimeofday.c                 \
