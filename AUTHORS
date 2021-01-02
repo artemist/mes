@@ -13,6 +13,8 @@ Additions and fixes throughout
 Jeremiah Orians <jeremiah@pdp10.guru>
 lib/stdio/fopen.c (first simple version of fopen)
 scaffold/tests/98-fopen.c
+Initial work on elf headers:
+lib/linux/x86-mes/elf32-header.hex2 and similar
 
 Han-Wen Nienhuys <hanwen@xs4all.nl>
 lib/string/memmem.c (_memmem, memmem)
@@ -31,6 +33,9 @@ scaffold/tests/91-goto-array.c
 Nathalie Kopaczewski <natkopa@gmail.com>
 Fast long devision
 lib/div.c (__mesabi_log2i)
+
+W. J. van der Laan <laanwj@protonmail.com>
+Bugfixes for logand, 64bit build, and va_arg
 
 List of imported files
 
@@ -80,6 +85,10 @@ include/mach/mach-init.h
 lib/mach/msg.c
 lib/mach/mach-init.c
 lib/mach/*.S
+
+M2-Planet dependencies
+lib/m2/x86/x86_defs.M1
+lib/m2/x86/ELF-x86.hex2
 
 * legalese
 Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
