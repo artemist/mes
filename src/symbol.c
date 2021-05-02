@@ -33,8 +33,6 @@
 // CONSTANT M2_CELL_SIZE 12
 #endif
 
-struct scm *g_symbol;
-
 struct scm *
 init_symbol (struct scm *x, long type, char const *name)
 {

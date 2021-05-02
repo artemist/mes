@@ -54,59 +54,59 @@ struct scm
 };
 
 /* mes */
-char *g_datadir;
-int g_debug;
-char *g_buf;
-int g_continuations;
-struct scm *g_symbols;
-struct scm *g_symbol_max;
-int g_mini;
+extern char *g_datadir;
+extern int g_debug;
+extern char *g_buf;
+extern int g_continuations;
+extern struct scm *g_symbols;
+extern struct scm *g_symbol_max;
+extern int g_mini;
 
 /* a/env */
-struct scm *R0;
+extern struct scm *R0;
 /* param 1 */
-struct scm *R1;
+extern struct scm *R1;
 /* save 2 */
-struct scm *R2;
+extern struct scm *R2;
 /* continuation */
-struct scm *R3;
+extern struct scm *R3;
 /* current-module */
-struct scm *M0;
+extern struct scm *M0;
 /* macro */
-struct scm *g_macros;
-struct scm *g_ports;
+extern struct scm *g_macros;
+extern struct scm *g_ports;
 
 /* gc */
-size_t ARENA_SIZE;
-size_t MAX_ARENA_SIZE;
-size_t STACK_SIZE;
-size_t JAM_SIZE;
-size_t GC_SAFETY;
-size_t MAX_STRING;
-char *g_arena;
-struct scm *cell_arena;
-struct scm *cell_zero;
+extern size_t ARENA_SIZE;
+extern size_t MAX_ARENA_SIZE;
+extern size_t STACK_SIZE;
+extern size_t JAM_SIZE;
+extern size_t GC_SAFETY;
+extern size_t MAX_STRING;
+extern char *g_arena;
+extern struct scm *cell_arena;
+extern struct scm *cell_zero;
 
-struct scm *g_free;
-struct scm *g_symbol;
+extern struct scm *g_free;
+extern struct scm *g_symbol;
 
-struct scm **g_stack_array;
-struct scm *g_cells;
-struct scm *g_news;
-long g_stack;
-size_t gc_count;
-struct timespec *gc_start_time;
-struct timespec *gc_end_time;
-size_t gc_time;
+extern struct scm **g_stack_array;
+extern struct scm *g_cells;
+extern struct scm *g_news;
+extern long g_stack;
+extern size_t gc_count;
+extern struct timespec *gc_start_time;
+extern struct timespec *gc_end_time;
+extern size_t gc_time;
 
-char **__execl_c_argv;
-char *__open_boot_buf;
-char *__open_boot_file_name;
-char *__setenv_buf;
-char *__reader_read_char_buf;
-struct timespec *g_start_time;
-struct timeval *__gettimeofday_time;
-struct timespec *__get_internal_run_time_ts;
+extern char **__execl_c_argv;
+extern char *__open_boot_buf;
+extern char *__open_boot_file_name;
+extern char *__setenv_buf;
+extern char *__reader_read_char_buf;
+extern struct timespec *g_start_time;
+extern struct timeval *__gettimeofday_time;
+extern struct timespec *__get_internal_run_time_ts;
 
 struct scm *cast_charp_to_scmp (char const *i);
 struct scm **cast_charp_to_scmpp (char const *i);

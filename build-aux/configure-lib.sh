@@ -439,6 +439,7 @@ src/core.c
 src/display.c
 src/eval-apply.c
 src/gc.c
+src/globals.c
 src/hash.c
 src/lib.c
 src/math.c
