@@ -92,15 +92,15 @@ get_machine.")
 (define-public m2-planet
   (package
     (name "m2-planet")
-    (version "1.7.0-31-g358b6cf")
+    (version "1.7.0-32-gaa3472b")
     (source (origin
               (method url-fetch)
               (uri (string-append
-                    "https://lilypond.org/janneke/guix/20210101/"
+                    "https://lilypond.org/janneke/guix/20210502/"
                     "m2-planet-" version ".tar.gz"))
               (sha256
                (base32
-                "1l20drk9pgxxqbbz635p7cb26s6cw70qlgrzmf46p2vfs3pyalks"))))
+                "1618fzav21x4vs29iv7g55c6xwnzjjcijw2z7yn5mcizhaxcaqck"))))
     (native-inputs
      `(("mescc-tools" ,mescc-tools)))
     (build-system gnu-build-system)
