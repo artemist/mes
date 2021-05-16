@@ -441,7 +441,7 @@ evlis3:
   goto vm_return;
 
 apply:
-  g_stack_array[g_stack + FRAME_PROCEDURE] = R1->car;
+  g_stack_array[g_stack + GC_FRAME_PROCEDURE] = R1->car;
   a = R1->car;
   t = a->type;
   if (t == TSTRUCT && builtin_p (R1->car) == cell_t)

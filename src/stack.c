@@ -53,8 +53,8 @@ make_frame (struct scm *stack, long index)
   struct scm *procedure = 0;
   if (index != 0)
     {
-      array_index = (STACK_SIZE - (index * FRAME_SIZE));
-      procedure = g_stack_array[array_index + FRAME_PROCEDURE];
+      array_index = (STACK_SIZE - (index * GC_FRAME_SIZE));
+      procedure = g_stack_array[array_index + GC_FRAME_PROCEDURE];
     }
   if (procedure == 0)
     procedure = cell_f;
@@ -78,7 +78,7 @@ struct scm *
 make_stack (struct scm *stack)          /*:((arity . n)) */
 {
   struct scm *stack_type = make_stack_type ();
-  long size = (STACK_SIZE - g_stack) / FRAME_SIZE;
+  long size = (STACK_SIZE - g_stack) / GC_FRAME_SIZE;
   struct scm *frames = make_vector_ (size, cell_unspecified);
   long i;
   struct scm* frame;

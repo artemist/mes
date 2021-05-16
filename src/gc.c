@@ -694,14 +694,14 @@ gc ()
 void
 gc_push_frame ()
 {
-  if (g_stack < FRAME_SIZE)
+  if (g_stack < GC_FRAME_SIZE)
     assert_msg (0, "STACK FULL");
   g_stack_array[g_stack - 1] = cell_f;
   g_stack_array[g_stack - 2] = R0;
   g_stack_array[g_stack - 3] = R1;
   g_stack_array[g_stack - 4] = R2;
   g_stack_array[g_stack - 5] = R3;
-  g_stack = g_stack - FRAME_SIZE;
+  g_stack = g_stack - GC_FRAME_SIZE;
 }
 
 void
@@ -711,14 +711,14 @@ gc_peek_frame ()
   R2 = g_stack_array[g_stack + 1];
   R1 = g_stack_array[g_stack + 2];
   R0 = g_stack_array[g_stack + 3];
-  g_stack_array[g_stack + FRAME_PROCEDURE];
+  g_stack_array[g_stack + GC_FRAME_PROCEDURE];
 }
 
 void
 gc_pop_frame ()
 {
   gc_peek_frame ();
-  g_stack = g_stack + FRAME_SIZE;
+  g_stack = g_stack + GC_FRAME_SIZE;
 }
 
 void
