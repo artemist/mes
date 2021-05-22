@@ -1177,7 +1177,7 @@ It will be ready sooner if you help.
 @end quotation
 
 @cindex contact, irc, mailing list
-Join us on @code{#bootstrappable} on the Freenode IRC network or on
+Join us on @code{#bootstrappable} on the Libera Chat IRC network or on
 @email{bug-mes@@gnu.org} to share your experience---good or bad.
 
 @cindex bug, bug report, reporting a bug
@@ -1220,8 +1220,8 @@ collection of small/bootstrappable compilers, operating systems,
 anything you need.
 
 @item
-@url{irc.freenode.net, #bootstrappable} The bootstrapping community home
-at the freenode IRC network.
+@url{irc.libera.chat, #bootstrappable} The bootstrapping community home
+at the Libera Chat IRC network.
 
 @item
 @file{guix-devel@@gnu.org} The Guix mailing list, where it all started.
