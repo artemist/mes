@@ -79,9 +79,9 @@ else
 fi
 
 trace "HEX2       ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0exit-42.hex2" $HEX2\
-      --LittleEndian\
+      --little-endian\
       $stage0_cpu_flag\
-      --BaseAddress 0x1000000\
+      --base-address 0x1000000\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0header.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0exit-42.hex2\
       --exec_enable\
@@ -93,9 +93,9 @@ trace "TEST       0exit-42"
 [ $r = 42 ]
 
 trace "HEX2       ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-body-exit-42.hex2" $HEX2\
-      --LittleEndian\
+      --little-endian\
       $stage0_cpu_flag\
-      --BaseAddress 0x1000000\
+      --base-address 0x1000000\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-header.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-body-exit-42.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-footer-single-main.hex2\
@@ -120,9 +120,9 @@ trace "TEST       hello-mes"
 [ $r = 0 ]
 
 trace "HEX2       ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0hello-mes.hex2" $HEX2\
-      --LittleEndian\
+      --little-endian\
       $stage0_cpu_flag\
-      --BaseAddress 0x1000000\
+      --base-address 0x1000000\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0header.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0hello-mes.hex2\
       --exec_enable\
@@ -134,9 +134,9 @@ trace "TEST       0hello-mes"
 [ $r = 0 ]
 
 trace "HEX2       ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-body-hello-mes.hex2" $HEX2\
-      --LittleEndian\
+      --little-endian\
       $stage0_cpu_flag\
-      --BaseAddress 0x1000000\
+      --base-address 0x1000000\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-header.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-body-hello-mes.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-footer-single-main.hex2\

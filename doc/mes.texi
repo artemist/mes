@@ -512,7 +512,7 @@ later, including 2.2.x and 3.0.x,
 @item @url{http://www.gnu.org/software/make/, GNU Make}.
 @item @url{https://savannah.gnu.org/projects/nyacc/, NYACC}, version 1.00.2,
 @item @url{http://gcc.gnu.org, GCC's gcc}, version 2.95.3 or later, including 10.2.0,
-@item @url{https://savannah.gnu.org/projects/mescc-tools/, mescc-tools}, version 0.7.0 or later,
+@item @url{https://savannah.gnu.org/projects/mescc-tools/, mescc-tools}, version 1.0.1 or later,
 @end itemize
 
 @cindex Guile, compatibility
@@ -541,8 +541,8 @@ Bootstrapping Mes depends on the following packages:
 
 @itemize
 @item a POSIX-compatible shell
-@item @url{https://github.com/oriansj/mescc-tools/, mescc-tools}, version 0.6.1 or later.
-@item @url{https://savannah.gnu.org/projects/nyacc/, NYACC}, 0.93.0 or later, including 0.99.0.
+@item @url{https://github.com/oriansj/mescc-tools/, mescc-tools}, version 1.0.1 or later.
+@item @url{https://savannah.gnu.org/projects/nyacc/, NYACC}, version 1.00.2,
 @end itemize
 
 @node Running the Test Suites,  , Bootstrap Requirements, Installation
