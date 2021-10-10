@@ -54,7 +54,7 @@
 (define-public mescc-tools
   (package
     (name "mescc-tools")
-    (version "0.7.0")
+    (version "1.0.1")
     (source
      (origin
        (method url-fetch)
@@ -65,7 +65,7 @@
        (file-name (string-append name "-" version ".tar.gz"))
        (sha256
         (base32
-         "1p1ijia4rm3002f5sypidl9v5gq0mlch9b0n61rpxkdsaaxjqax3"))))
+         "1wqj70h4rrxl1d1aqpxhy47964r5dilvll6gvqv75y9qk6pwx5is"))))
     (build-system gnu-build-system)
     (supported-systems
      '("aarch64-linux" "armhf-linux" "i686-linux" "x86_64-linux"))
