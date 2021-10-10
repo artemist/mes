@@ -199,7 +199,7 @@
          (verbose? (count-opt options 'verbose))
          (M1 (or (getenv "M1") "M1"))
          (command `(,M1
-                    "--LittleEndian"
+                    "--little-endian"
                     ,@(arch-get-architecture options)
                     "-f" ,(arch-find options (arch-get-m1-macros options))
                     ,@(append-map (cut list "-f" <>) M1-files)
@@ -226,16 +226,15 @@
                               (option-ref options 'nostdlib #f)) '()
                               `("-f" ,(arch-find options "crt1.o"))))
          (command `(,hex2
-                    "--LittleEndian"
+                    "--little-endian"
                     ,@(arch-get-architecture options)
-                    "--BaseAddress" ,base-address
+                    "--base-address" ,base-address
                     "-f" ,(kernel-find
                            options
                            (string-append "elf" machine "-header.hex2"))
                     ,@start-files
                     ,@(append-map (cut list "-f" <>) hex2-files)
                     "-f" ,elf-footer
-                    "--exec_enable"
                     "-o" ,elf-file-name)))
     (when (and verbose? (> verbose? 1))
       (stderr "~a\n" (string-join command)))
@@ -250,10 +249,10 @@
          (verbose? (count-opt options 'verbose))
          (blood-elf (or (getenv "BLOOD_ELF") "blood-elf"))
          (command `(,blood-elf
-                      ,@(if (equal? (arch-get-machine options) "64") '("--64") '())
-                      "-f" ,(arch-find options (arch-get-m1-macros options))
-                      ,@(append-map (cut list "-f" <>) M1-files)
-                      "-o" ,M1-blood-elf-footer)))
+                    ,@(if (equal? (arch-get-machine options) "64") '("--64") '())
+                    "-f" ,(arch-find options (arch-get-m1-macros options))
+                    ,@(append-map (cut list "-f" <>) M1-files)
+                    "-o" ,M1-blood-elf-footer)))
     (when (and verbose? (> verbose? 1))
       (format (current-error-port) "~a\n" (string-join command)))
     (and (zero? (apply assert-system* command))
