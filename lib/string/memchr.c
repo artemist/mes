@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -29,7 +29,7 @@ memchr (void const *block, int c, size_t size)
     {
       size = size - 1;
       if (c == p[0])
-        return p;
+        return (void*) p;
       p = p + 1;
     }
 
