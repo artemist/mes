@@ -2,7 +2,7 @@
 #+TITLE: Hacking GNU Mes
 
 * SETUP
-    guix environment -l guix.scm     #64 bit + 32bit
+    guix shell #64 bit + 32bit
 
     CC=i686-unknown-linux-gnu-gcc ./configure
     CC=arm-unknown-linux-gnu-gcc ./configure
@@ -201,7 +201,7 @@ https://notabug.org/rain1/hex86/src/master/tests/hex0b3.hex86
 ** linux syscalls: https://fedora.juszkiewicz.com.pl/syscalls.html
 * legalese
 
-Copyright © 2016,2017,2018,2019,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+Copyright © 2016,2017,2018,2019,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright

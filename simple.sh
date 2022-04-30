@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # GNU Mes --- Maxwell Equations of Software
-# Copyright © 2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2019,2020,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -143,9 +143,9 @@ set -e
 # Mes C lib build
 
 # To get a i686-unknown-linux-gnu-gcc, you may do:
-#    guix environment -l guix.scm
+#    guix shell
 # or
-#    guix environment --ad-hoc -e '(begin (use-modules (gnu packages cross-base)) (list (cross-binutils "i686-unknown-linux-gnu") (cross-gcc "i686-unknown-linux-gnu")))'
+#    guix shell -e '(begin (use-modules (gnu packages cross-base)) (list (cross-binutils "i686-unknown-linux-gnu") (cross-gcc "i686-unknown-linux-gnu")))'
 
 ## Clean ##
 rm -rf out-mes

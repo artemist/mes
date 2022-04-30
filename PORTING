@@ -22,7 +22,7 @@ to your config.scm and run guix system reconfigure.
 
 For example (note: ARM is no longer a 'port', see HACKING)
    #+BEGIN_SRC bash
-   guix environment --system=armhf-linux --pure --ad-hoc bash coreutils diffutils findutils gawk gcc-toolchain@7 grep git guile@2.2 gzip help2man make mescc-tools nyacc openssh-sans-x pkg-config sed tar texinfo
+   guix shell --system=armhf-linux --pure bash coreutils diffutils findutils gawk gcc-toolchain@7 grep git guile@2.2 gzip help2man make mescc-tools nyacc openssh-sans-x pkg-config sed tar texinfo
    #+END_SRC
 
 ** Try it
@@ -75,7 +75,7 @@ a Reduced Binary seed, thus significantly reducing the Trusted Computing
 Base (TCB), strategic decisions about the build process can start.
 
 * Legalese
-Copyright © 2019 Jan (janneke) Nieuwenhuizen <[[mailto:janneke@gnu.org][janneke@gnu.org]]>
+Copyright © 2019,2022 Jan (janneke) Nieuwenhuizen <[[mailto:janneke@gnu.org][janneke@gnu.org]]>
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright

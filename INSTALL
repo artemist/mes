@@ -1,7 +1,7 @@
                                                               -*- org -*-
 #+TITLE: Building and Installing GNU Mes
 
-Copyright © 2016,2017,2018,2019,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+Copyright © 2016,2017,2018,2019,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright
@@ -20,9 +20,9 @@ similar way.
 ** Prerequisites
 *** Guix
    #+BEGIN_SRC bash
-   guix environment -l guix.scm     #64 bit + 32bit
-   guix environment --system=i686-linux -l guix.scm #32 bit only
-   guix environment --system=armhf-linux -l guix.scm #32 bit only
+   guix shell #64 bit + 32bit
+   guix shell --system=i686-linux #32 bit only
+   guix shell --system=armhf-linux #32 bit only
    #+END_SRC
 
 *** Other GNU/Linux
