@@ -1,5 +1,5 @@
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016,2017,2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2016,2017,2018,2019,2020,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;;
 ;;; This file is part of GNU Mes.
 ;;;
@@ -101,8 +101,7 @@ get_machine.")
               (sha256
                (base32
                 "1618fzav21x4vs29iv7g55c6xwnzjjcijw2z7yn5mcizhaxcaqck"))))
-    (native-inputs
-     `(("mescc-tools" ,mescc-tools)))
+    (native-inputs (list mescc-tools))
     (build-system gnu-build-system)
     (arguments
      `(#:make-flags (list (string-append "PREFIX=" (assoc-ref %outputs "out"))
@@ -151,10 +150,8 @@ with introspective steps inbetween.")
                      "DOCDIR = @prefix@/share/doc/$(PACKAGE_TARNAME)\n"))
                   #t))))
     (build-system gnu-build-system)
-    (native-inputs
-     `(("pkg-config" ,pkg-config)))
-    (inputs
-     `(("guile" ,guile-2.2)))
+    (native-inputs (list pkg-config))
+    (inputs (list guile-2.2))
     (synopsis "LALR(1) Parser Generator in Guile")
     (description
      "NYACC is an LALR(1) parser generator implemented in Guile.
@@ -189,8 +186,7 @@ extensive examples, including parsers for the Javascript and C99 languages.")
               (sha256
                (base32
                 "065ksalfllbdrzl12dz9d9dcxrv97wqxblslngsc6kajvnvlyvpk"))))
-    (inputs
-     `(("guile" ,guile-3.0)))))
+    (inputs (list guile-3.0))))
 
 (define-public mes
   (package
@@ -204,34 +200,41 @@ extensive examples, including parsers for the Javascript and C99 languages.")
                (base32 #!mes!# "0mnryfkl0dwbr5gxp16j5s95gw7z1vm1fqa1pxabp0aiar1hw53s"))))
     (build-system gnu-build-system)
     (supported-systems '("aarch64-linux" "armhf-linux" "i686-linux" "x86_64-linux"))
-    (propagated-inputs
-     `(("mescc-tools" ,mescc-tools)
-       ("nyacc" ,nyacc)))
+    (propagated-inputs (list mescc-tools nyacc))
     (native-inputs
-     `(("guile" ,guile-3.0-latest)
-       ,@(cond ((string-prefix? "x86_64-linux" (or (%current-target-system)
-                                                   (%current-system)))
-                ;; Use cross-compiler rather than #:system "i686-linux" to get
-                ;; MesCC 64 bit .go files installed ready for use with Guile.
-                (let ((triplet "i686-unknown-linux-gnu"))
-                  `(("i686-linux-binutils" ,(cross-binutils triplet))
-                    ("i686-linux-gcc" ,(cross-gcc triplet)))))
-               ((string-prefix? "aarch64-linux" (or (%current-target-system)
-                                                    (%current-system)))
-                ;; Use cross-compiler rather than #:system "armhf-linux" to get
-                ;; MesCC 64 bit .go files installed ready for use with Guile.
-                (let ((triplet "arm-linux-gnueabihf"))
-                  `(("arm-linux-binutils" ,(cross-binutils triplet))
-                    ("arm-linux-gcc" ,(cross-gcc triplet)))))
-               (else
-                '()))
-       ("graphviz" ,graphviz)
-       ("help2man" ,help2man)
-       ("m2-planet" ,m2-planet)
-       ("perl" ,perl)                   ; build-aux/gitlog-to-changelog
-       ("texinfo" ,texinfo)))
+     (append
+      (list guile-3.0)
+      (let ((target-system (or (%current-target-system)
+                               (%current-system))))
+        (cond
+         ((string-prefix? "x86_64-linux" target-system)
+          ;; Use cross-compiler rather than #:system "i686-linux" to get
+          ;; MesCC 64 bit .go files installed ready for use with Guile.
+          (list (cross-binutils "i686-unknown-linux-gnu")
+                (cross-gcc "i686-unknown-linux-gnu")))
+         ((string-prefix? "aarch64-linux" target-system)
+          ;; Use cross-compiler rather than #:system "armhf-linux" to get
+          ;; MesCC 64 bit .go files installed ready for use with Guile.
+          (let ((triplet "arm-linux-gnueabihf"))
+            (list (cross-binutils triplet) (cross-gcc triplet))))
+         (else
+          '())))
+      (list graphviz help2man m2-planet
+            perl                        ;build-aux/gitlog-to-changelog
+            texinfo)))
     (arguments
      `(#:strip-binaries? #f)) ; binutil's strip b0rkes MesCC/M1/hex2 binaries
+    (native-search-paths
+     (list (search-path-specification
+            (variable "C_INCLUDE_PATH")
+            (files '("include")))
+           (search-path-specification
+            (variable "LIBRARY_PATH")
+            (files '("lib")))
+           (search-path-specification
+            (variable "MES_PREFIX")
+            (separator #f)
+            (files '("")))))
     (synopsis "Scheme interpreter and C compiler for full source bootstrapping")
     (description
      "GNU Mes--Maxwell Equations of Software--brings the Reduced Binary Seed
