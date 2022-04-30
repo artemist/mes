@@ -48,7 +48,7 @@ Edition @value{EDITION} @*
 @contents
 
 @c *********************************************************************
-@node Top, Introduction, (dir), (dir)
+@node Top
 @top GNU Mes
 
 This document describes GNU Mes version @value{VERSION}, a bootstrappable
@@ -77,7 +77,7 @@ Software Freedom
 
 Installation
 
-* Regular Requirements::        Software needed to build and run Mes.
+* Requirements::                Software needed to build and run Mes.
 * Bootstrap Requirements::      Software needed to bootstrap Mes.
 * Running the Test Suites::     Testing Mes.
 
@@ -109,7 +109,7 @@ Contributing
 @end menu
 
 @c *********************************************************************
-@node Introduction, Installation, Top, Top
+@node Introduction
 @chapter Introduction
 
 @quotation
@@ -191,7 +191,7 @@ Freedom 1.
 * LISP as Maxwell's Equations of Software::  Auditable elegance.
 @end menu
 
-@node Reproducible Builds, Bootstrappable Builds, Introduction, Introduction
+@node Reproducible Builds
 @section Reproducible Builds
 
 The current Reproducible Builds effort incubated in the Debian
@@ -240,7 +240,7 @@ packages could be rebuild bit-identical from source.
 @author Martin Uecker
 @end quotation
 
-@node Bootstrappable Builds, Full Source Bootstrap, Reproducible Builds, Introduction
+@node Bootstrappable Builds
 @section Bootstrappable Builds
 
 Software distributions that take reproducible builds seriously are
@@ -295,7 +295,7 @@ This was a very important step because the ~250MB @emph{seed} of binary
 code was practically non-auditable, which makes it hard to establish
 what source code produced them.
 
-@node Full Source Bootstrap,  , Bootstrappable Builds, Introduction
+@node Full Source Bootstrap
 @section  Full Source Bootstrap
 
 There is an obvious solution: we cannot allow any binary seeds in our
@@ -480,7 +480,7 @@ It is our sincerest hope to bring back this level of quality and
 elegance..
 
 @c *********************************************************************
-@node Installation, Bootstrapping, Introduction, Top
+@node Installation
 @chapter Installation
 
 @cindex installing Mes
@@ -491,13 +491,13 @@ to use it.
 
 
 @menu
-* Regular Requirements::        Software needed to build and run Mes.
+* Requirements::                Software needed to build and run Mes.
 * Bootstrap Requirements::      Software needed to bootstrap Mes.
 * Running the Test Suites::     Testing Mes.
 @end menu
 
-@node Regular Requirements, Bootstrap Requirements, Installation, Installation
-@section Regular Requirements
+@node Requirements
+@section Requirements
 
 This section lists requirements when building Mes from source.  The
 build procedure for Mes is the same as for other GNU software, and is
@@ -512,7 +512,14 @@ later, including 2.2.x and 3.0.x,
 @item @url{http://www.gnu.org/software/make/, GNU Make}.
 @item @url{https://savannah.gnu.org/projects/nyacc/, NYACC}, version 1.00.2,
 @item @url{http://gcc.gnu.org, GCC's gcc}, version 2.95.3 or later, including 10.2.0,
-@item @url{https://savannah.gnu.org/projects/mescc-tools/, mescc-tools}, version 1.0.1 or later,
+@item @url{https://savannah.gnu.org/projects/mescc-tools/, mescc-tools}, version 1.4.0,
+@end itemize
+
+The following dependencies are optional:
+
+@itemize
+Support for building the bootstrap @file{bin/mes-m2} depends on
+@item @url{https://github.com/oriansj/m2-planet/, M2-Planet}, version 1.9.0.
 @end itemize
 
 @cindex Guile, compatibility
@@ -520,7 +527,7 @@ Mes is compatible with GNU Guile, so it is possible to share the same
 Scheme code between both.  Currently Mes only supports the minimal
 subset of R5RS and Guile extensions to run MesCC.
 
-@node Bootstrap Requirements, Running the Test Suites, Regular Requirements, Installation
+@node Bootstrap Requirements
 @section Bootstrap Requirements
 
 This section lists requirements when building Mes as a bootstrap
@@ -541,11 +548,12 @@ Bootstrapping Mes depends on the following packages:
 
 @itemize
 @item a POSIX-compatible shell
-@item @url{https://github.com/oriansj/mescc-tools/, mescc-tools}, version 1.0.1 or later.
+@item @url{https://savannah.gnu.org/projects/mescc-tools/, mescc-tools}, version 1.4.0,
+@item @url{https://github.com/oriansj/m2-planet/, M2-Planet}, version 1.9.0.
 @item @url{https://savannah.gnu.org/projects/nyacc/, NYACC}, version 1.00.2,
 @end itemize
 
-@node Running the Test Suites,  , Bootstrap Requirements, Installation
+@node Running the Test Suites
 @section Running the Test Suites
 
 @cindex test suites
@@ -588,7 +596,7 @@ CC=gcc CC32=i686-unknown-linux-gnu-gcc MES=guile \
   build-aux/test.sh scaffold/tests/00-exit-0
 @end example
 
-@node Bootstrapping, Contributing, Installation, Top
+@node Bootstrapping
 @chapter Bootstrapping
 
 @quotation
@@ -633,7 +641,7 @@ responsibility.
 * Invoking mesar::
 @end menu
 
-@node The Mes Bootstrap Process, Invoking mes, Bootstrapping, Bootstrapping
+@node The Mes Bootstrap Process
 @section The Mes Bootstrap Process
 
 The Reduced Binary Seed bootstrap currently adopted by Guix@footnote{See
@@ -711,7 +719,7 @@ Although we think these are less essential and thus less interesting
 than the GNU toolchain triplet that we focussed on initially, our next
 priority is to eleminate these one by one.
 
-@node Invoking mes, Invoking mescc, The Mes Bootstrap Process, Bootstrapping
+@node Invoking mes
 @section Invoking mes
 
 @cindex repl
@@ -787,7 +795,7 @@ Display the current version of mes%, and then exit.
 * Environment Variables::       If the bits won't change, change their habitat.
 @end menu
 
-@node Environment Variables,  , Invoking mes, Invoking mes
+@node Environment Variables
 @subsection Environment Variables
 @cindex environment variables
 @cindex shell
@@ -865,7 +873,7 @@ Mes uses @var{@strong{GUILE}_LOAD_PATH} for compatibility with Guile.
 
 @end table
 
-@node Invoking mescc, Invoking mesar, Invoking mes, Bootstrapping
+@node Invoking mescc
 @section Invoking mescc
 
 @example
@@ -947,7 +955,7 @@ specify LANGUAGE of the following input files
 * MesCC Environment Variables::  There's no NIX like POSIX.
 @end menu
 
-@node MesCC Environment Variables,  , Invoking mescc, Invoking mescc
+@node MesCC Environment Variables
 @subsection MesCC Environment Variables
 
 @table @env
@@ -976,7 +984,7 @@ during the parsing phase.
 
 @end table
 
-@node Invoking mesar,  , Invoking mescc, Bootstrapping
+@node Invoking mesar
 @section Invoking mesar
 
 @example
@@ -1006,7 +1014,7 @@ display version and exit
 @end table
 
 @c *********************************************************************
-@node Contributing, Acknowledgments, Bootstrapping, Top
+@node Contributing
 @chapter Contributing
 
 @menu
@@ -1018,7 +1026,7 @@ display version and exit
 * Submitting Patches::          Share your work.
 @end menu
 
-@node Building from Git, Running Mes From the Source Tree, Contributing, Contributing
+@node Building from Git
 @section Building from Git
 
 If you want to hack GNU Mes itself, it is recommended to use the latest
@@ -1037,12 +1045,23 @@ hack on Mes:
 guix shell
 @end example
 
+If you are unable to use Guix when building Mes from a Git checkout,
+the following are the required packages in addition to those mentioned
+in the installation instructions (@pxref{Requirements}).
+
+@itemize
+@item @url{https://gnu.org/software/help2man/, GNU Help2man};
+@item @url{https://gnu.org/software/texinfo/, GNU Texinfo};
+@item @url{https://www.graphviz.org/, Graphviz};
+@item @url{https://www.perl.org/, Perl}.
+@end itemize
+
 Finally, you have to invoke @code{make check} to run tests
 (@pxref{Running the Test Suites}).  If anything fails, take a look at
 installation instructions (@pxref{Installation}) or send a message to
 the @email{bug-mes@@gnu.org} mailing list.
 
-@node Running Mes From the Source Tree, Porting GNU Mes, Building from Git, Contributing
+@node Running Mes From the Source Tree
 @section Running Mes From the Source Tree
 
 First, you need to have an environment with all the dependencies
@@ -1050,7 +1069,7 @@ available (@pxref{Building from Git}), and then simply prefix each
 command by @command{./pre-inst-env} (the @file{pre-inst-env} script
 lives in the top build tree of Mes).
 
-@node Porting GNU Mes, The Perfect Setup, Running Mes From the Source Tree, Contributing
+@node Porting GNU Mes
 @section Porting GNU Mes
 
 Mes is supported for x86-linux and armhf-linux.  A 64 bit (x86_64-linux)
@@ -1083,7 +1102,7 @@ Porting MesCC:
   @file{mes/module/mescc/i386/info.mes}
 @end example
 
-@node The Perfect Setup, Coding Style, Porting GNU Mes, Contributing
+@node The Perfect Setup
 @section The Perfect Setup
 
 The Perfect Setup to hack on Mes is basically the perfect setup used
@@ -1098,7 +1117,7 @@ on-line documentation (docstrings), context-sensitive completion,
 @kbd{M-.} to jump to an object definition, a REPL to try out your code,
 and more (@pxref{Introduction,,, geiser, Geiser User Manual}).
 
-@node Coding Style, Submitting Patches, The Perfect Setup, Contributing
+@node Coding Style
 @section Coding Style
 
 In general our code follows the GNU Coding Standards (@pxref{Top,,,
@@ -1134,7 +1153,7 @@ Additionally, in Mes we prefer to format @code{if} statements like this
       else))
 @end example
 
-@node Submitting Patches,  , Coding Style, Contributing
+@node Submitting Patches
 @section Submitting Patches
 
 Development is done using the Git distributed version control system.
@@ -1184,7 +1203,7 @@ Join us on @code{#bootstrappable} on the Libera Chat IRC network or on
 Please send bug reports with full details to @email{bug-mes@@gnu.org}.
 
 @c *********************************************************************
-@node Acknowledgments, Resources, Contributing, Top
+@node Acknowledgments
 @chapter Acknowledgments
 
 We would like to thank the following people for their help: Jeremiah
@@ -1196,7 +1215,7 @@ LISP-1.5 and Alan Kay for their inspiring comment on
 @url{https://queue.acm.org/detail.cfm?id=1039523, Page 13}.
 
 @c *********************************************************************
-@node Resources, GNU Free Documentation License, Acknowledgments, Top
+@node Resources
 @chapter Resources
 
 @itemize
@@ -1230,17 +1249,17 @@ at the Libera Chat IRC network.
 @end itemize
 
 @c *********************************************************************
-@node GNU Free Documentation License, Concept Index, Resources, Top
+@node GNU Free Documentation License
 @appendix GNU Free Documentation License
 @cindex license, GNU Free Documentation License
 @include fdl-1.3.texi
 
 @c *********************************************************************
-@node Concept Index, Programming Index, GNU Free Documentation License, Top
+@node Concept Index
 @unnumbered Concept Index
 @printindex cp
 
-@node Programming Index,  , Concept Index, Top
+@node Programming Index
 @unnumbered Programming Index
 @syncodeindex tp fn
 @syncodeindex vr fn
