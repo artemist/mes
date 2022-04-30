@@ -84,7 +84,6 @@ trace "HEX2       ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0exit-42.h
       --base-address 0x1000000\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0header.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0exit-42.hex2\
-      --exec_enable\
       -o 0exit-42
 
 trace "TEST       0exit-42"
@@ -99,7 +98,6 @@ trace "HEX2       ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-body-exit-
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-header.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-body-exit-42.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-footer-single-main.hex2\
-      --exec_enable\
       -o body-exit-42
 
 trace "TEST       body-exit-42"
@@ -125,7 +123,6 @@ trace "HEX2       ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0hello-mes
       --base-address 0x1000000\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0header.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-0hello-mes.hex2\
-      --exec_enable\
       -o 0hello-mes
 
 trace "TEST       0hello-mes"
@@ -140,7 +137,6 @@ trace "HEX2       ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-body-hello
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-header.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-body-hello-mes.hex2\
       -f ${srcdest}lib/$mes_kernel/$mes_cpu-mes/elf$mes_bits-footer-single-main.hex2\
-      --exec_enable\
       -o body-hello-mes
 
 trace "TEST       body-hello-mes"

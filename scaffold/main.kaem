@@ -1,5 +1,5 @@
 #! /bin/sh
-# Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -24,6 +24,7 @@ mes_cpu=${mes_cpu:-x86}
 stage0_cpu=${stage0_cpu:-x86}
 
 M2-Planet                                       \
+    --bootstrap-mode                            \
     --debug                                     \
     --architecture ${stage0_cpu}                \
     -f lib/linux/${mes_cpu}-mes-m2/crt1.c       \
