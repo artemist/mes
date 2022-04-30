@@ -121,7 +121,8 @@ fi
     fi
 )
 
-if test -n "$M2_PLANET" && test "$mes_cpu" == "x86"; then
+if test -n "$M2_PLANET" && (test "$mes_cpu" == "x86" \
+                                || test "$mes_cpu" == "arm"); then
     (
         . ${srcdest}build-aux/trace.sh
         if [ -z "$V" -o "$V" = 0 ]; then
