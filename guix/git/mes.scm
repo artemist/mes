@@ -92,15 +92,17 @@ get_machine.")
 (define-public m2-planet
   (package
     (name "m2-planet")
-    (version "1.7.0-32-gaa3472b")
+    (version "1.8.0")
     (source (origin
-              (method url-fetch)
-              (uri (string-append
-                    "https://lilypond.org/janneke/guix/20210502/"
-                    "m2-planet-" version ".tar.gz"))
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://github.com/oriansj/m2-planet")
+                    (commit (string-append "Release_" version))
+                    (recursive? #t)))             ;for M2libc
+              (file-name (git-file-name name version))
               (sha256
                (base32
-                "1618fzav21x4vs29iv7g55c6xwnzjjcijw2z7yn5mcizhaxcaqck"))))
+                "0525fhijrjljgaabmgsjy8yk2pmh5zf8lwa44wpvkjc18knl7nza"))))
     (native-inputs (list mescc-tools))
     (build-system gnu-build-system)
     (arguments
@@ -109,18 +111,13 @@ get_machine.")
        #:tests? #f
        #:phases (modify-phases %standard-phases
                   (delete 'bootstrap)
-                  (delete 'configure)
-                  (add-after 'unpack 'patch-prefix
-                    (lambda _
-                      (substitute* "sha256.sh"
-                        (("\\$\\(which sha256sum\\)") (which "sha256sum")))
-                      #t)))))
+                  (delete 'configure))))
     (synopsis "The PLAtform NEutral Transpiler")
     (description
      "M2-Planet, The PLAtform NEutral Transpiler, when combined with
 mescc-tools compiles a subset of the C language into working binaries
 with introspective steps inbetween.")
-    (home-page "https://savannah.nongnu.org/projects/mescc-tools")
+    (home-page "https://github.com/oriansj/m2-planet")
     (license gpl3+)))
 
 (define-public nyacc-0.99
