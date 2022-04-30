@@ -2,7 +2,7 @@
 #+TITLE: GNU Mes NEWS – history of user-visible changes
 #+STARTUP: content hidestars
 
-Copyright © 2016,2017,2018,2019,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+Copyright © 2016,2017,2018,2019,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright
@@ -10,6 +10,20 @@ Copyright © 2016,2017,2018,2019,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.o
 
 Please send Mes bug reports to bug-mes@gnu.org.
 
+* Changes in 0.24 since 0.23
+** Core
+*** Mes and Mes C Library can now be built with M2-Planet.
+*** Mes now supports the --bootstrap build on ARM.
+** MesCC
+*** MesCC now supports the integer suffixes:
+Next to `U', also support `ULL', `UL', `L', and `LL'.
+** Noteworthy bug fixes
+*** MesCC now uses the unsigned type for sizeof.
+*** MesCC now only uses signed division if numerator is signed.
+*** The Mes C library now supports an argv bigger than 255.
+*** Development build support with Guile-2 was resurrected.
+*** The logand procedure now works correctly.
+*** The 64bit build was resurrected.
 * Changes in 0.23 since 0.22
 ** Core
 *** Mes and Mes C Library can now be built with GCC 10.x.
