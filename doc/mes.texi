@@ -72,8 +72,15 @@ Software Freedom
 
 * Reproducible Builds::         Reproducibility and free software.
 * Bootstrappable Builds::       The freedom to build a software without binary seed.
-* Full Source Bootstrap::       Software dependencies worthy of GNU.
+* Reduced Binary Seed Bootstrap::  Guix reduces bootstrap binaries with 50%.
+* Scheme-only Bootsrap::        Guix reduced bootstrap binaries to 25%.
+* Full Source Bootstrap::       A bootstrap worthy of GNU.
 * LISP as Maxwell's Equations of Software::  Auditable elegance.
+
+Full Source Bootstrap
+
+* Stage0::                      The Magical Self-Hosting Hex Assembler.
+* M2-Planet::                   A Sub-C bootstrap compiler.
 
 Installation
 
@@ -187,7 +194,9 @@ Freedom 1.
 @menu
 * Reproducible Builds::         Reproducibility and free software.
 * Bootstrappable Builds::       The freedom to build a software without binary seed.
-* Full Source Bootstrap::       Software dependencies worthy of GNU.
+* Reduced Binary Seed Bootstrap::  Guix reduces bootstrap binaries with 50%.
+* Scheme-only Bootsrap::        Guix reduced bootstrap binaries to 25%.
+* Full Source Bootstrap::       A bootstrap worthy of GNU.
 * LISP as Maxwell's Equations of Software::  Auditable elegance.
 @end menu
 
@@ -258,10 +267,11 @@ binary seed that all software distributions inject are the so called
 @emph{bootstrap binary seed}.  Bootstrap binaries are the initial binary
 seeds that are used to start building the distribution.
 
-The GNU Guix operating system, version 1.0 had a relatively small
-closure of bootstrap binary seed: GNU binutils, GNU gcc, GNU Libc, GNU
-Guile, and ``Static binaries'' (think: bash, bzip2, coreutils, gawk,
-grep, gzip, patch, sed, tar, xz).
+The GNU Guix operating system (@pxref{Top,,, guix, The GNU Guix
+Manual}), version 1.0 had a relatively small closure of bootstrap binary
+seed: GNU binutils, GNU gcc, GNU Libc, GNU Guile, and ``Static
+binaries'' (think: bash, bzip2, coreutils, gawk, grep, gzip, patch, sed,
+tar, xz).
 
 @example
 $ du -schx $(readlink $(guix build bootstrap-tarballs)/*)
@@ -288,6 +298,9 @@ $ du -schx *
 252M	total
 @end example
 
+@node Reduced Binary Seed Bootstrap
+@section Reduced Binary Seed Bootstrap
+
 During the Guix 1.1 development series we managed to create the first
 reduction by 50% of the Guix @emph{bootstrap binary seed}@footnote{See
 @url{https://guix.gnu.org/blog/2019/guix-reduces-bootstrap-seed-by-50/}}.
@@ -295,16 +308,37 @@ This was a very important step because the ~250MB @emph{seed} of binary
 code was practically non-auditable, which makes it hard to establish
 what source code produced them.
 
+@node Scheme-only Bootsrap
+@section Scheme-only Bootstrap
+
+The next step that Guix has taken is to replace the shell and all its
+utilities with implementations in Guile Scheme, the @emph{Scheme-only
+bootstrap}.  This second halving of the boostrap binaries reduced their
+size to 25% @footnote{See
+@url{https://guix.gnu.org/en/blog/2020/guix-further-reduces-bootstrap-seed-to-25/}}.
+Gash (@pxref{Gash,,, gash, The Gash manual}) is a POSIX-compatible shell
+that replaces Bash, and it comes with Gash Utils which has minimalist
+replacements for Awk, the GNU Core Utilities, Grep, Gzip, Sed, and Tar.
+The rest of the bootstrap binary seeds that were removed are now built
+from source.
+
 @node Full Source Bootstrap
-@section  Full Source Bootstrap
+@section Full Source Bootstrap
 
-There is an obvious solution: we cannot allow any binary seeds in our
-software stack.  Not even in the bootstrap binary seed.  Maybe that is a
-bit too strong: we want to have the absolute minimum of binary seeds and
-all binary seeds need to be inspectable and must be reviewed.  How big
-would the absolute minimal set be?
+Reduction of binary seeds is great, but there is an obvious target: we
+cannot allow any binary seeds in our software stack.  Not even in the
+bootstrap binary seed.  Maybe that is a bit too strong: we want to have
+the absolute minimum of binary seeds and all binary seeds need to be
+inspectable and must be reviewed.  How big would the absolute minimal
+set be?
 
-@subsection The Magical Self-Hosting Hex Assembler
+@menu
+* Stage0::                      The Magical Self-Hosting Hex Assembler.
+* M2-Planet::                   A Sub-C bootstrap compiler.
+@end menu
+
+@node Stage0
+@subsection Stage0
 
 June 2016 I learnt about
 @url{https://github.com/oriansj/stage0/,Stage0}.  Jeremiah Orians
@@ -408,6 +442,18 @@ done.  We might be able to create a fully inspectable path from almost
 nothing to all of the programs that our computer runs.  Something that
 seemed to be an impossible dream is suddenly starting to look like
 ``just a couple years of work''.
+
+@node M2-Planet
+@subsection M2-Planet
+
+@url{https://github.com/oriansj/m2-planet/,M2-Planet} @footnote{The
+PLAtform NEutral Transpiler}, when combined with
+@url{https://savannah.gnu.org/projects/mescc-tools/, mescc-tools};
+allows one to compile a subset of the C language into working binaries
+with introspective steps inbetween.  In 2021 M2-Planet with release
+1.8.0 reached a level of maturity that allowed to build MesCC-Tools and
+Mes.  This allows for another reduction the Guix bootstrap binaries: mes
+and mescc-tools can be removed.
 
 @node LISP as Maxwell's Equations of Software
 @section LISP as Maxwell's Equations of Software
@@ -648,7 +694,7 @@ The Reduced Binary Seed bootstrap currently adopted by Guix@footnote{See
 @file{gnu/packages/commencement.scm} in the @var{master} branch in Guix
 git
 @url{http://git.savannah.gnu.org/cgit/guix.git/tree/gnu/packages/commencement.scm}}.
-In its intiial form it is only available for x86-linux arm armhf-linux.
+In its intiial form it is only available for x86-linux and armhf-linux.
 
 Currently, it goes like this:
 
@@ -687,19 +733,23 @@ Currently, it goes like this:
                                 ^
                                 |
                                 *
-              bootstrap-mescc-tools, bootstrap-mes (~10MB)
-      bootstrap-bash, bootstrap-coreutils&co, bootstrap-guile (~120MB)
+                     gash-boot, gash-utils-boot
+                                ^
+                                |
+                                *
+               bootstrap-mescc-tools, bootstrap-mes (~12 MiB)
+                         bootstrap-guile (~48 MiB)
 @end verbatim
 
 @c This graph is generated from wip-bootstrap, doing:
 
-@c ~/src/guix/core-updates/pre-inst-env guix graph --type=bag -e '(@@ (gnu packages commencement) gcc-mesboot)' > doc/images/gcc-mesboot-graph.dot
+@c guix graph --type=bag -e '(@@ (gnu packages commencement) gcc-core-mesboot0)' > doc/images/gcc-mesboot-graph.dot
 @c dot -T png doc/images/gcc-mesboot-graph.dot > doc/images/gcc-mesboot-graph.png
 
-Here's a generated dependency diagram to for the final bootstrap gcc
+Here's a generated dependency diagram to for the initial bootstrap gcc
 that builds the rest of Guix.
 
-@image{images/gcc-mesboot-graph,2in,,Reference graph of the gcc-mesboot}
+@image{images/gcc-mesboot-graph,2in,,Reference graph of the gcc-core-mesboot0}
 
 Work is ongoing to remove these binary seeds that were intentionally
 injected by our own doing as temporary shortcut
@@ -707,17 +757,14 @@ injected by our own doing as temporary shortcut
 bootstrap-mescc-tools (seed), bootstrap-mes (seed)
 @end example
 
-For now, these additional non-bootstrapped dependencies (i.e., binary
+For now, this additional non-bootstrapped dependencies (i.e., binary
 seeds) are taken for granted
 
 @example
-bootstrap-guile, bash, bzip2, coreutils, gawk, grep, gzip, patch, sed,
-tar, xz
+bootstrap-guile
 @end example
 
-Although we think these are less essential and thus less interesting
-than the GNU toolchain triplet that we focussed on initially, our next
-priority is to eleminate these one by one.
+Our next priority is to eleminate these one by one.
 
 @node Invoking mes
 @section Invoking mes
