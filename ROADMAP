@@ -1,7 +1,7 @@
                                                               -*- org -*-
 #+TITLE: Tentative GNU Mes Road Map
 
-Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+Copyright © 2016,2017,2018,2019,2020,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright
@@ -23,13 +23,12 @@ on Libera Chat!
 
 * TODO
 ** release 0.x, unsorted
+  - Full Source Bootstrap:
+    + integrate into GNU Guix; see branch wip-full-source-bootstrap.
   - Integrate Reduced Binary Seed bootstrap for ARM on GNU Guix;
     see branch wip-arm-bootstrap.
   - Introduce the Reduced Binary Seed bootstrap to NixOS (Debian,
     Arch, Gentoo, ...?).
-  - Full Source Bootstrap:
-    + compile mes.c using M2-Planet; see branch wip-m2,
-    + integrate into GNU Guix; see branch wip-full-source-bootstrap.
   - Full Guile-compatible module support; see branch wip-module.
   - RISC-V support: Mes C Library and MesCC.
   - AArch64 support: Mes C Library and MesCC.
@@ -64,6 +63,8 @@ on Libera Chat!
       https://srfi.schemers.org/srfi-72/srfi-72.html, or
     + ... drop it?
 * DONE
+  - 0.23 Full Source Bootstrap:
+    + compile mes.c using M2-Planet; see branch wip-m2,
   - GNU Mes now supports building Tiny CC on ARM.
   - Merge the Scheme-only bootstrap which uses Gash and Gash Core
     Utilities to remove from bootstrap-binary seed : Awk, Bash, Core
