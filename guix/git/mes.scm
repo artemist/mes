@@ -54,32 +54,27 @@
 (define-public mescc-tools
   (package
     (name "mescc-tools")
-    (version "1.1.0")
-    (source
-     (origin
-       (method url-fetch)
-       (uri (string-append
-             "http://git.savannah.nongnu.org/cgit/mescc-tools.git/snapshot/"
-             name "-Release_" version
-             ".tar.gz"))
-       (file-name (string-append name "-" version ".tar.gz"))
-       (sha256
-        (base32
-         "12cjryqfd6m6j807pvhk7i4vr2q0jiibpfrpnq5s67iq9l4rrc6b"))))
+    (version "1.4.0")
+    (source (origin
+              (method git-fetch)
+              (uri (git-reference
+                    (url "https://git.savannah.nongnu.org/r/mescc-tools.git")
+                    (commit (string-append "Release_" version))
+                    (recursive? #t)))             ;for M2libc
+              (file-name (git-file-name name version))
+              (sha256
+               (base32
+                "0z2ni2qn2np1walcaqlxz8sinzb78d4hiq9glddzf26wxc226hs4"))))
     (build-system gnu-build-system)
     (supported-systems
      '("aarch64-linux" "armhf-linux" "i686-linux" "x86_64-linux"))
+    (native-inputs (list which))
     (arguments
      `(#:make-flags (list (string-append "PREFIX=" (assoc-ref %outputs "out"))
                           (string-append "CC=" ,(cc-for-target)))
        #:test-target "test"
        #:phases (modify-phases %standard-phases
-                  (delete 'configure)
-                  (add-after 'unpack 'patch-prefix
-                    (lambda _
-                      (substitute* "sha256.sh"
-                        (("\\$\\(which sha256sum\\)") (which "sha256sum")))
-                      #t)))))
+                  (delete 'configure))))
     (synopsis "Tools for the full source bootstrapping process")
     (description
      "Mescc-tools is a collection of tools for use in a full source
