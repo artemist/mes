@@ -202,8 +202,7 @@ m2/mes-m2.M1: simple.make $(M2_PLANET_SOURCES) $(MES_SOURCES) $(M2_PLANET_INCLUD
 	$(M2_PLANET) $(M2_PLANET_FLAGS) $(M2_PLANET_SOURCES:%=-f %)  $(MES_SOURCES:%.c=-f %.c) -o $@ || rm -f $@
 
 m2/mes-m2.blood-elf.M1: m2/mes-m2.M1
-#	blood-elf --32 -f $< -o $@
-	blood-elf -f $< -o $@
+	blood-elf --little-endian -f $< -o $@
 
 m2/mes-m2.hex2: m2/mes-m2.blood-elf.M1
 	M1					\

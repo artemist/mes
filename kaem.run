@@ -118,7 +118,7 @@ M2-Planet                                       \
     -f src/vector.c                             \
     -o m2/mes.M1
 
-blood-elf -f m2/mes.M1 -o m2/mes.blood-elf-M1
+blood-elf --little-endian -f m2/mes.M1 -o m2/mes.blood-elf-M1
 
 M1                                              \
     --architecture ${stage0_cpu}                \

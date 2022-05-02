@@ -31,7 +31,7 @@ M2-Planet                                       \
     -f scaffold/main.c                          \
     -o scaffold/main.M1
 
-blood-elf -f scaffold/main.M1 -o scaffold/main.blood-elf-M1
+blood-elf --little-endian -f scaffold/main.M1 -o scaffold/main.blood-elf-M1
 
 M1                                              \
     --architecture ${stage0_cpu}                \

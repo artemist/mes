@@ -37,7 +37,7 @@ M2-Planet                                       \
     -f scaffold/local-static-array.c            \
     -o scaffold/local-static-array.M1
 
-blood-elf -f scaffold/local-static-array.M1 -o scaffold/local-static-array.blood-elf-M1
+blood-elf --little-endian -f scaffold/local-static-array.M1 -o scaffold/local-static-array.blood-elf-M1
 
 M1                                              \
     --architecture ${stage0_cpu}                \

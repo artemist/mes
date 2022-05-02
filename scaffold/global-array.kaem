@@ -37,7 +37,7 @@ M2-Planet                                       \
     -f scaffold/global-array.c                  \
     -o scaffold/global-array.M1
 
-blood-elf -f scaffold/global-array.M1 -o scaffold/global-array.blood-elf-M1
+blood-elf --little-endian -f scaffold/global-array.M1 -o scaffold/global-array.blood-elf-M1
 
 M1                                              \
     --architecture ${stage0_cpu}                \

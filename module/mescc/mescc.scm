@@ -251,6 +251,7 @@
          (blood-elf (or (getenv "BLOOD_ELF") "blood-elf"))
          (command `(,blood-elf
                     ,@(if (equal? (arch-get-machine options) "64") '("--64") '())
+                    "--little-endian"
                     "-f" ,(arch-find options (arch-get-m1-macros options))
                     ,@(append-map (cut list "-f" <>) M1-files)
                     "-o" ,M1-blood-elf-footer)))

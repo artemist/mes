@@ -49,7 +49,7 @@ M2-Planet                                       \
     -f scaffold/read.c                          \
     -o scaffold/read.M1
 
-blood-elf -f scaffold/read.M1 -o scaffold/read.blood-elf-M1
+blood-elf --little-endian -f scaffold/read.M1 -o scaffold/read.blood-elf-M1
 
 M1                                              \
     --architecture ${stage0_cpu}                \
