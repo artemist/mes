@@ -282,7 +282,10 @@ GIT_LS_FILES:=find
 MTIME:=0
 endif
 
-dist: $(TARBALL)
+check-signature:
+	git show HEAD --show-signature |grep 'gpg: Good signature'
+
+dist: check-signature $(TARBALL)
 
 sign-dist: $(TARBALL)
 	gpg -a --output $(TARBALL).sig --detach-sig $(TARBALL)
@@ -358,7 +361,7 @@ tag:
 guix-build:
 	./pre-inst-env $(GUIX) build mes@$(VERSION) --with-source=$(TARBALL)
 
-release: update-hash
+release: check-signature update-hash
 	git commit -m 'guix: mes: Update to $(VERSION).'			\
 	    -m '* guix/git/mes.scm (mes)[source]: Update to $(VERSION).'	\
 	    guix/git/mes.scm
