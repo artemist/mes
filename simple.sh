@@ -36,47 +36,48 @@ cat > include/mes/config.h <<EOF
 EOF
 
 ## Build ##
-gcc -g -D HAVE_CONFIG_H=1 -I include\
-    -o out-system-libc/mes\
-    \
-    lib/mes/eputs.c\
-    lib/mes/oputs.c\
-    \
-    lib/mes/cast.c\
-    lib/mes/itoa.c\
-    lib/mes/ltoa.c\
-    lib/mes/ltoab.c\
-    lib/mes/ultoa.c\
-    lib/mes/utoa.c\
-    lib/mes/eputc.c\
-    lib/mes/fdgetc.c\
-    lib/mes/fdputc.c\
-    lib/mes/fdputs.c\
-    lib/mes/fdungetc.c\
-    lib/mes/mes_open.c\
-    lib/mes/ntoab.c\
-    lib/mes/oputc.c\
-    \
-    lib/mes/__assert_fail.c\
-    lib/mes/assert_msg.c\
-    \
-    src/builtins.c\
-    src/cc.c\
-    src/core.c\
-    src/display.c\
-    src/eval-apply.c\
-    src/gc.c\
-    src/hash.c\
-    src/lib.c\
-    src/math.c\
-    src/mes.c\
-    src/module.c\
-    src/posix.c\
-    src/reader.c\
-    src/stack.c\
-    src/string.c\
-    src/struct.c\
-    src/symbol.c\
+gcc -g -D HAVE_CONFIG_H=1 -I include            \
+    -o out-system-libc/mes                      \
+                                                \
+    lib/mes/eputs.c                             \
+    lib/mes/oputs.c                             \
+                                                \
+    lib/mes/cast.c                              \
+    lib/mes/itoa.c                              \
+    lib/mes/ltoa.c                              \
+    lib/mes/ltoab.c                             \
+    lib/mes/ultoa.c                             \
+    lib/mes/utoa.c                              \
+    lib/mes/eputc.c                             \
+    lib/mes/fdgetc.c                            \
+    lib/mes/fdputc.c                            \
+    lib/mes/fdputs.c                            \
+    lib/mes/fdungetc.c                          \
+    lib/mes/mes_open.c                          \
+    lib/mes/ntoab.c                             \
+    lib/mes/oputc.c                             \
+                                                \
+    lib/mes/__assert_fail.c                     \
+    lib/mes/assert_msg.c                        \
+                                                \
+    src/builtins.c                              \
+    src/cc.c                                    \
+    src/core.c                                  \
+    src/display.c                               \
+    src/eval-apply.c                            \
+    src/gc.c                                    \
+    src/globals.c                               \
+    src/hash.c                                  \
+    src/lib.c                                   \
+    src/math.c                                  \
+    src/mes.c                                   \
+    src/module.c                                \
+    src/posix.c                                 \
+    src/reader.c                                \
+    src/stack.c                                 \
+    src/string.c                                \
+    src/struct.c                                \
+    src/symbol.c                                \
     src/vector.c
 
 ## Check ##
@@ -164,115 +165,119 @@ EOF
 
 ## Build ##
 compiler=gcc     # not configurable
-$CC -g -D HAVE_CONFIG_H=1 -I include -I include/$mes_kernel/$mes_cpu\
-    -nostdinc -nostdlib -fno-builtin -fno-stack-protector\
-    -o out-mes/mes\
-    \
-    lib/linux/$mes_cpu-mes-gcc/crt1.c\
-    \
-    lib/mes/globals.c\
-    lib/mes/eputs.c\
-    lib/mes/oputs.c\
-    \
-    lib/posix/write.c\
-    lib/string/strlen.c\
-    lib/stdlib/puts.c\
-    lib/stdlib/exit.c\
-    lib/$mes_kernel/$mes_cpu-mes-$compiler/_exit.c\
-    lib/$mes_kernel/$mes_cpu-mes-$compiler/_write.c\
-    \
-    lib/mes/cast.c\
-    lib/mes/itoa.c\
-    lib/mes/ltoa.c\
-    lib/mes/ltoab.c\
-    lib/mes/ultoa.c\
-    lib/mes/utoa.c\
-    lib/mes/eputc.c\
-    lib/mes/fdgetc.c\
-    lib/mes/fdputc.c\
-    lib/mes/fdputs.c\
-    lib/mes/fdungetc.c\
-    lib/mes/mes_open.c\
-    lib/mes/ntoab.c\
-    lib/mes/oputc.c\
-    \
-    lib/stdlib/atoi.c\
-    lib/mes/abtol.c\
-    lib/ctype/isdigit.c\
-    lib/ctype/isnumber.c\
-    lib/ctype/isspace.c\
-    lib/ctype/isxdigit.c\
-    \
-    lib/mes/__assert_fail.c\
-    lib/mes/assert_msg.c\
-    lib/mes/__buffered_read.c\
-    lib/mes/__mes_debug.c\
-    lib/posix/execv.c\
-    lib/posix/getcwd.c\
-    lib/posix/getenv.c\
-    lib/posix/isatty.c\
-    lib/posix/open.c\
-    lib/posix/setenv.c\
-    lib/posix/wait.c\
-    lib/stdio/fgetc.c\
-    lib/stdio/fputc.c\
-    lib/stdio/fputs.c\
-    lib/stdio/getc.c\
-    lib/stdio/getchar.c\
-    lib/stdio/putc.c\
-    lib/stdio/putchar.c\
-    lib/stdio/ungetc.c\
-    lib/stdlib/free.c\
-    lib/stdlib/malloc.c\
-    lib/stdlib/realloc.c\
-    lib/string/memchr.c\
-    lib/string/memcmp.c\
-    lib/string/memcpy.c\
-    lib/string/memmove.c\
-    lib/string/memset.c\
-    lib/string/strcmp.c\
-    lib/string/strcpy.c\
-    lib/string/strncmp.c\
-    \
-    lib/linux/lseek.c\
-    \
-    lib/linux/access.c\
-    lib/linux/brk.c\
-    lib/linux/chmod.c\
-    lib/linux/clock_gettime.c\
-    lib/linux/dup.c\
-    lib/linux/dup2.c\
-    lib/linux/execve.c\
-    lib/linux/fork.c\
-    lib/linux/fsync.c\
-    lib/linux/_getcwd.c\
-    lib/linux/gettimeofday.c\
-    lib/linux/ioctl3.c\
-    lib/linux/_open3.c\
-    lib/linux/read.c\
-    lib/linux/_read.c\
-    lib/linux/time.c\
-    lib/linux/unlink.c\
-    lib/linux/waitpid.c\
-    lib/linux/$mes_cpu-mes-$compiler/syscall.c\
-    \
-    src/builtins.c\
-    src/cc.c\
-    src/core.c\
-    src/display.c\
-    src/eval-apply.c\
-    src/gc.c\
-    src/hash.c\
-    src/lib.c\
-    src/math.c\
-    src/mes.c\
-    src/module.c\
-    src/posix.c\
-    src/reader.c\
-    src/stack.c\
-    src/string.c\
-    src/struct.c\
-    src/symbol.c\
+$CC -g -D HAVE_CONFIG_H=1                               \
+    -I include -I include/$mes_kernel/$mes_cpu          \
+       -nostdinc -nostdlib                              \
+    -fno-builtin -fno-stack-protector                   \
+    -o out-mes/mes                                      \
+                                                        \
+    lib/linux/$mes_cpu-mes-gcc/crt1.c                   \
+                                                        \
+    lib/mes/globals.c                                   \
+    lib/mes/eputs.c                                     \
+    lib/mes/oputs.c                                     \
+                                                        \
+    lib/posix/write.c                                   \
+    lib/string/strlen.c                                 \
+    lib/stdlib/puts.c                                   \
+    lib/stdlib/exit.c                                   \
+    lib/$mes_kernel/$mes_cpu-mes-$compiler/_exit.c      \
+    lib/$mes_kernel/$mes_cpu-mes-$compiler/_write.c     \
+                                                        \
+    lib/mes/cast.c                                      \
+    lib/mes/itoa.c                                      \
+    lib/mes/ltoa.c                                      \
+    lib/mes/ltoab.c                                     \
+    lib/mes/ultoa.c                                     \
+    lib/mes/utoa.c                                      \
+    lib/mes/eputc.c                                     \
+    lib/mes/fdgetc.c                                    \
+    lib/mes/fdputc.c                                    \
+    lib/mes/fdputs.c                                    \
+    lib/mes/fdungetc.c                                  \
+    lib/mes/mes_open.c                                  \
+    lib/mes/ntoab.c                                     \
+    lib/mes/oputc.c                                     \
+                                                        \
+    lib/stdlib/atoi.c                                   \
+    lib/mes/abtol.c                                     \
+    lib/ctype/isdigit.c                                 \
+    lib/ctype/isnumber.c                                \
+    lib/ctype/isspace.c                                 \
+    lib/ctype/isxdigit.c                                \
+                                                        \
+    lib/stub/__raise.c                                  \
+    lib/mes/__assert_fail.c                             \
+    lib/mes/assert_msg.c                                \
+    lib/mes/__buffered_read.c                           \
+    lib/mes/__mes_debug.c                               \
+    lib/posix/execv.c                                   \
+    lib/posix/getcwd.c                                  \
+    lib/posix/getenv.c                                  \
+    lib/posix/isatty.c                                  \
+    lib/posix/open.c                                    \
+    lib/posix/setenv.c                                  \
+    lib/posix/wait.c                                    \
+    lib/stdio/fgetc.c                                   \
+    lib/stdio/fputc.c                                   \
+    lib/stdio/fputs.c                                   \
+    lib/stdio/getc.c                                    \
+    lib/stdio/getchar.c                                 \
+    lib/stdio/putc.c                                    \
+    lib/stdio/putchar.c                                 \
+    lib/stdio/ungetc.c                                  \
+    lib/stdlib/free.c                                   \
+    lib/linux/malloc.c                                  \
+    lib/stdlib/realloc.c                                \
+    lib/string/memchr.c                                 \
+    lib/string/memcmp.c                                 \
+    lib/string/memcpy.c                                 \
+    lib/string/memmove.c                                \
+    lib/string/memset.c                                 \
+    lib/string/strcmp.c                                 \
+    lib/string/strcpy.c                                 \
+    lib/string/strncmp.c                                \
+                                                        \
+    lib/linux/lseek.c                                   \
+                                                        \
+    lib/linux/access.c                                  \
+    lib/linux/brk.c                                     \
+    lib/linux/chmod.c                                   \
+    lib/linux/clock_gettime.c                           \
+    lib/linux/dup.c                                     \
+    lib/linux/dup2.c                                    \
+    lib/linux/execve.c                                  \
+    lib/linux/fork.c                                    \
+    lib/linux/fsync.c                                   \
+    lib/linux/_getcwd.c                                 \
+    lib/linux/gettimeofday.c                            \
+    lib/linux/ioctl3.c                                  \
+    lib/linux/_open3.c                                  \
+    lib/linux/read.c                                    \
+    lib/linux/_read.c                                   \
+    lib/linux/time.c                                    \
+    lib/linux/unlink.c                                  \
+    lib/linux/waitpid.c                                 \
+    lib/linux/$mes_cpu-mes-$compiler/syscall.c          \
+                                                        \
+    src/builtins.c                                      \
+    src/cc.c                                            \
+    src/core.c                                          \
+    src/display.c                                       \
+    src/eval-apply.c                                    \
+    src/gc.c                                            \
+    src/globals.c                                       \
+    src/hash.c                                          \
+    src/lib.c                                           \
+    src/math.c                                          \
+    src/mes.c                                           \
+    src/module.c                                        \
+    src/posix.c                                         \
+    src/reader.c                                        \
+    src/stack.c                                         \
+    src/string.c                                        \
+    src/struct.c                                        \
+    src/symbol.c                                        \
     src/vector.c
 
 ## Check ##
