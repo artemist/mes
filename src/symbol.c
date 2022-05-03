@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2020,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -23,7 +23,7 @@
 
 #include <string.h>
 
-// char const *MES_VERSION = "0.23";
+// char const *MES_VERSION = "0.24";
 
 #if __M2_PLANET__
 #define M2_CELL_SIZE 12
