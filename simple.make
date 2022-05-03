@@ -1,6 +1,6 @@
 # GNU Mes --- Maxwell Equations of Software
 # Copyright © 2019 Jeremiah Orians <jeremiah@pdp10.guru>
-# Copyright © 2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2018,2019,2020,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -33,7 +33,7 @@ M2_PLANET_FUBAR = i386
 
 #M2_PLANET_ARCH = amd64
 #M2_PLANET_FUBAR = amd64
-M2_PLANET_FLAGS = --debug --architecture $(M2_PLANET_ARCH)
+M2_PLANET_FLAGS = --bootstrap-mode --debug --architecture $(M2_PLANET_ARCH)
 
 CFLAGS:=					\
   $(CFLAGS)					\
@@ -76,12 +76,14 @@ M2_SOURCES =					\
  lib/linux/x86-mes-m2/crt1.c			\
  lib/linux/x86-mes-m2/_exit.c			\
  lib/linux/x86-mes-m2/_write.c			\
+ lib/mes/globals.c	                        \
  lib/m2/cast.c					\
  lib/m2/exit.c					\
- lib/mes/write.c				\
+ lib/mes/mini-write.c				\
  lib/linux/x86-mes-m2/syscall.c			\
+ lib/stub/__raise.c				\
  lib/linux/brk.c				\
- lib/stdlib/malloc.c				\
+ lib/m2/malloc.c				\
  lib/string/memset.c				\
 						\
  lib/m2/read.c					\
@@ -170,7 +172,8 @@ GCC_SOURCES =					\
  lib/mes/itoa.c					\
  lib/mes/ltoa.c					\
  lib/mes/assert_msg.c				\
- src/cc.c
+ src/cc.c					\
+ src/globals.c
 
 mes-gcc: bin/mes-gcc
 mes-m2: bin/mes-m2
@@ -179,11 +182,11 @@ gc-gcc: bin/gc-gcc
 gc-m2: bin/gc-m2
 
 bin/mes-gcc: simple.make $(GCC_SOURCES) $(MES_SOURCES) $(INCLUDES) | bin
-	$(CC) $(CFLAGS) $(GCC_SOURCES) $(MES_SOURCES) -o $@
+	$(CC) $(CFLAGS) -o $@ $(GCC_SOURCES) $(MES_SOURCES)
 	cp -f $@ bin/mes
 
 bin/gc-gcc: simple.make $(GCC_SOURCES) $(TEST_GC_SOURCES) $(INCLUDES) | bin
-	$(CC) $(CFLAGS) -D GC_TEST=1 $(GCC_SOURCES) $(TEST_GC_SOURCES) -o $@
+	$(CC) $(CFLAGS) -D GC_TEST=1 -o $@ $(GCC_SOURCES) $(TEST_GC_SOURCES)
 
 M2_PLANET_INCLUDES =				\
  include/m2/lib.h				\
@@ -198,10 +201,10 @@ M2_PLANET_SOURCES =				\
  $(M2_PLANET_INCLUDES:%.h=%.h)			\
  $(M2_SOURCES)
 
-m2/mes-m2.M1: simple.make $(M2_PLANET_SOURCES) $(MES_SOURCES) $(M2_PLANET_INCLUDES) | bin
+m2/mes-m2.M1: simple.make $(M2_PLANET_SOURCES) $(MES_SOURCES) $(M2_PLANET_INCLUDES) | m2
 	$(M2_PLANET) $(M2_PLANET_FLAGS) $(M2_PLANET_SOURCES:%=-f %)  $(MES_SOURCES:%.c=-f %.c) -o $@ || rm -f $@
 
-m2/mes-m2.blood-elf.M1: m2/mes-m2.M1
+m2/mes-m2.blood-elf.M1: m2/mes-m2.M1 | m2
 	blood-elf --little-endian -f $< -o $@
 
 m2/mes-m2.hex2: m2/mes-m2.blood-elf.M1
@@ -215,13 +218,13 @@ m2/mes-m2.hex2: m2/mes-m2.blood-elf.M1
 	    -f m2/mes-m2.blood-elf.M1		\
 	    -o $@
 
-bin/mes-m2: m2/mes-m2.hex2
-	hex2					\
-	    --architecture $(M2_PLANET_ARCH)	\
-	    --little-endian			\
-	    --base-address 0x1000000		\
-	    -f lib/x86-mes/elf32-header.hex2	\
-	    -f m2/mes-m2.hex2			\
+bin/mes-m2: m2/mes-m2.hex2 | bin
+	hex2						\
+	    --architecture $(M2_PLANET_ARCH)		\
+	    --little-endian				\
+	    --base-address 0x1000000			\
+	    -f lib/linux/x86-mes/elf32-header.hex2	\
+	    -f m2/mes-m2.hex2				\
 	    -o $@
 	cp -f $@ bin/mes
 
@@ -250,14 +253,17 @@ check-gc: $(MES)
 check-mescc: $(MES)
 	rm -f a.out
 # this already needs succesful GC
-#	MES_DEBUG=1 MES_PREFIX=mes MES=$(MES) sh -x scripts/mescc -- -I include -nostdlib lib/string/strlen.c lib/mes/eputs.c scaffold/hello.c
-	MES_DEBUG=1 MES_PREFIX=mes MES=$(MES) sh -x scripts/mescc -- -m 32 -I include -nostdlib lib/linux/$(MESCC_CPU)-mes-mescc/crt1.c scaffold/main.c
+#	LIBRARY_PATH=lib MES_DEBUG=1 MES_PREFIX=mes MES=$(MES) sh -x scripts/mescc -- -I include -nostdlib lib/mes/globals.c lib/string/strlen.c lib/mes/eputs.c scaffold/hello.c
+	LIBRARY_PATH=lib MES_DEBUG=1 MES_PREFIX=mes MES=$(MES) sh -x scripts/mescc -- -m 32 -I include -nostdlib lib/mes/globals.c lib/linux/$(MESCC_CPU)-mes-mescc/crt1.c scaffold/main.c
 	./a.out; r=$$?; if [ $$r != 42 ]; then exit 1; fi
 
 
 # Directories
 bin:
-	mkdir -p bin
+	mkdir -p $@
+
+m2:
+	mkdir -p $@
 
 TAGS:
 	etags $(shell find . -name '*.c' -o -name '*.h') --language=scheme $(shell find mes module -name '*.mes' -o -name '*.scm')
