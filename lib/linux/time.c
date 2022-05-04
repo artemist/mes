@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -23,13 +23,6 @@
 #include <time.h>
 #include <stdlib.h>
 
-/* Linux' SYS_time syscall is a compatibility shim for SYS_gettimeofday.
-Therefore, prefer SYS_gettimeofday. */
-
-#if defined (SYS_gettimeofday)
-
-#include <sys/time.h>
-
 time_t
 time (time_t * result)
 {
@@ -41,31 +34,3 @@ time (time_t * result)
     *result = tv.tv_sec;
   return tv.tv_sec;
 }
-
-#elif defined (SYS_time)
-
-time_t
-time (time_t * result)
-{
-  return _sys_call1 (SYS_time, (long) result);
-}
-
-#else
-
-#warning there is no time
-
-#include <mes/lib.h>
-
-time_t
-time (time_t * result)
-{
-  static int stub = 0;
-  if (__mes_debug () && !stub)
-    eputs ("time stub\n");
-  stub = 1;
-  if (result)
-    *result = 0;
-  return 0;
-}
-
-#endif
