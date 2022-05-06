@@ -170,6 +170,7 @@ fi
     ${SHELL} ${srcdest}build-aux/build-lib.sh
     ${SHELL} ${srcdest}build-aux/build-source-lib.sh
     if $bootstrap; then
+        rm -f globals.* # FIXME: avoid name clash with globals from lib
         ${SHELL} ${srcdest}build-aux/build-mes.sh
         cp -f bin/mes-mescc ../bin
         cp -f bin/mes ../bin
