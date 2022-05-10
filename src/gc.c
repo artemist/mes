@@ -213,14 +213,6 @@ copy_cell (struct scm *to, struct scm *from)
 }
 
 void
-copy_news (struct scm *to, struct scm *from)
-{
-  to->type = from->type;
-  to->car = from->car;
-  to->cdr = from->cdr;
-}
-
-void
 copy_stack (long index, struct scm *from)
 {
   g_stack_array[index] = from;
@@ -483,14 +475,14 @@ gc_copy (struct scm *old)               /*:((internal)) */
     return old->car;
   struct scm *new = g_free;
   g_free = g_free + M2_CELL_SIZE;
-  copy_news (new, old);
+  copy_cell (new, old);
   if (new->type == TSTRUCT || new->type == TVECTOR)
     {
       new->vector = g_free;
       long i;
       for (i = 0; i < old->length; i = i + 1)
         {
-          copy_news (g_free, cell_ref (old->vector, i));
+          copy_cell (g_free, cell_ref (old->vector, i));
           g_free = g_free + M2_CELL_SIZE;
         }
     }
