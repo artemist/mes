@@ -40,13 +40,6 @@ cell_bytes (struct scm *x)
   return p + (2 * sizeof (long));
 }
 
-char *
-news_bytes (struct scm *x)
-{
-  char *p = cast_voidp_to_charp (x);
-  return p + (2 * sizeof (long));
-}
-
 #define U10 10U
 // CONSTANT U10 10
 #define U100 100U
@@ -504,7 +497,7 @@ gc_copy (struct scm *old)               /*:((internal)) */
   else if (new->type == TBYTES)
     {
       char const *src = cell_bytes (old);
-      char *dest = news_bytes (new);
+      char *dest = cell_bytes (new);
       size_t length = new->length;
       memcpy (dest, src, length);
       g_free = g_free + ((bytes_cells (length) - 1) * M2_CELL_SIZE);

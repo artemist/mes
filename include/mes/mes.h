@@ -153,7 +153,6 @@ struct scm *vector_ref_ (struct scm *x, long i);
 struct scm *vector_set_x_ (struct scm *x, long i, struct scm *e);
 FUNCTION builtin_function (struct scm *builtin);
 char *cell_bytes (struct scm *x);
-char *news_bytes (struct scm *x);
 int peekchar ();
 int readchar ();
 int unreadchar ();
