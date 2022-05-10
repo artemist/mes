@@ -1,6 +1,7 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
  * Copyright © 2016,2017,2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2022 Gabriel Wicki <gabriel@erlikon.ch>
  *
  * This file is part of GNU Mes.
  *
@@ -326,11 +327,11 @@ void
 gc_up_arena ()
 {
   long old_arena_bytes = (ARENA_SIZE + JAM_SIZE) * sizeof (struct scm);
-  if (ARENA_SIZE >> 1 < MAX_ARENA_SIZE >> 2)
+  if (ARENA_SIZE / 2 < MAX_ARENA_SIZE / 4)
     {
-      ARENA_SIZE = ARENA_SIZE << 1;
-      JAM_SIZE = JAM_SIZE << 1;
-      GC_SAFETY = GC_SAFETY << 1;
+      ARENA_SIZE = ARENA_SIZE * 2;
+      JAM_SIZE = JAM_SIZE * 2;
+      GC_SAFETY = GC_SAFETY * 2;
     }
   else
     ARENA_SIZE = MAX_ARENA_SIZE - JAM_SIZE;
@@ -448,7 +449,7 @@ void
 gc_flip ()
 {
   if (g_free - g_news > JAM_SIZE)
-    JAM_SIZE = (g_free - g_news) + ((g_free - g_news) / 2);
+    JAM_SIZE = ((g_free - g_news) * 3) / 2;
 
   cell_arena = g_cells - M2_CELL_SIZE; /* For debugging. */
   gc_cellcpy (g_cells, g_news, (g_free - g_news) / M2_CELL_SIZE);
