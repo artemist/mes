@@ -6,8 +6,8 @@
 [[https://www.gnu.org/software/mes][GNU Mes]] is a Scheme interpreter and C compiler for bootstrapping the GNU
 System.  Since version 0.22 it has again helped to halve the size of
 opaque, uninspectable binary seeds that are currently being used in the
-[[https://guix.gnu.org/blog/2019/guix-reduces-bootstrap-seed-by-50/][Reduced Binary Seed bootstrap]] of [[https://www.gnu.org/software/guix][GNU Guix]].  The final goal is to help
-create a full source bootstrap as part of the [[http://bootstrappable.org][bootstrappable builds]]
+[[https://guix.gnu.org/blog/2020/guix-further-reduces-bootstrap-seed-to-25][Further Reduced Binary Seed bootstrap]] of [[https://www.gnu.org/software/guix][GNU Guix]].  The final goal is to
+help create a full-source bootstrap as part of the [[http://bootstrappable.org][bootstrappable builds]]
 effort for UNIX-like operating systems.
 
 The Scheme interpreter is written in ~5,000 LOC of simple C, and the C
