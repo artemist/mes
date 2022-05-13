@@ -261,6 +261,16 @@ WEB_IMAGES:=\
 web: info $(WEB_IMAGES)
 	GENDOCS_TEMPLATE_DIR=doc build-aux/gendocs.sh -I doc -s ${srcdest}doc/mes.texi -o doc/web/manual --email bug-mes@gnu.org mes "GNU Mes manual"
 
+SITE = /srv/mes.org
+publish: web
+	rsync -P -v . $(SITE)/
+	rsync -P -v . $(SITE)/manual/
+	rsync -P -rvz doc/web/manual/ $(SITE)/manual/
+
+LOCAL_SITE = $(HOME)/src/web/mes
+publish-local: web
+	$(MAKE) publish SITE=$(LOCAL_SITE)
+
 ###  dist
 COMMIT=$(shell test -e ${srcdest}.git && (cd ${srcdir} && git describe --dirty 2>/dev/null) || cat ${srcdest}.tarball-version)
 TARBALL_VERSION=$(COMMIT:v%=%)
@@ -349,10 +359,14 @@ tag:
 #     - Update package in Guix master.
 #     - If applicable, verify bootstrap.
 #  6. Upload to ftp.gnu.org
-#  7. Create blog post
+#  7. Update web
+#     - make publish-local
+#     - Update ~/src/web/mes/index.html
+#     - Upload: cvs ci
+#  8. Create blog post
 #     cp doc/announce/ANNOUNCE-0.23 ~/src/web/joyofsource.com/posts/announce-0.23.md
 #     fix urls and all
-#  8. Send mail
+#  9. Send mail
 #     To: info-gnu@gnu.org
 #     Cc: bug-mes@gnu.org
 #     Cc: guix-devel@gnu.org
