@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # GNU Mes --- Maxwell Equations of Software
-# Copyright © 2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2017,2018,2019,2020,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -117,6 +117,7 @@ lib/tests/scaffold/54-argv.c
 lib/tests/scaffold/55-char-array.c
 lib/tests/scaffold/60-math.c
 lib/tests/scaffold/60-math-itoa.c
+lib/tests/scaffold/60-math-modulo.c
 lib/tests/scaffold/61-array.c
 lib/tests/scaffold/62-array.c
 lib/tests/scaffold/63-struct.c
