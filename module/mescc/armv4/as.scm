@@ -383,9 +383,9 @@
                `(,(string-append "push___%" r0))
                (armv4:call-label #f "__mesabi_imod" 2))
         ;; __mesabi_uldiv(a, b, remainderp)
-        (append `(("push___%r0") ; slot for remainder
-                  ("mov____%esp,%r0")
-                  ("push___%r0") ; pointer to remainder
+        (append `(("push___%r3")        ; slot for remainder
+                  ("mov____%esp,%r3")
+                  ("push___%r3")        ; pointer to remainder
                   (,(string-append "push___%" r1))
                   (,(string-append "push___%" r0)))
                 (armv4:call-label #f "__mesabi_uldiv" 3)

@@ -1,5 +1,5 @@
 ### GNU Mes --- Maxwell Equations of Software
-### Copyright © 2017,2018,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+### Copyright © 2017,2018,2020,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ### Copyright © 2019,2020 Danny Milosavljevic <dannym@scratchpost.org>
 ###
 ### This file is part of GNU Mes.
@@ -91,6 +91,7 @@ DEFINE mov____%r0,(%r1) 000081e5
 DEFINE mov____%r1,%r0 0100a0e1
 DEFINE mov____%r1,%r2 0120a0e1
 DEFINE mov____%esp,%r0 0d00a0e1
+DEFINE mov____%esp,%r3 0d30a0e1
 
 # e59f9004        ldr     r9, [pc, #4]    ; <L1>
 # e5890000        str     r0, [r9]
