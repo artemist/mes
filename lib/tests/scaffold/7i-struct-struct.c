@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -48,7 +48,12 @@ struct anon
 int
 main ()
 {
-  struct foo f = { 0, 1, 2 };
+#if __GNUC__ > 11
+  struct foo f = { 0, 1, 2, 0, 0 };
+#else
+  // FIXME: gcc-12.2.0 segfaults on this
+  struct foo f = { 0, 1, 2, 0 };
+#endif
   f.s.baz = 2;
   oputs ("f.s.bar=");
   oputs (itoa (f.s.bar));

@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2019, 2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -29,7 +29,12 @@ int
 main (int argc, char const *argv[])
 {
   eputs ("test:getenv\n");
+#if __GNUC__ > 11
+  char* file_name = malloc (PATH_MAX);
+#else
+  // FIXME: gcc-12.2.0 fails open using this
   char file_name[PATH_MAX];
+#endif
   char *srcdir = getenv ("abs_top_srcdir");
   if (! srcdir) // for running by hand
     srcdir = ".";

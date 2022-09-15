@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -214,7 +214,12 @@ main (int argc, char *argv[])
   //i = (*fun2)(argc, argv);
 
   i = 1;
+#if __GNUC__ > 11
+  int lst[6] = { -1, 1 - 1, i, 2, 3, 0 };
+#else
+  // FIXME: gcc-12.2.0 segfaults on this
   int lst[6] = { -1, 1 - 1, i, 2, 3 };
+#endif
   for (int i = 0; i < 4; i++)
     {
       eputs ("i: ");
