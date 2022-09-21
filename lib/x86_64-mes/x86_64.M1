@@ -1,6 +1,7 @@
 ### GNU Mes --- Maxwell Equations of Software
 ### Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ### Copyright © 2018 Peter De Wachter <pdewacht@gmail.com>
+### Copyright © 2022 Ekaitz Zarraga <ekaitz@elenq.tech>
 ###
 ### This file is part of GNU Mes.
 ###
@@ -123,10 +124,14 @@ DEFINE mov____%rdx,%rax 4889d0
 DEFINE mov____%rdx,%rdi 4889d7
 DEFINE mov____%rsi,(%rdi) 488937
 DEFINE mov____%rsp,%rbp 4889e5
+DEFINE mov____%si,(%rdi) 668937
+DEFINE mov____%sil,(%rdi) 448837
 DEFINE mov____(%rax),%eax 8b00
 DEFINE mov____(%rax),%esi 8b30
 DEFINE mov____(%rax),%rax 488b00
 DEFINE mov____(%rax),%rsi 488b30
+DEFINE mov____(%rax),%si 668b30
+DEFINE mov____(%rax),%sil 408a30
 DEFINE mov____(%rdi),%edi 8b3f
 DEFINE mov____(%rdi),%rdi 488b3f
 DEFINE mov____0x32(%rbp),%rax 488b85
