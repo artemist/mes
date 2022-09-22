@@ -935,7 +935,7 @@ The @var{option}s can be among the following:
 align @var{symbol}, the default is @code{functions}; other valid values
 are: @code{globals}.
 
-@item --base-address=ADRRESS
+@item --base-address=ADDRESS
 use BaseAddress ADDRESS [0x1000000]
 
 @item -c

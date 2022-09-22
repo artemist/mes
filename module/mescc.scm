@@ -107,7 +107,7 @@ Options:
   --arch=ARCH         compile for ARCH [~a]
   --kernel=ARCH       compile for KERNEL [~a]
   -dumpmachine        display the compiler's target machine
-  --base-address=ADRRESS
+  --base-address=ADDRESS
                       use BaseAddress ADDRESS [0x1000000]
   --numbered-arch     mescc-tools use numbered arch
   -D DEFINE[=VALUE]   define DEFINE [VALUE=1]
