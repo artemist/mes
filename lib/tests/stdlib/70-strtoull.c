@@ -1,6 +1,7 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
  * Copyright © 2017 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2022 Rick Masters <grick23@gmail.com>
  *
  * This file is part of GNU Mes.
  *
@@ -42,6 +43,14 @@ main ()
   eputs (p);
   if (strcmp (p, "zar\n"))
     return 4;
+
+  p = "a2zar\n";
+  n = strtoull (p, (char **) &p, 16);
+  if (n != 162)
+    return 5;
+  eputs (p);
+  if (strcmp (p, "zar\n"))
+    return 6;
 
   return 0;
 }

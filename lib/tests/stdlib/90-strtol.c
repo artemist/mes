@@ -1,6 +1,7 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
  * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2022 Rick Masters <grick23@gmail.com>
  *
  * This file is part of GNU Mes.
  *
@@ -28,17 +29,21 @@ main ()
   if (strtol ("0x12", 0, 0) != 18)
     1;
 
-  eputs ("012\n");
-  if (strtol ("012", 0, 0) != 10)
+  eputs ("0xa2\n");
+  if (strtol ("0xa2", 0, 0) != 162)
     2;
 
-  eputs ("-1\n");
-  if (strtol ("-1", 0, 0) != -1)
+  eputs ("012\n");
+  if (strtol ("012", 0, 0) != 10)
     3;
 
   eputs ("-1\n");
-  if (strtoul ("-1", 0, 0) != -1)
+  if (strtol ("-1", 0, 0) != -1)
     4;
+
+  eputs ("-1\n");
+  if (strtoul ("-1", 0, 0) != -1)
+    5;
 
   char *p = "16";
   int n = strtol (p, (char **) &p, 0);
@@ -46,7 +51,7 @@ main ()
   eputs (p);
   eputs ("\n");
   if (*p != 0)
-    return 5;
+    return 6;
 
   p = "0x12";
   n = strtol (p, (char **) &p, 0);
@@ -54,7 +59,7 @@ main ()
   eputs (p);
   eputs ("\n");
   if (*p != 0)
-    return 5;
+    return 7;
 
 
   return 0;
