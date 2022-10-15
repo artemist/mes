@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # GNU Mes --- Maxwell Equations of Software
-# Copyright © 2018,2019,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2018,2019,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -20,7 +20,7 @@
 
 set -e
 
-VERSION=0.24
+VERSION=0.24.1
 srcdir=${srcdir-$(dirname $0)}
 srcdest=
 if test "$srcdir" != "."; then
