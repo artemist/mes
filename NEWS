@@ -10,6 +10,16 @@ Copyright © 2016,2017,2018,2019,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@
 
 Please send Mes bug reports to bug-mes@gnu.org.
 
+* Changes in 0.24.1 since 0.24
+** Build
+*** Support M2-Planet bootstrap for ARM.
+** MesCC
+*** The Mes C Library now supports bootstrapping ARM.
+** Noteworthy bug fixes
+*** The definition of S_ISUID was fixed.
+*** Unsigned modulo has been fixed for ARM.
+*** A bug with abtol has been fixed.
+*** Workarounds for building with gcc-12.2.0 have been added.
 * Changes in 0.24 since 0.23
 ** Core
 *** Mes and Mes C Library can now be built with M2-Planet.
@@ -24,6 +34,20 @@ Next to `U', also support `ULL', `UL', `L', and `LL'.
 *** Development build support with Guile-2 was resurrected.
 *** The logand procedure now works correctly.
 *** The 64bit build was resurrected.
+
+* Changes in 0.23.1 since 0.23
+** Build: Move to libera.chat.
+** Core
+*** Mes and Mes C Library can now support ARM bootstrap.
+** MesCC
+*** MesCC now supports ARM bootstrap.
+** Noteworthy bug fixes
+*** Stack frame 0 does not perform out of bounds access.
+*** MesCC's -m64 works again.
+*** Guile-2 support has been resurrected.
+*** logand has been fixed.
+*** Mes C Library now supports more than 255 command line parameters.
+
 * Changes in 0.23 since 0.22
 ** Core
 *** Mes and Mes C Library can now be built with GCC 10.x.
