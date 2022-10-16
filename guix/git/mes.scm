@@ -189,7 +189,7 @@ extensive examples, including parsers for the Javascript and C99 languages.")
               (uri (string-append
                     "https://ftp.gnu.org/pub/gnu/mes/mes-" version ".tar.gz"))
               (sha256
-               (base32 #!mes!# "0d855agwawjjzwbjmvb5xlbwg77zdpwbjm9kjxc2wqvn0vmhq4im"))))
+               (base32 #!mes!# "0246sy5zm49zw4zs87hrq1j1x74mchijh4rlj2mzlwjccha5cybs"))))
     (build-system gnu-build-system)
     (supported-systems '("aarch64-linux" "armhf-linux" "i686-linux" "x86_64-linux"))
     (propagated-inputs (list mescc-tools nyacc))
