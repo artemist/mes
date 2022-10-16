@@ -749,7 +749,7 @@ Currently, it goes like this:
 Here's a generated dependency diagram to for the initial bootstrap gcc
 that builds the rest of Guix.
 
-@image{images/gcc-mesboot-graph,2in,,Reference graph of the gcc-core-mesboot0}
+@image{images/gcc-mesboot-graph,6in,,Reference graph of the gcc-core-mesboot0}
 
 Work is ongoing to remove these binary seeds that were intentionally
 injected by our own doing as temporary shortcut
