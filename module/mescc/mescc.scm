@@ -1,5 +1,5 @@
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016,2017,2018,2019,2020,2021 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2016,2017,2018,2019,2020,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;; Copyright © 2021 W. J. van der Laan <laanwj@protonmail.com>
 ;;;
 ;;; This file is part of GNU Mes.
@@ -22,7 +22,6 @@
   #:use-module (srfi srfi-26)
   #:use-module (ice-9 pretty-print)
   #:use-module (ice-9 getopt-long)
-  #:use-module (mes mes-0)
   #:use-module (mes misc)
 
   #:use-module (mescc info)
@@ -40,10 +39,9 @@
             mescc:link
             multi-opt))
 
-(define GUILE-with-output-to-file with-output-to-file)
-(define (with-output-to-file file-name thunk)
+(define (with-output-to-file* file-name thunk)
   (if (equal? file-name "-") (thunk)
-      (GUILE-with-output-to-file file-name thunk)))
+      (with-output-to-file file-name thunk)))
 
 (define (mescc:preprocess options)
   (let* ((pretty-print/write (string->symbol (option-ref options 'write (if guile? "pretty-print" "write"))))
@@ -64,7 +62,7 @@
          (arch (arch-get options))
          (defines (append (arch-get-defines options) defines))
          (verbose? (count-opt options 'verbose)))
-    (with-output-to-file ast-file-name
+    (with-output-to-file* ast-file-name
       (lambda _ (for-each (cut c->ast prefix defines includes arch pretty-print/write verbose? <>) files)))))
 
 (define (c->ast prefix defines includes arch write verbose? file-name)
@@ -89,7 +87,7 @@
                     (filter (negate (cut eq? <> 'functions)) align))))
     (when verbose?
       (format (current-error-port) "dumping: ~a\n" M1-file-name))
-    (with-output-to-file M1-file-name
+    (with-output-to-file* M1-file-name
       (cut infos->M1 M1-file-name infos #:align align #:verbose? verbose?))
     M1-file-name))
 
@@ -183,7 +181,7 @@
                     (filter (negate (cut eq? <> 'functions)) align))))
     (when verbose?
       (format (current-error-port) "dumping: ~a\n" M1-file-name))
-    (with-output-to-file M1-file-name
+    (with-output-to-file* M1-file-name
       (cut infos->M1 M1-file-name infos #:align align))
     (or (M1->hex2 options (list M1-file-name))
         (exit 1))))
