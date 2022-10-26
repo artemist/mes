@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -27,8 +27,9 @@
 #undef __MES_ASSERT_H
 #include_next <assert.h>
 #else // ! SYSTEM_LIBC
-#define assert(x) ((x) ? (void)0 : __assert_fail (#x))
-void __assert_fail (char *s);
+#define assert(x) ((x) ? (void)0 : __assert_fail (#x, 0, 0, 0))
+void __assert_fail (char const *s, char const *file, unsigned line,
+                    char const *function);
 #endif // ! SYSTEM_LIBC
 
 #endif // __MES_ASSERT_H

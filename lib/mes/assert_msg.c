@@ -1,7 +1,7 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
  * Copyright © 2019 Jeremiah Orians <jeremiah@pdp10.guru>
- * Copyright © 2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -20,11 +20,12 @@
  */
 
 #include <mes/lib.h>
+#include <assert.h>
 #include <stdlib.h>
 
 void
 assert_msg (int bool, char *msg)
 {
   if (bool == 0)
-    __assert_fail (msg);
+    __assert_fail (msg, 0, 0, 0);
 }

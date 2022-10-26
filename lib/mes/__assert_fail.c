@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -19,14 +19,30 @@
  */
 
 #include <mes/lib.h>
+#include <assert.h>
 
 void
-__assert_fail (char *s)
+__assert_fail (char const *msg, char const *file, unsigned line,
+               char const *function)
 {
+  if (file && file[0])
+    {
+      eputs (file);
+      eputs (":");
+    }
+  if (line)
+    {
+      eputs (itoa (line));
+      eputs (":");
+    }
+  if (function && function[0])
+    {
+      eputs (function);
+      eputs (":");
+    }
   eputs ("assert fail: ");
-  eputs (s);
+  eputs (msg);
   eputs ("\n");
-  char *fail = s;
-  fail = 0;
+  char *fail = 0;
   fail[0] = 0;
 }
