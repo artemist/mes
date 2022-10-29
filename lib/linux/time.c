@@ -19,7 +19,7 @@
  */
 
 #include <linux/syscall.h>
-#include <syscall.h>
+#include <arch/syscall.h>
 #include <time.h>
 #include <sys/time.h>
 #include <stdlib.h>

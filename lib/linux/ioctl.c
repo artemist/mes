@@ -19,7 +19,7 @@
  */
 
 #include <linux/syscall.h>
-#include <syscall.h>
+#include <arch/syscall.h>
 #include <stdarg.h>
 #include <sys/ioctl.h>
 

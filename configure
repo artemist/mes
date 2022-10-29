@@ -707,6 +707,13 @@ See \"Porting GNU Mes\" in the manual, or try --with-courage\n" mes-system)
 #define MES_VERSION \"" VERSION "\"
 ")))))
         (substitute (string-append srcdest "build-aux/config.make.in") pairs #:target ".config.make"))
+      (let ((arch-dir (string-append srcdest "include/" mes-kernel "/" mes-cpu)))
+        (define (copy-header file-name)
+          (system* "cp" "-f" "-v"
+                   (string-append arch-dir "/" file-name)
+                   (string-append "include/arch/" file-name)))
+        (system* "mkdir" "-p" "include/arch")
+        (for-each copy-header '("kernel-stat.h" "syscall.h")))
 
       (let ((make (and=> (file-name "make" deps) basename)))
         (display (string-append "

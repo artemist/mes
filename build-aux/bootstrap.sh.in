@@ -50,7 +50,7 @@ srcdest=../${srcdest}
 ln -sf ${srcdest}mes .
 ln -sf ${srcdest}module .
 ln -sf ${srcdest}src .
-AM_CPPFLAGS="-D HAVE_CONFIG_H=1 -I ${srcdest}include -I ${srcdest}include/$mes_kernel/$mes_cpu"
+AM_CPPFLAGS="-D HAVE_CONFIG_H=1 -I ${srcdest}include -I ../include -I include"
 AM_CFLAGS="-L ${srcdest}lib"
 
 mkdir -p $mes_cpu-mes
@@ -108,7 +108,7 @@ $AR crD $mes_cpu-mes/libc+tcc.a $objects
 
 cd ..
 srcdest=
-CPPFLAGS="-D HAVE_CONFIG_H=1 -I ${srcdest}include -I ${srcdest}include/$mes_kernel/$mes_cpu"
+AM_CPPFLAGS="-D HAVE_CONFIG_H=1 -I ${srcdest}include -I ../include -I include"
 AM_CFLAGS="-L ${srcdest}lib"
 
 objects=

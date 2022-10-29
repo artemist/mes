@@ -20,7 +20,7 @@
 
 #include <mes/lib.h>
 #include <linux/syscall.h>
-#include <syscall.h>
+#include <arch/syscall.h>
 #include <sys/types.h>
 
 int

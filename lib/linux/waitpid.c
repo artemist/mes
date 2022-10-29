@@ -19,7 +19,7 @@
  */
 
 #include <linux/syscall.h>
-#include <syscall.h>
+#include <arch/syscall.h>
 #include <sys/types.h>
 
 pid_t

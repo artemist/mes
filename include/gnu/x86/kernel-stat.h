@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018,2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -17,13 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef __MES_GNU_X86_KERNEL_STAT_H
+#define __MES_GNU_X86_KERNEL_STAT_H 1
 
-#include <linux/syscall.h>
 #include <arch/syscall.h>
-#include <sys/types.h>
 
-int
-getdents (int filedes, char *buffer, size_t nbytes)
-{
-  return _sys_call3 (SYS_getdents, (int) filedes, (long) buffer, (long) nbytes);
-}
+#endif // __MES_GNU_X86_KERNEL_STAT_H

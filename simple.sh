@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # GNU Mes --- Maxwell Equations of Software
-# Copyright © 2019,2020,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2019,2020,2022,2023 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -36,7 +36,9 @@ cat > include/mes/config.h <<EOF
 EOF
 
 ## Build ##
-gcc -g -D HAVE_CONFIG_H=1 -I include            \
+gcc -g -D HAVE_CONFIG_H=1                       \
+    -I include                                  \
+    -I include/$mes_kernel/$mes_cpu             \
     -o out-system-libc/mes                      \
                                                 \
     lib/mes/eputs.c                             \
@@ -163,11 +165,15 @@ cat > include/mes/config.h <<EOF
 #define MES_VERSION "git"
 EOF
 
+mkdir -p include/arch
+cp -f include/$mes_kernel/$mes_cpu/kernel-stat.h include/arch
+cp -f include/$mes_kernel/$mes_cpu/syscall.h include/arch
+
 ## Build ##
 compiler=gcc     # not configurable
 $CC -g -D HAVE_CONFIG_H=1                               \
     -I include -I include/$mes_kernel/$mes_cpu          \
-       -nostdinc -nostdlib                              \
+    -nostdinc -nostdlib                                 \
     -fno-builtin -fno-stack-protector                   \
     -o out-mes/mes                                      \
                                                         \

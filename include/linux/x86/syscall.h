@@ -75,7 +75,6 @@
 #define SYS_stat   0x6a
 
 /* libc+gnu */
-
 #define SYS_chdir     0x0c
 #define SYS_link      0x09
 #define SYS_getpid    0x14
@@ -111,5 +110,24 @@
 #define SYS_symlink   0x53
 #define SYS_readlink  0x55
 #define SYS_mknod     0x0e
+
+#if __SIZEOF_LONG_LONG__ == 8
+
+#define SYS_stat64     0xc3
+#define SYS_lstat64    0xc4
+#define SYS_fstat64    0xc5
+#define SYS_fcntl64    0xdd
+#define SYS_getdents64 0xdc
+
+#undef SYS_stat
+#define SYS_stat SYS_stat64
+
+#undef SYS_lstat
+#define SYS_lstat SYS_lstat64
+
+#undef SYS_fstat
+#define SYS_fstat SYS_fstat64
+
+#endif  // __SIZEOF_LONG_LONG__ == 8
 
 #endif /* __MES_LINUX_X86_SYSCALL_H */

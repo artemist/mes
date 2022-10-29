@@ -85,16 +85,25 @@ PHONY_TARGETS:=\
 
 .PHONY: $(PHONY_TARGETS)
 
+X86_ARCH_HEADERS = $(wildcard $(scrdest)include/linux/x86/*.h)
+ARCH_HEADERS = $(X86_ARCH_HEADERS:$(srcdest)include/linux/x86/%=include/arch/%)
+
 default: all
 
 all: doc
 
 doc: build
 
-build:
+build: | $(ARCH_HEADERS)
 	$(SHELL) build.sh
 
 src/${program_prefix}mes: build
+
+include/arch/%.h: $(srcdest)include/$(mes_kernel)/$(mes_cpu)/%.h | arch-dir
+	cp -f $< $@
+
+arch-dir:
+	mkdir -p include/arch
 
 clean:
 	rm -f *.o *.s bin/mes bin/mes-gcc bin/mes-mescc

@@ -18,6 +18,8 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <linux/syscall.h>
+#include <arch/syscall.h>
 #include <mes/lib.h>
 #include <fcntl.h>
 #include <stdarg.h>

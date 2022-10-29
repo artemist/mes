@@ -1,7 +1,7 @@
 #! @SHELL@
 
 # GNU Mes --- Maxwell Equations of Software
-# Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2017,2018,2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -99,6 +99,7 @@ mkdir -p $DESTDIR$includedir
 mkdir -p $DESTDIR$libdir
 mkdir -p $DESTDIR$pkgdatadir
 tar -cf- -C ${srcdir}/include . | tar -${v}xf- -C $DESTDIR$includedir
+tar -cf- -C include . | tar -${v}xf- -C $DESTDIR$includedir
 tar -cf- -C ${srcdir}/lib $mes_cpu-mes | tar -${v}xf- -C $DESTDIR$libdir
 tar -cf- -C ${srcdir}/lib $mes_kernel/$mes_cpu-mes | tar -${v}xf- -C $DESTDIR$libdir
 if test -z "$srcdest"; then

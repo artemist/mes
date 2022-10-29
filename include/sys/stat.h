@@ -19,7 +19,7 @@
  * along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
  */
 #ifndef __MES_SYS_STAT_H
-#define __MES_SYS_STAT_H 1lei
+#define __MES_SYS_STAT_H 1
 
 #if SYSTEM_LIBC
 #undef __MES_SYS_STAT_H
@@ -29,59 +29,12 @@
 
 #include <time.h>
 #include <sys/types.h>
+#include <arch/kernel-stat.h>
 
 #ifndef __MES_MODE_T
 #define __MES_MODE_T
 typedef int mode_t;
 #endif
-
-// *INDENT-OFF*
-#if __i386__ || __arm__
-struct stat
-{
-  unsigned long  st_dev;
-  unsigned long  st_ino;
-  unsigned short st_mode;
-  unsigned short st_nlink;
-  unsigned short st_uid;
-  unsigned short st_gid;
-  unsigned long  st_rdev;
-  long           st_size; /* Linux: unsigned long; glibc: off_t (i.e. signed) */
-  unsigned long  st_blksize;
-  unsigned long  st_blocks;
-  time_t         st_atime; /* Linux: unsigned long; glibc: time_t */
-  unsigned long  st_atime_usec;
-  time_t         st_mtime; /* Linux: unsigned long; glibc: time_t */
-  unsigned long  st_mtime_usec;
-  time_t         st_ctime; /* Linux: unsigned long; glibc: time_t */
-  unsigned long  st_ctime_usec;
-  unsigned long  __foo0;
-  unsigned long  __foo1;
-};
-#elif __x86_64__
-struct stat
-{
-  unsigned long  st_dev;
-  unsigned long  st_ino;
-  unsigned int   st_mode;
-  unsigned int   st_nlink;
-  unsigned int   st_uid;
-  unsigned int   st_gid;
-  unsigned long  st_rdev;
-  long           st_size;
-  unsigned long  st_blksize;
-  unsigned long  st_blocks;
-  time_t         st_atime;
-  unsigned long  st_atime_usec;
-  time_t         st_mtime;
-  unsigned long  st_mtime_usec;
-  time_t         st_ctime;
-  unsigned long  st_ctime_usec;
-  unsigned long  __foo0;
-  unsigned long  __foo1;
-};
-#endif
-// *INDENT-ON*
 
 int chmod (char const *file_name, mode_t mode);
 int fstat (int filedes, struct stat *buf);
