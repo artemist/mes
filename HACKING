@@ -130,30 +130,30 @@ x/s *((char **)($rsp+8))
 
 ** C parser/compiler
 *** [[https://savannah.gnu.org/projects/nyacc][nyacc]]
-*** PEG: [[http://piumarta.com/software/peg/][parse C using PEG]]
+*** PEG: [[https://piumarta.com/software/peg/][parse C using PEG]]
 *** [[https://en.wikipedia.org/wiki/Tiny_C_Compiler][Tiny C Compiler]]
-*** [[http://www.t3x.org/subc/index.html][Sub C]]
+*** [[https://www.t3x.org/subc/index.html][Sub C]]
 *** [[https://groups.google.com/forum/#!topic/comp.lang.lisp/VPuX0VsjTTE][C intepreter in LISP/Scheme/Python]]
 
 ** C assembler/linker
-*** [[http://www.tldp.org/HOWTO/Assembly-HOWTO/linux.html][Assembly HOWTO]]
+*** [[https://www.tldp.org/HOWTO/Assembly-HOWTO/linux.html][Assembly HOWTO]]
 *** ELF
 7f 45 4c 46
-*** [[http://www.muppetlabs.com/~breadbox/software/tiny/][Small ELF programs]]
-*** [[http://www.cirosantilli.com/elf-hello-world/][Elf hello world]]
+*** [[https://www.muppetlabs.com/~breadbox/software/tiny/][Small ELF programs]]
+*** [[https://www.cirosantilli.com/elf-hello-world/][Elf hello world]]
 ** SC - c as s-expressions
-sc: http://sph.mn/content/3d3
+sc: https://sph.mn/content/3d3
 ** RNRS
-*** [[http://www.scheme-reports.org/][Scheme Reports]]
+*** [[https://www.scheme-reports.org/][Scheme Reports]]
 *** [[ftp://publications.ai.mit.edu/ai-publications/pdf/AIM-349.pdf][Scheme - Report on Scheme]]
 *** [[ftp://publications.ai.mit.edu/ai-publications/pdf/AIM-452.pdf][RRS - Revised Report on Scheme]]
 
 ** tiny schemes
-http://forum.osdev.org/viewtopic.php?f=15&t=19937
+https://forum.osdev.org/viewtopic.php?f=15&t=19937
 
-http://www.stripedgazelle.org/joey/dreamos.html
-http://armpit.sourceforge.net/
-http://common-lisp.net/project/movitz/movitz.html
+https://www.stripedgazelle.org/joey/dreamos.html
+https://armpit.sourceforge.net/
+https://common-lisp.net/project/movitz/movitz.html
 
 <civodul> janneke: https://github.com/namin/inc looks interesting  [15:18]
 ** Orians Jeremiah
@@ -170,13 +170,13 @@ http://common-lisp.net/project/movitz/movitz.html
 <janneke> OriansJ: i looked a few times and saw 'LISP empty', so thanks for
           the pointer!  [00:24]
 <civodul> OriansJ, janneke: from that page, there's also:
-          https://web.archive.org/web/20160604035203fw_/http://homepage.ntlworld.com/edmund.grimley-evans/bcompiler.html
+          https://web.archive.org/web/20160604035203fw_/https://homepage.ntlworld.com/edmund.grimley-evans/bcompiler.html
 
 ** C4/C500
-https://web.archive.org/web/20160604041431/http://homepage.ntlworld.com/edmund.grimley-evans/cc500/cc500.c
+https://web.archive.org/web/20160604041431/https://homepage.ntlworld.com/edmund.grimley-evans/cc500/cc500.c
 https://github.com/rswier/c4/blob/master/c4.c
 ** Compilers for free
-http://codon.com/compilers-for-free
+https://codon.com/compilers-for-free
 ** Small lisps
 *** [[https://www.mirrorservice.org/sites/www.bitsavers.org/bits/TI/Explorer/zeta-c/][ZETA-C]]
 ** Small C compilers
@@ -188,10 +188,10 @@ simple as possible.
 *** pcc
 *** early GCC?
 https://miyuki.github.io/2017/10/04/gcc-archaeology-1.html
-*** [[http://tack.sourceforge.net/][ack]]
+*** [[https://tack.sourceforge.net/][ack]]
 <rain1> it may be possible to compile like this:  mes |> ack |> pcc |> tcc |>
         gcc 4.7.4 |> gcc later version... up to modern
-*** [[https://web.archive.org/web/20160402225843/http://homepage.ntlworld.com/edmund.grimley-evans/cc500/][cc500]]
+*** [[https://web.archive.org/web/20160402225843/https://homepage.ntlworld.com/edmund.grimley-evans/cc500/][cc500]]
 ** rain1's Bootstrapping Wiki: https://bootstrapping.miraheze.org/wiki/Main_Page
 ** rain1's hex86
 https://notabug.org/rain1/hex86/src/master/tests/hex0b3.hex86
