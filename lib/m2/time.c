@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018,2019,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2019,2022,2023 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -22,13 +22,16 @@
 #include <arch/syscall.h>
 #include <time.h>
 
+char *__tv;
+
 long
 time (long* result)
 {
   int r;
-  struct timeval tv;
-  struct timezone tz;
-  r = _sys_call2 (SYS_gettimeofday, tv, tz);
+  if (__tv == 0)
+    __tv = malloc (sizeof (struct timeval));
+  struct timeval *tv = __tv;
+  r = _sys_call2 (SYS_gettimeofday, tv, 0);
   if (r != 0)
     return -1;
   if (result != 0)
