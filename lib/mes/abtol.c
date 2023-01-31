@@ -1,7 +1,7 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
  * Copyright © 2016,2017,2018,2019,2020 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
- * Copyright © 2022 Rick Masters <grick23@gmail.com>
+ * Copyright © 2022,2023 Rick Masters <grick23@gmail.com>
  *
  * This file is part of GNU Mes.
  *
@@ -43,10 +43,15 @@ abtol (char const **p, int base)
   while (isnumber (s[0], base) != 0)
     {
       i = i * base;
-      if (s[0] > '9')
+      if (s[0] >= 'a')
         m = 'a' - 10;
       else
-        m = '0';
+        {
+          if (s[0] >= 'A')
+            m = 'A' - 10;
+          else
+            m = '0';
+        }
       i = i + s[0] - m;
       s = s + 1;
     }

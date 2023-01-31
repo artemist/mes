@@ -24,5 +24,5 @@
 int
 isxdigit (int c)
 {
-  return isdigit (c) || (c >= 'a' && c <= 'f');
+  return isdigit (c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
 }
