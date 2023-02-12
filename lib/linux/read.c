@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2016,2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2016,2017,2018,2019,2023 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -27,7 +27,7 @@ ssize_t
 read (int filedes, void *buffer, size_t size)
 {
   long long_filedes = filedes;
-  ssize_t bytes = _sys_call3 (SYS_read, long_filedes, buffer, size);
+  ssize_t bytes = _sys_call3 (SYS_read, long_filedes, (long) buffer, (long) size);
   if (__mes_debug () > 4)
     {
       if (bytes == 1)

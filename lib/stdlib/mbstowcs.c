@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2018 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2018,2023 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -30,6 +30,6 @@ mbstowcs (wchar_t * wstring, char const *string, size_t size)
   if (__mes_debug () && !stub)
     eputs ("mbstowcs stub\n");
   stub = 1;
-  strcpy (wstring, string);
+  strcpy ((char*)wstring, string);
   return strlen (string);
 }

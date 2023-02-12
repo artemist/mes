@@ -1,6 +1,6 @@
 /* -*-comment-start: "//";comment-end:""-*-
  * GNU Mes --- Maxwell Equations of Software
- * Copyright © 2017,2018,2019 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+ * Copyright © 2017,2018,2019,2023 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
  *
  * This file is part of GNU Mes.
  *
@@ -22,6 +22,7 @@
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int
 vfscanf (FILE * stream, char const *template, va_list ap)
@@ -76,7 +77,7 @@ vfscanf (FILE * stream, char const *template, va_list ap)
               ungetc (p, stream);
               *q = 0;
               q = buf;
-              *d = abtol (&q, 10);
+              *d = abtol ((char const**)&q, 10);
               count++;
               break;
             }
