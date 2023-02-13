@@ -1,0 +1,117 @@
+
+Subject: GNU Mes 0.24.2 released
+
+<#secure method=pgpmime mode=sign>
+
+We are happy to announce the release of GNU Mes 0.24.2, representing 25
+commits over nine months by four people.
+
+This release should fix the long standing `stat64' bug #41264[0].
+
+We are very grateful that the NLnet Foundation[1] is sponsoring this
+work!
+
+What's next?
+
+Work to prototype this so-called "Full Source Bootstrap" for ARM on
+Aarch64 is happening on the wip-aarch64-bootstrap[2] branch.  Also, full
+Guile compatible module support, and RISC-V support.
+
+Enjoy!
+
+* About
+
+  GNU Mes[3] is a Scheme interpreter and C compiler for bootstrapping
+  the GNU System.  Since version 0.22 it has again helped to halve the
+  size of opaque, uninspectable binary seeds that are currently being
+  used in the Reduced Binary Seed bootstrap[4] of GNU Guix[5].  The
+  final goal is to help create a full source bootstrap as part of the
+  bootstrappable builds[6] effort for UNIX-like operating systems.
+
+  The Scheme interpreter is written in ~5,000 LOC of simple C, and the C
+  compiler written in Scheme and these are mutual self-hosting.  Mes can
+  now be bootstrapped from M2-Planet[7] and Mescc-Tools[8].
+
+  Mes has a Garbage Collector, a library of loadable Scheme modules--
+  notably Dominique Boucher's LALR[9], Pre-R6RS portable
+  syntax-case[10] with R7RS ellipsis, Matt Wette's Nyacc[11] --and test
+  suite, just enough to support a REPL and a C99 compiler: mescc.
+
+  Mes + MesCC + Mes C Library can build a bootstrappable TinyCC[12] that
+  is self-hosting.  Using this tcc and the Mes C library we now have a
+  Reduced Binary Seed bootstrap for the gnutools triplet: glibc-2.2.5,
+  binutils-2.20.1, gcc-2.95.3.  This is enough to bootstrap Guix for
+  i686-linux, x86_64-linux, armhf-linux and aarch64-linux.
+
+  Mes is inspired by The Maxwell Equations of Software: LISP-1.5[13] --
+  John McCarthy page 13, GNU Guix's source/binary packaging transparency
+  and Jeremiah Orians's stage0[14] 357-byte self-hosting hex assembler.
+
+* Download
+
+  git clone git://git.savannah.gnu.org/mes.git
+
+  Here are the compressed sources and a GPG detached signature[*]:
+    https://ftp.gnu.org/gnu/mes/mes-0.24.2.tar.gz
+    https://ftp.gnu.org/gnu/mes/mes-0.24.2.tar.gz.sig
+
+  Use a mirror for higher download bandwidth:
+    https://ftpmirror.gnu.org/mes/mes-0.24.2.tar.gz
+    https://ftpmirror.gnu.org/mes/mes-0.24.2.tar.gz.sig
+
+  Here are the SHA1 and SHA256 checksums:
+
+  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  mes-0.24.2.tar.gz
+  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  mes-0.24.2.tar.gz
+
+  [*] Use a .sig file to verify that the corresponding file (without the
+  .sig suffix) is intact.  First, be sure to download both the .sig file
+  and the corresponding tarball.  Then, run a command like this:
+
+    gpg --verify mes-0.24.2.tar.gz.sig
+
+  If that command fails because you don't have the required public key,
+  or that public key has expired, try the following commands to update
+  or refresh it, and then rerun the 'gpg --verify' command.
+
+    gpg --recv-keys 1A858392E331EAFDB8C27FFBF3C1A0D9C1D65273
+
+* Get informed, get involved
+
+  See https://bootstrappable.org
+  Join #bootstrappable on irc.libera.chat
+
+* NEWS
+ * Changes in 0.24.2 since 0.24.1
+ ** Build
+ *** A number of compile warnings have been fixed.
+ *** The `simple.make' and `simple.sh' builds have been resurrected.
+ ** MesCC
+ *** Some assembly defines were added for building TinyCC for x86_64.
+ *** `__assert_fail' has been updated to use the standard signature.
+ ** Noteworthy bug fixes
+ *** A bootstrap build without M2-Planet is now supported again.
+ *** `gettimeofday' no longer segfaults in the M2-Planet build.
+ *** `stat64' and friends are now used on 32bit platforms.
+ This fixes https://debbugs.gnu.org/41264, and should also fix
+ https://debbugs.gnu.org/49985,
+ https://debbugs.gnu.org/53415,
+ https://debbugs.gnu.org/53416.
+ *** The Mes C Library now supports uppercase hex conversions.
+
+* Links
+  [0] https://debbugs.gnu.org/41264
+  [1] https://nlnet.nl/project/GNUMes-ARM_RISC-V
+  [2] https://git.savannah.gnu.org/cgit/guix.git/log/?h=wip-aarch64-bootstrap
+  [3] https://www.gnu.org/software/mes
+  [4] https://guix.gnu.org/blog/2020/guix-further-reduces-bootstrap-seed-to-25
+  [5] https://www.gnu.org/software/guix
+  [6] https://bootstrappable.org
+  [7] https://github.com/oriansj/m2-planet
+  [8] https://savannah.nongnu.org/projects/mescc-tools
+  [9] https://github.com/schemeway/lalr-scm
+  [10] https://www.cs.indiana.edu/chezscheme/syntax-case/old-psyntax.html
+  [11] https://www.nongnu.org/nyacc
+  [12] https://gitlab.com/janneke/tinycc
+  [13] http://www.softwarepreservation.org/projects/LISP/book/LISP%201.5%20Programmers%20Manual.pdf
+  [14] https://github.com/oriansj/stage0-posix
