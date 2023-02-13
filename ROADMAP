@@ -1,7 +1,7 @@
                                                               -*- org -*-
 #+TITLE: Tentative GNU Mes Road Map
 
-Copyright © 2016,2017,2018,2019,2020,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+Copyright © 2016,2017,2018,2019,2020,2022,2023 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 
   Copying and distribution of this file, with or without modification,
   are permitted in any medium without royalty provided the copyright
@@ -23,6 +23,9 @@ on Libera Chat!
 
 * TODO
 ** release 0.x, unsorted
+  - Full Guile module support.
+  - Run Gash and Gash-Utils on Mes.
+  - Remove Guile as a dependency for the Guix Full Source Bootstrap.
   - Integrate Full Source bootstrap for ARM on GNU Guix;
     see branch wip-aarch64-bootstrap.
   - Integrate Reduced Binary Seed bootstrap for ARM on GNU Guix;
