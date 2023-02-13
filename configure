@@ -4,7 +4,7 @@ MES_ARENA=100000000 exec ${SCHEME-guile} -L . --no-auto-compile -e '(configure)'
 !#
 
 ;;; GNU Mes --- Maxwell Equations of Software
-;;; Copyright © 2016,2017,2018,2019,2020,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+;;; Copyright © 2016,2017,2018,2019,2020,2021,2022,2023 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 ;;; Copyright © 2020 Vagrant Cascadian <vagrant@reproducible-builds.org>
 ;;;
 ;;; configure: This file is part of GNU Mes.
@@ -37,7 +37,7 @@ MES_ARENA=100000000 exec ${SCHEME-guile} -L . --no-auto-compile -e '(configure)'
 (define PACKAGE "mes")
 (define PACKAGE-NAME "GNU Mes")
 (define PACKAGE-BUGREPORT "bug-mes@gnu.org")
-(define VERSION "0.24.1")
+(define VERSION "0.24.2")
 
 (cond-expand
  (guile)
