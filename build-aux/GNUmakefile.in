@@ -1,5 +1,5 @@
 # GNU Mes --- Maxwell Equations of Software
-# Copyright © 2018,2019,2021,2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+# Copyright © 2018,2019,2021,2022,2023 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
 #
 # This file is part of GNU Mes.
 #
@@ -357,6 +357,7 @@ tag:
 #  1. Tag for release
 #     make tag VERSION=0.23
 #  2. Create signed tarball
+#     ./configure
 #     make sign-dist
 #  3. Update Guix package description
 #     make release
