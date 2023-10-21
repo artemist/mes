@@ -24,23 +24,41 @@
 /* See https://github.com/torvalds/linux/blob/v6.5/include/uapi/asm-generic/unistd.h */
 
 /* libc */
+// CONSTANT SYS_exit 93
 #define SYS_exit    93
+// CONSTANT SYS_write 64
 #define SYS_write   64
+// CONSTANT SYS_clone 220
 #define SYS_clone   220
+// CONSTANT SYS_read 63
 #define SYS_read    63
+// CONSTANT SYS_openat 56
 #define SYS_openat  56
+// CONSTANT SYS_wait4 260
 #define SYS_wait4   260
+// CONSTANT SYS_execve 221
 #define SYS_execve  221
+// CONSTANT SYS_fchmod 52
 #define SYS_fchmod  52
+// CONSTANT SYS_faccessat 48
 #define SYS_faccessat 48
+// CONSTANT SYS_brk 234
 #define SYS_brk     234
+// CONSTANT SYS_ioctl 29
 #define SYS_ioctl   29
+// CONSTANT SYS_fsync 82
 #define SYS_fsync   82
+// CONSTANT SYS_getcwd 17
 #define SYS_getcwd  17
+// CONSTANT SYS_dup 23
 #define SYS_dup     23
+// CONSTANT SYS_dup3 24
 #define SYS_dup3    24
+// CONSTANT SYS_unlinkat 35
 #define SYS_unlinkat 35
+// CONSTANT SYS_gettimeofday 169
 #define SYS_gettimeofday 169
+// CONSTANT SYS_clock_gettime 113
 #define SYS_clock_gettime 113
 
 /* libc+tcc */
