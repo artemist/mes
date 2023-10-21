@@ -38,8 +38,8 @@
 #define SYS_wait4   260
 // CONSTANT SYS_execve 221
 #define SYS_execve  221
-// CONSTANT SYS_fchmod 52
-#define SYS_fchmod  52
+// CONSTANT SYS_fchmodat 53
+#define SYS_fchmodat 53
 // CONSTANT SYS_faccessat 48
 #define SYS_faccessat 48
 // CONSTANT SYS_brk 234

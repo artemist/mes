@@ -26,5 +26,5 @@ int
 unlink (char const *file_name)
 {
   long long_file_name = cast_charp_to_long (file_name);
-  return _sys_call1 (SYS_unlink, long_file_name);
+  return _sys_call3 (SYS_unlinkat, -100, long_file_name, 0);
 }

@@ -26,7 +26,7 @@
 int
 _open3 (char const *file_name, int flags, int mask)
 {
-  int r = _sys_call3 (SYS_open, (long) file_name, (int) flags, (int) mask);
+  int r = _sys_call4 (SYS_openat, (long) -100, (long) file_name, (int) flags, (int) mask);
   if (r > 2)
     {
       __ungetc_clear (r);

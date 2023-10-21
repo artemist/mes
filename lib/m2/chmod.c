@@ -27,5 +27,5 @@ chmod (char const *file_name, int mask)
 {
   long long_file_name = file_name;
   long long_mask = mask;
-  return _sys_call2 (SYS_chmod, long_file_name, long_mask);
+  return _sys_call2 (SYS_fchmodat, -100, long_file_name, long_mask, 0);
 }

@@ -24,5 +24,6 @@
 int
 fork ()
 {
-  return _sys_call (SYS_fork);
+  /* We don't have a _sys_call5 but this works */
+  return _sys_call6 (SYS_clone, 17, 0, 0, 0, 0, 0);
 }
