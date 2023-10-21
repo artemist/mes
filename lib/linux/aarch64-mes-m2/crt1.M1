@@ -1,0 +1,73 @@
+### GNU Mes --- Maxwell Equations of Software
+### Copyright (C) 2016 Jeremiah Orians
+### Copyright © 2022 Jan (janneke) Nieuwenhuizen <janneke@gnu.org>
+###
+### This file is part of GNU Mes.
+###
+### GNU Mes is free software; you can redistribute it and/or modify it
+### under the terms of the GNU General Public License as published by
+### the Free Software Foundation; either version 3 of the License, or (at
+### your option) any later version.
+###
+### GNU Mes is distributed in the hope that it will be useful, but
+### WITHOUT ANY WARRANTY; without even the implied warranty of
+### MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+### GNU General Public License for more details.
+###
+### You should have received a copy of the GNU General Public License
+### along with GNU Mes.  If not, see <http://www.gnu.org/licenses/>.
+
+:_start
+	; sp has to be 16 byte aligned but we only want to deal with 8 byte registers,
+	; so use a normal register as sp
+	INIT_SP		; mov x18, sp
+	LDR_X0_[SP]
+	ADD_X1_SP_8
+
+	; M2-Planet also has a frame pointer, x17
+	SET_BP_FROM_SP	; mov x17, x18
+
+	; Separate out envp, get our args for main
+	PUSH_X0		; argc
+	PUSH_X1		; argv (yes, that's above the top of the stack)
+	SET_X1_TO_2	; One word for argc, one word for a null pointer
+	ADD_X0_X1_X0
+	SET_X1_TO_8
+	MUL_X0_X1_X0
+	ADD_X0_BP_X0
+	PUSH_X0		; envp
+
+	; Store envp to environ global
+	LOAD_W1_AHEAD
+	SKIP_32_DATA
+	&GLOBAL_environ
+	STR_X0_[X1]
+
+	; Set stdin, stdout, and stderr
+	SET_X0_TO_0
+	LOAD_W1_AHEAD
+	SKIP_32_DATA
+	&GLOBAL___stdin
+	STR_X0_[X1]
+
+	SET_X0_TO_1
+	LOAD_W1_AHEAD
+	SKIP_32_DATA
+	&GLOBAL___stdout
+	STR_X0_[X1]
+
+	SET_X0_TO_2
+	SKIP_32_DATA
+	&GLOBAL___stderr
+	STR_X0_[X1]
+
+	; Call our main function
+	LOAD_W16_AHEAD
+	SKIP_32_DATA
+	&FUNCTION_main
+	BLR_X16
+
+	; Exit
+	; Return from main is already in x0
+	SET_X8_TO_SYS_EXIT
+	SYSCALL
