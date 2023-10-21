@@ -42,8 +42,8 @@
 #define SYS_fchmodat 53
 // CONSTANT SYS_faccessat 48
 #define SYS_faccessat 48
-// CONSTANT SYS_brk 234
-#define SYS_brk     234
+// CONSTANT SYS_brk 214
+#define SYS_brk     214
 // CONSTANT SYS_ioctl 29
 #define SYS_ioctl   29
 // CONSTANT SYS_fsync 82

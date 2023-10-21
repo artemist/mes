@@ -22,9 +22,20 @@
 void
 _write ()
 {
-  asm ("POP_X2");
-  asm ("POP_X1");
-  asm ("POP_X0");
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("DEREF_X0");
+  asm ("SET_X2_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_16");
+  asm ("DEREF_X0");
+  asm ("SET_X1_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+
   asm ("SET_X8_TO_SYS_WRITE");
   asm ("SYSCALL");
 }

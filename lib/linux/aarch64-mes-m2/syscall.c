@@ -26,59 +26,148 @@ int errno;
 int
 __sys_call (int sys_call)
 {
-  asm ("POP_X8");
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X8_FROM_X0");
   asm ("SYSCALL");
 }
 
 int
 __sys_call1 (int sys_call, int one)
 {
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X8_FROM_X0");
 
-  asm ("POP_X0");
-  asm ("POP_X8");
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_16");
+  asm ("DEREF_X0");
+
   asm ("SYSCALL");
 }
 
 int
 __sys_call2 (int sys_call, int one, int two)
 {
-  asm ("POP_X1");
-  asm ("POP_X0");
-  asm ("POP_X8");
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X8_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("DEREF_X0");
+  asm ("SET_X1_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_16");
+  asm ("DEREF_X0");
+
   asm ("SYSCALL");
 }
 
 int
 __sys_call3 (int sys_call, int one, int two, int three)
 {
-  asm ("POP_X2");
-  asm ("POP_X1");
-  asm ("POP_X0");
-  asm ("POP_X8");
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X8_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X2_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("DEREF_X0");
+  asm ("SET_X1_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_16");
+  asm ("DEREF_X0");
+
   asm ("SYSCALL");
 }
 
 int
 __sys_call4 (int sys_call, int one, int two, int three, int four)
 {
-  asm ("POP_X3");
-  asm ("POP_X2");
-  asm ("POP_X1");
-  asm ("POP_X0");
-  asm ("POP_X8");
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X8_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("SUB_X0_16");
+  asm ("DEREF_X0");
+  asm ("SET_X3_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X2_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("DEREF_X0");
+  asm ("SET_X1_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_16");
+  asm ("DEREF_X0");
+
   asm ("SYSCALL");
 }
 
 int
 __sys_call6 (int sys_call, int one, int two, int three, int four, int five, int six)
 {
-  asm ("POP_X5");
-  asm ("POP_X4");
-  asm ("POP_X3");
-  asm ("POP_X2");
-  asm ("POP_X1");
-  asm ("POP_X0");
-  asm ("POP_X8");
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X8_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("SUB_X0_24");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X5_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("SUB_X0_24");
+  asm ("DEREF_X0");
+  asm ("SET_X4_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("SUB_X0_16");
+  asm ("DEREF_X0");
+  asm ("SET_X3_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("SUB_X0_8");
+  asm ("DEREF_X0");
+  asm ("SET_X2_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_24");
+  asm ("DEREF_X0");
+  asm ("SET_X1_FROM_X0");
+
+  asm ("SET_X0_FROM_BP");
+  asm ("SUB_X0_16");
+  asm ("DEREF_X0");
+
   asm ("SYSCALL");
 }
 
