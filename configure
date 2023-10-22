@@ -538,7 +538,7 @@ Some influential environment variables:
            (mes-cpu (cond ((member mes-cpu '("i386" "i486" "i586" "i686")) "x86")
                           ((member mes-cpu '("arm" "armv4" "armv7l")) "arm")
                           (else mes-cpu)))
-           (mes-bits (if (member mes-cpu '("x86_64")) "64"
+           (mes-bits (if (member mes-cpu '("x86_64" "aarch64")) "64"
                          "32"))
            (mes-libc (if system-libc? "system" "mes"))
            (mes-kernel (car (filter
@@ -578,6 +578,7 @@ Some influential environment variables:
                   (loop (read-line in 'concat))))))))
 
       (when (and (not (member mes-system '("arm-linux-mes"
+                                           "aarch64-linux-mes"
                                            "x86-linux-mes"
                                            "x86_64-linux-mes")))
                  (not with-courage?))
