@@ -22,11 +22,8 @@
       in rec {
         formatter = pkgs.nixfmt;
 
-        devShells.rustybar = pkgs.mkShellNoCC {
+        devShells.mes-m2 = pkgs.mkShellNoCC {
           packages = with pkgs; [
-            perl
-            guile
-            gnumake
             minimal-bootstrap.kaem
             minimal-bootstrap.mescc-tools
           ];
@@ -34,8 +31,25 @@
           CC = "M2-Planet";
           stage0_cpu = stage0Arch;
           mes_cpu = mesArch;
+
+          shellHook = ''
+            export GUILE_LOAD_PATH=$PWD/mes/module:$PWD/module:${pkgs.minimal-bootstrap.mes.nyacc.guilePath}
+          '';
         };
-        devShells.default = devShells.rustybar;
+
+        devShells.mes-guile = pkgs.mkShell {
+          packages = with pkgs; [
+            perl
+            guile
+            gnumake
+            minimal-bootstrap.mescc-tools
+          ];
+
+          shellHook = ''
+            export GUILE_LOAD_PATH=$PWD/module:${pkgs.minimal-bootstrap.mes.nyacc.guilePath}
+          '';
+        };
+        devShells.default = devShells.mes-m2;
       }));
 }
 
