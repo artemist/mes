@@ -22,7 +22,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-// CONSTANT M2_PTR_SIZE 4
+// CONSTANT M2_PTR_SIZE 8
 #define M2_PTR_SIZE 1
 
 char *
