@@ -193,7 +193,7 @@ init_symbols ()                  /*:((internal)) */
   a = acons (cell_symbol_boot_module, cell_symbol_boot_module, a);
   a = acons (cell_symbol_current_module, cell_symbol_current_module, a);
 
-  a = acons (cell_symbol_mes_version, make_string0 (MES_VERSION), a);
+  a = acons (cell_symbol_mes_version, make_string0 ("uwu"), a);
   a = acons (cell_symbol_mes_datadir, make_string0 (g_datadir), a);
 
   a = acons (cell_type_bytes, make_number (TBYTES), a);
