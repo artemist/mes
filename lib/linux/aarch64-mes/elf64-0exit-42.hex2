@@ -1,0 +1,7 @@
+:ELF_text
+a8 0b 80 d2	# mov x8, #93
+40 05 80 d2	# mov x0, #42
+01 00 00 d4	# svc #0
+7f 20 03 d5	# wfi
+
+:ELF_end
